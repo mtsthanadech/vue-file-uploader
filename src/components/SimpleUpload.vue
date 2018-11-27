@@ -77,20 +77,20 @@ export default {
                 this.message = err.response.data.error;
                 this.error = true;
             }
-        }
-        // async sendToggle() {
-        //     const formData = new FormData();
-        //     const url = "http://35.198.215.67:9542/seniorproject/json/" + this.dbname;
+        },
+        async sendToggle() {
+            const formData = new FormData();
+            const url = "http://35.198.215.67:9542/seniorproject/json/" + this.dbname;
 
-        //     try {
-        //         await axios.get(url);
-        //         this.message = "Toggle Seccess";
-        //         this.error = false;
-        //     } catch(err) {
-        //         this.message = err.response.data.error;
-        //         this.error = true;
-        //     }
-        // }
+            try {
+                await axios.get(url);
+                this.message = "Toggle Seccess";
+                this.error = false;
+            } catch(err) {
+                this.message = err.response.data.error;
+                this.error = true;
+            }
+        }
     }
 }
 </script>
