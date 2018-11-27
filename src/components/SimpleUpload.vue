@@ -16,7 +16,7 @@
                     
                 </label>
 
-                <button class="btn btn-lg btn-outline-primary">Send</button>
+                <button v-on:click="sendToggle" class="btn btn-lg btn-outline-primary">Send</button>
                 
             </div>
             
@@ -64,14 +64,13 @@ export default {
         async sendFile() {
             const formData = new FormData();
             const url = "https://35.198.215.67:3344/upload";
-            const urlnew = "http://35.198.215.67:9542/seniorproject/json/" + this.dbname;
             formData.append('file', this.file, this.dbname+".json");
+            
             // const url = "https://localhost:3344/upload";
             // formData.append('dbnam',this.dbname+".json");
 
             try {
-                // await axios.post(url, formData);
-                await axios.get(urlnew);
+                await axios.post(url, formData);
                 this.message = "File has been uploaded";
                 this.file = "";
                 this.error = false;
@@ -82,6 +81,7 @@ export default {
         },
         async sendToggle() {
             const formData = new FormData();
+            console.log(this.dbname);
             const url = "http://35.198.215.67:9542/seniorproject/json/" + this.dbname;
 
             try {
