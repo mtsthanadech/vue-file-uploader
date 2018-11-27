@@ -67,6 +67,7 @@ export default {
             // const url = "https://localhost:3344/upload";
             formData.append('file', this.file, this.dbname+".json");
             // formData.append('dbnam',this.dbname+".json");
+            console.log
 
             try {
                 await axios.post(url, formData);
@@ -77,7 +78,7 @@ export default {
                 this.message = err.response.data.error;
                 this.error = true;
             }
-            
+            console.log("hello")
             const urlnew = "http://35.198.215.67:9542/seniorproject/json/" + this.dbname;
 
             try {
