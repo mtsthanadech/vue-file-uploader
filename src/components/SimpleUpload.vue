@@ -62,33 +62,34 @@ export default {
             }
         },
         async sendFile() {
-            console.log("hello")
             const formData = new FormData();
             const url = "https://35.198.215.67:3344/upload";
-            // const url = "https://localhost:3344/upload";
+            const urlnew = "http://35.198.215.67:9542/seniorproject/json/" + this.dbname;
             formData.append('file', this.file, this.dbname+".json");
+            // const url = "https://localhost:3344/upload";
             // formData.append('dbnam',this.dbname+".json");
-            console.log
 
             try {
                 await axios.post(url, formData);
                 this.message = "File has been uploaded";
                 this.file = "";
                 this.error = false;
+                console.log("File")
             } catch(err) {
                 this.message = err.response.data.error;
                 this.error = true;
+                console.log("File error")
             }
-     
-            const urlnew = "http://35.198.215.67:9542/seniorproject/json/" + this.dbname;
 
             try {
                 await axios.get(urlnew);
                 this.message = "Toggle Seccess";
                 this.error = false;
+                console.log("Get")
             } catch(err) {
                 this.message = err.response.data.error;
                 this.error = true;
+                console.log("Get error")
             }
             
         },
