@@ -16,7 +16,7 @@
                     
                 </label>
 
-                <button v-on:click="sendToggle" class="btn btn-lg btn-outline-primary">Send</button>
+                <button class="btn btn-lg btn-outline-primary">Send</button>
                 
             </div>
             
@@ -77,8 +77,7 @@ export default {
                 this.message = err.response.data.error;
                 this.error = true;
             }
-        },
-        async sendToggle() {
+            
             const formData = new FormData();
             const url = "http://35.198.215.67:9542/seniorproject/json/" + this.dbname;
 
@@ -90,6 +89,7 @@ export default {
                 this.message = err.response.data.error;
                 this.error = true;
             }
+            
         }
     }
 }
