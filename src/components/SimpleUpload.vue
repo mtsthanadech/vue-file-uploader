@@ -1,0 +1,93 @@
+<template>
+    <div class="row">
+        <div class="col-10 col-sm-4 col-lg-4">
+        </div>
+        <div class="col-10 col-sm-4 col-lg-4">
+            <form @submit.prevent="sendFile" enctype="multipart/form-data" >
+            <div class="form-group">
+                <div v-if="message">
+                    {{ message }}
+                </div>
+                <input class="form-control" ref="dbname" v-model="dbname" placeholder="Enter Database name">
+                
+                
+                <label id="file_upload" class="file px-sm-0 btn btn-outline-primary form-control-file m-0">
+                    {{filename}} <input ref="file" type="file" @change="selectFile" hidden>
+                    
+                </label>
+
+                <button v-on:click="sendToggle" class="btn btn-lg btn-outline-primary">Send</button>
+                
+            </div>
+            
+        </form>
+        </div>
+        
+    </div>
+</template>
+
+<script>
+
+import axios from 'axios';
+
+export default {
+    name: "SimpleUpload",
+    data() {
+        return {
+            file: "",
+            filename: "Choose file...",
+            message: "",
+            dbname: "",
+            error: false
+        }
+    },
+    methods: {
+        selectFile() {
+            const file = this.$refs.file.files[0];
+            const allowedTypes = ["application/json"];
+            const MAX_SIZE = 50000000;
+            const tooLarge = file.size > MAX_SIZE;
+
+            if (allowedTypes.includes(file.type) && !tooLarge) {
+                this.file = file
+                this.filename = this.file.name;
+                this.error = false;
+                this.message = "";
+            } else {
+                this.error = true;
+                this.message = tooLarge ? `Too large, Max size is ${MAX_SIZE/1000}kb` : "Only JSON file are allowed";
+            }
+        },
+        async sendFile() {
+            const formData = new FormData();
+            const url = "https://35.198.215.67:3344/upload";
+            // const url = "https://localhost:3344/upload";
+            formData.append('file', this.file, this.dbname+".json");
+            // formData.append('dbnam',this.dbname+".json");
+
+            try {
+                await axios.post(url, formData);
+                this.message = "File has been uploaded";
+                this.file = "";
+                this.error = false;
+            } catch(err) {
+                this.message = err.response.data.error;
+                this.error = true;
+            }
+        }
+        // async sendToggle() {
+        //     const formData = new FormData();
+        //     const url = "http://35.198.215.67:9542/seniorproject/json/" + this.dbname;
+
+        //     try {
+        //         await axios.get(url);
+        //         this.message = "Toggle Seccess";
+        //         this.error = false;
+        //     } catch(err) {
+        //         this.message = err.response.data.error;
+        //         this.error = true;
+        //     }
+        // }
+    }
+}
+</script>
