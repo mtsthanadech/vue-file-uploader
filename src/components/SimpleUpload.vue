@@ -82,7 +82,7 @@ export default {
         async sendToggle() {
             const formData = new FormData();
             console.log(this.dbname);
-            const url = "http://35.198.215.67:9542/seniorproject/json/" + this.dbname;
+            const url = "https://35.198.215.67:9542/seniorproject/json/" + this.dbname;
 
             try {
                 await axios.get(url);
