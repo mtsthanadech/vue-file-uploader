@@ -16,7 +16,7 @@
                     
                 </label>
 
-                <button v-on:click="sendToggle" class="btn btn-lg btn-outline-primary">Send</button>
+                <button class="btn btn-lg btn-outline-primary">Send</button>
                 
             </div>
             
@@ -62,6 +62,7 @@ export default {
             }
         },
         async sendFile() {
+            console.log("hello")
             const formData = new FormData();
             const url = "https://35.198.215.67:3344/upload";
             // const url = "https://localhost:3344/upload";
@@ -78,7 +79,7 @@ export default {
                 this.message = err.response.data.error;
                 this.error = true;
             }
-            console.log("hello")
+     
             const urlnew = "http://35.198.215.67:9542/seniorproject/json/" + this.dbname;
 
             try {
