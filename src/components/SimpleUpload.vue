@@ -70,28 +70,15 @@ export default {
             // formData.append('dbnam',this.dbname+".json");
 
             try {
-                await axios.post(url, formData);
+                axios.post(url, formData);
+                axios.get(urlnew);
                 this.message = "File has been uploaded";
                 this.file = "";
                 this.error = false;
-                console.log("File")
             } catch(err) {
                 this.message = err.response.data.error;
                 this.error = true;
-                console.log("File error")
             }
-
-            try {
-                await axios.get(urlnew);
-                this.message = "Toggle Seccess";
-                this.error = false;
-                console.log("Get")
-            } catch(err) {
-                this.message = err.response.data.error;
-                this.error = true;
-                console.log("Get error")
-            }
-            
         },
         async sendToggle() {
             const formData = new FormData();
