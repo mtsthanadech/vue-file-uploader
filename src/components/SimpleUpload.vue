@@ -79,7 +79,7 @@ export default {
                 this.error = true;
             }
         },
-        sendToggle() {
+        async sendToggle() {
             const formData = new FormData();
             console.log(this.dbname);
             const url = "https://35.198.215.67/seniorproject/json/" + this.dbname;
