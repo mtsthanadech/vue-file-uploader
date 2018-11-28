@@ -79,13 +79,13 @@ export default {
                 this.error = true;
             }
         },
-        async sendToggle() {
+        sendToggle() {
             const formData = new FormData();
             console.log(this.dbname);
             const url = "https://35.198.215.67/seniorproject/json/" + this.dbname;
 
             try {
-                await axios.get(url);
+                axios.get(url);
                 this.message = "Toggle Seccess";
                 this.error = false;
             } catch(err) {
