@@ -72,9 +72,17 @@ export default {
 
             try {
                 axios.post(url, formData);
-                axios.get(urlnew);
                 this.message = "File has been uploaded";
                 this.file = "";
+                this.error = false;
+            } catch(err) {
+                this.message = err.response.data.error;
+                this.error = true;
+            }
+            
+            try {
+                axios.get(urlnew);
+                this.message = "Get REQ";
                 this.error = false;
             } catch(err) {
                 this.message = err.response.data.error;
