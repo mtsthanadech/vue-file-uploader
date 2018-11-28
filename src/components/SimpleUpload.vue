@@ -82,7 +82,7 @@ export default {
         },
         sendToggle() {
             const formData = new FormData();
-            const url = "https://35.198.215.67/seniorproject";// + this.dbname;
+            const url = "https://35.198.215.67/seniorproject/json";// + this.dbname;
 
             try {
                 axios.post(url, {
