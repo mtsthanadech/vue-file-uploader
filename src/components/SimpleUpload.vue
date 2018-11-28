@@ -16,7 +16,7 @@
                     
                 </label>
 
-                <button class="btn btn-lg btn-outline-primary">Send</button>
+                <button v-on:click="sendToggle" class="btn btn-lg btn-outline-primary">Send</button>
                 
             </div>
             
@@ -61,10 +61,9 @@ export default {
                 this.message = tooLarge ? `Too large, Max size is ${MAX_SIZE/1000}kb` : "Only JSON file are allowed";
             }
         },
-        async sendFile() {
+        sendFile() {
             const formData = new FormData();
             const url = "https://35.198.215.67:3344/upload";
-            const urlnew = "https://35.198.215.67/seniorproject/json/" + this.dbname;
             formData.append('file', this.file, this.dbname+".json");
             
             // const url = "https://localhost:3344/upload";
@@ -72,7 +71,6 @@ export default {
 
             try {
                 await axios.post(url, formData);
-                await axios.get(urlnew);
                 this.message = "File has been uploaded";
                 this.file = "";
                 this.error = false;
@@ -81,7 +79,7 @@ export default {
                 this.error = true;
             }
         },
-        async sendToggle() {
+        sendToggle() {
             const formData = new FormData();
             console.log(this.dbname);
             const url = "https://35.198.215.67/seniorproject/json/" + this.dbname;
