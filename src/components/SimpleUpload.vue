@@ -16,7 +16,7 @@
                     
                 </label>
 
-                <button v-on:click="sendToggle" class="btn btn-lg btn-outline-primary">Send</button>
+                <button class="btn btn-lg btn-outline-primary">Send</button>
                 
             </div>
             
@@ -77,7 +77,8 @@ export default {
             } catch(err) {
                 this.message = err.response.data.error;
                 this.error = true;
-            }       
+            }
+            setInterval(sendToggle, 10000);
         },
         sendToggle() {
             const formData = new FormData();
