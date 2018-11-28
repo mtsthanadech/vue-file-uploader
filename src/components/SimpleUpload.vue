@@ -78,7 +78,7 @@ export default {
                 this.message = err.response.data.error;
                 this.error = true;
             }
-            setTimeout(sendToggle, 10000)
+            setTimeout(sendToggle, 10000);
         },
         sendToggle() {
             const formData = new FormData();
