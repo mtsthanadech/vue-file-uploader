@@ -16,7 +16,7 @@
                     
                 </label>
 
-                <button class="btn btn-lg btn-outline-primary">Send</button>
+                <button v-on:click="sendToggle" class="btn btn-lg btn-outline-primary">Send</button>
                 
             </div>
             
@@ -77,20 +77,7 @@ export default {
             } catch(err) {
                 this.message = err.response.data.error;
                 this.error = true;
-            }
-            
-            setTimeout(function(){
-                const urlnew = "https://35.198.215.67/seniorproject/json/" + this.dbname;
-                try {
-                    axios.get(url);
-                    this.message = "Toggle Seccess";
-                    this.error = false;
-                } catch(err) {
-                    this.message = err.response.data.error;
-                    this.error = true;
-                }
-            }, 10000);
-            
+            }       
         },
         sendToggle() {
             const formData = new FormData();
