@@ -82,11 +82,13 @@ export default {
         },
         sendToggle() {
             const formData = new FormData();
-            console.log("Hello");
-            const url = "https://35.198.215.67/seniorproject/json/" + this.dbname;
+            const url = "https://35.198.215.67/seniorproject";// + this.dbname;
 
             try {
-                axios.get(url);
+                axios.post(url, {
+                    indexname: this.dbname
+                })
+                // axios.get(url);
                 this.message = "Toggle Seccess";
                 this.error = false;
             } catch(err) {
