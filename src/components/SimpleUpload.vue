@@ -83,11 +83,10 @@ export default {
         sendToggle() {
             const formData = new FormData();
             const url = "https://35.198.215.67/seniorproject/json";// + this.dbname;
+            formData.append(this.dbname);
 
             try {
-                axios.post(url, {
-                    indexname: this.dbname
-                })
+                axios.post(url, formData);
                 // axios.get(url);
                 this.message = "Toggle Seccess";
                 this.error = false;
