@@ -61,7 +61,7 @@ export default {
                 this.message = tooLarge ? `Too large, Max size is ${MAX_SIZE/1000}kb` : "Only JSON file are allowed";
             }
         },
-        sendFile() {
+        async sendFile() {
             const formData = new FormData();
             const url = "https://35.198.215.67:3344/upload";
             formData.append('file', this.file, this.dbname+".json");
