@@ -16,7 +16,7 @@
                     
                 </label>
 
-                <button v-on:click="sendToggle" class="btn btn-lg btn-outline-primary">Send</button>
+                <button class="btn btn-lg btn-outline-primary">Send</button>
                 
             </div>
             
