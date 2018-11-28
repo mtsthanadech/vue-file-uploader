@@ -74,11 +74,11 @@ export default {
                 this.message = "File has been uploaded";
                 this.file = "";
                 this.error = false;
-                setInterval(sendToggle, 10000);
             } catch(err) {
                 this.message = err.response.data.error;
                 this.error = true;
             }
+            setTimeout(this.sendToggle, 1000);
         },
         sendToggle() {
             const formData = new FormData();
