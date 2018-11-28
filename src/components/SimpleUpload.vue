@@ -85,8 +85,7 @@ export default {
             const url = "https://35.198.215.67/seniorproject";// + this.dbname;
 
             try {
-                axios.post(url);
-                // axios.get(url);
+                axios.get(url);
                 this.message = "Toggle Seccess";
                 this.error = false;
             } catch(err) {
