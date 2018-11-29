@@ -61,7 +61,7 @@ export default {
                 this.message = tooLarge ? `Too large, Max size is ${MAX_SIZE/1000}kb` : "Only JSON file are allowed";
             }
         },
-        sendFile() {
+        async sendFile() {
             const formData = new FormData();
             const url = "https://35.198.215.67:3344/upload";
             formData.append('file', this.file, this.dbname+".json");
@@ -73,10 +73,11 @@ export default {
 
             try {
                 //axios.post(url, formData);
-                axios.get(urlnew).then(function(response, data) {
+                await axios.get(urlnew).then(function(response, data) {
                         data = response.data;
                  });
                 console.log(data);
+                console.log("Helloworld");
                 this.message = "File has been uploaded";
                 this.file = "";
                 this.error = false;
