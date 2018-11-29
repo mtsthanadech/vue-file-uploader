@@ -41,7 +41,6 @@ export default {
             filename: "Choose file...",
             message: "",
             dbname: "",
-            mark: "lol",
             error: false
         }
     },
@@ -49,14 +48,12 @@ export default {
         getTest() {
             try {
                 const response = axios.get('https://35.198.215.67:3344/testapi');
-                this.mark = JSON.parse(response.data);
-                console.log(this.mark);
-                console.log(response[0]);
+                console.log(JSON.parse(response.data));
+                console.log(response);
             } catch(err) {
                 this.message = "Error";
                 this.error = true;
             }
-            console.log(this.mark);
         },
         selectFile() {
             const file = this.$refs.file.files[0];
