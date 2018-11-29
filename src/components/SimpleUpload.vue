@@ -48,8 +48,10 @@ export default {
     methods: {
         async getTest() {
             try {
-                const response = await axios.get('https://35.198.215.67:3344/testapi')
+                const response = await axios.get('https://35.198.215.67:3344/testapi');
                 this.mark = response.data;
+                console.log(response);
+                console.log(response.data);
             } catch(err) {
                 this.message = "Error";
                 this.error = true;
