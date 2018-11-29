@@ -50,9 +50,8 @@ export default {
                 const response = axios.get('https://35.198.215.67:3344/testapi');
                 console.log(response);
                 console.log(response[0][0]);
-                console.log(response['PromiseValue']);
-                console.log(response[0]['PromiseValue']);
                 console.log(response.PromiseValue);
+                console.log(response.data);
             } catch(err) {
                 this.message = "Error";
                 this.error = true;
