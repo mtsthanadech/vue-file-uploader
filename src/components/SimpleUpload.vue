@@ -46,13 +46,10 @@ export default {
         }
     },
     methods: {
-        getTest() {
-            console.log(this.name);
+        async getTest() {
             try {
-                axios.get('https://35.198.215.67:3344/testapi').then(response =>{
-                   this.name = response.data;
-                   console.log("Helloworld");
-                })
+                const response = await axios.get('https://35.198.215.67:3344/testapi')
+                this.name = response.data;
             } catch(err) {
                 this.message = err.response.data.error;
                 this.error = true;
