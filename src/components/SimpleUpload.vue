@@ -51,13 +51,12 @@ export default {
             try {
                 axios.get('https://35.198.215.67:3344/testapi')
                 .then(response =>{
-                   this.name = "fskldfksl";
+                   this.name = response.data;
                 })
             } catch(err) {
                 this.message = err.response.data.error;
                 this.error = true;
             }
-            this.name = "CPE";
             console.log(this.name);
         },
         selectFile() {
