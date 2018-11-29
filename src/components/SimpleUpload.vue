@@ -48,10 +48,16 @@ export default {
     methods: {
         getTest() {
             console.log(name);
-            axios.get('https://35.198.215.67:3344/testapi')
-            .then(response =>{
-               this.name = "fskldfksl";
-            })
+            try {
+                axios.get('https://35.198.215.67:3344/testapi')
+                .then(response =>{
+                   this.name = "fskldfksl";
+                })
+            } catch(err) {
+                this.message = err.response.data.error;
+                this.error = true;
+            }
+            this.name = "CPE";
             console.log(name);
         },
         selectFile() {
