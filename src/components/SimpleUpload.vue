@@ -49,7 +49,8 @@ export default {
             axios.get('https://35.198.215.67:3344/testapi')
             .then(response =>{
                 var name = JSON.parse( response.data );
-                console.log(name);
+                console.log(response.data);
+                console.log(response);
             })
             console.log(name);
         },
