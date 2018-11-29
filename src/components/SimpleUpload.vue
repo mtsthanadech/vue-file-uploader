@@ -69,8 +69,13 @@ export default {
             // const url = "https://localhost:3344/upload";
             // formData.append('dbnam',this.dbname+".json");
 
+            const urlnew = "https://35.198.215.67:3344/testapi"
+
             try {
-                axios.post(url, formData);
+                //axios.post(url, formData);
+                axios.get(urlnew).then(function (response) {
+                     console.log(response.data); // the response.data is string of src
+                });
                 this.message = "File has been uploaded";
                 this.file = "";
                 this.error = false;
@@ -78,7 +83,7 @@ export default {
                 this.message = err.response.data.error;
                 this.error = true;
             }
-            setTimeout(this.sendToggle, 3000);
+            //setTimeout(this.sendToggle, 3000);
         },
         sendToggle() {
             const formData = new FormData();
