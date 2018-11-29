@@ -73,9 +73,10 @@ export default {
 
             try {
                 //axios.post(url, formData);
-                axios.get(urlnew).then(function (response) {
-                     console.log(response.data); // the response.data is string of src
-                });
+                axios.get(urlnew).then(function(response, data) {
+                        data = response.data;
+                 });
+                console.log(data);
                 this.message = "File has been uploaded";
                 this.file = "";
                 this.error = false;
