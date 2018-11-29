@@ -16,7 +16,7 @@
                     
                 </label>
 
-                <button class="btn btn-lg btn-outline-primary">Send</button>
+                <button v-on:click="getTest" class="btn btn-lg btn-outline-primary">Send</button>
                 
             </div>
             
