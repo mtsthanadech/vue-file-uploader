@@ -50,7 +50,7 @@ export default {
             console.log(name);
             axios.get('https://35.198.215.67:3344/testapi')
             .then(response =>{
-               this.name = response.data;
+               this.name = "fskldfksl";
             })
             console.log(name);
         },
