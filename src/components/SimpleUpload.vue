@@ -51,7 +51,7 @@ export default {
                 const response = await axios.get('https://35.198.215.67:3344/testapi')
                 this.mark = response.data;
             } catch(err) {
-                this.message = err.response.data.error;
+                this.message = "Error";
                 this.error = true;
             }
             console.log(this.mark);
