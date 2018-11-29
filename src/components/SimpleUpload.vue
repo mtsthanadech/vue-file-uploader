@@ -47,7 +47,7 @@ export default {
     },
     methods: {
         getTest() {
-            console.log(name);
+            console.log(this.name);
             try {
                 axios.get('https://35.198.215.67:3344/testapi')
                 .then(response =>{
@@ -58,7 +58,7 @@ export default {
                 this.error = true;
             }
             this.name = "CPE";
-            console.log(name);
+            console.log(this.name);
         },
         selectFile() {
             const file = this.$refs.file.files[0];
