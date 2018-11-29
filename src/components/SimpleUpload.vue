@@ -45,6 +45,17 @@ export default {
         }
     },
     methods: {
+        // Function to get the patient's personal information 
+        getTest: function(){
+            axios.get('https://35.198.215.67:3344/testapi')
+            .then(response =>{
+                this.name = response.data;
+            })
+            .catch(e => {
+                this.errors.push(e);
+            })
+            console.log(name);
+        },
         selectFile() {
             const file = this.$refs.file.files[0];
             const allowedTypes = ["application/json"];
@@ -61,7 +72,7 @@ export default {
                 this.message = tooLarge ? `Too large, Max size is ${MAX_SIZE/1000}kb` : "Only JSON file are allowed";
             }
         },
-        async sendFile() {
+        sendFile() {
             const formData = new FormData();
             const url = "https://35.198.215.67:3344/upload";
             formData.append('file', this.file, this.dbname+".json");
@@ -69,15 +80,8 @@ export default {
             // const url = "https://localhost:3344/upload";
             // formData.append('dbnam',this.dbname+".json");
 
-            const urlnew = "https://35.198.215.67:3344/testapi"
-
             try {
                 //axios.post(url, formData);
-                await axios.get(urlnew).then(function(response, data) {
-                        data = response.data;
-                 });
-                console.log(data);
-                console.log("Helloworld");
                 this.message = "File has been uploaded";
                 this.file = "";
                 this.error = false;
