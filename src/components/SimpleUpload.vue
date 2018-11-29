@@ -46,9 +46,9 @@ export default {
         }
     },
     methods: {
-        async getTest() {
+        getTest() {
             try {
-                const response = await axios.get('https://35.198.215.67:3344/testapi');
+                const response = axios.get('https://35.198.215.67:3344/testapi');
                 this.mark = response.data;
                 console.log(response);
                 console.log(response.data);
