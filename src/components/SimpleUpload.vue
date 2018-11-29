@@ -47,6 +47,7 @@ export default {
     },
     methods: {
         getTest: function(){
+            console.log(name);
             axios.get('https://35.198.215.67:3344/testapi')
             .then(response =>{
                this.name = response.data;
