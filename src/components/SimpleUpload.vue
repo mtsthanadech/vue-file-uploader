@@ -45,14 +45,10 @@ export default {
         }
     },
     methods: {
-        // Function to get the patient's personal information 
         getTest: function(){
             axios.get('https://35.198.215.67:3344/testapi')
             .then(response =>{
-                this.name = response.data;
-            })
-            .catch(e => {
-                this.errors.push(e);
+                var name = JSON.parse( response.data );
             })
             console.log(name);
         },
