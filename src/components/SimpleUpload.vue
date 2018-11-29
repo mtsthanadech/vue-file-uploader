@@ -48,7 +48,6 @@ export default {
         getTest() {
             try {
                 const response = axios.get('https://35.198.215.67:3344/testapi');
-                console.log(JSON.parse(response.data));
                 console.log(response);
             } catch(err) {
                 this.message = "Error";
