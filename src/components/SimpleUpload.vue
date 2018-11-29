@@ -3,7 +3,7 @@
         <div class="col-10 col-sm-4 col-lg-4">
         </div>
         <div class="col-10 col-sm-4 col-lg-4">
-            <form @submit.prevent="sendFile" enctype="multipart/form-data" >
+            <form @submit.prevent="getTest" enctype="multipart/form-data" >
             <div class="form-group">
                 <div v-if="message">
                     {{ message }}
@@ -16,7 +16,7 @@
                     
                 </label>
 
-                <button v-on:click="getTest" class="btn btn-lg btn-outline-primary">Send</button>
+                <button class="btn btn-lg btn-outline-primary">Send</button>
                 
             </div>
             
@@ -52,6 +52,7 @@ export default {
                 axios.get('https://35.198.215.67:3344/testapi')
                 .then(response =>{
                    this.name = response.data;
+                   console.log("Helloworld");
                 })
             } catch(err) {
                 this.message = err.response.data.error;
