@@ -47,12 +47,9 @@ export default {
     methods: {
         getTest() {
             try {
-                const mark = "";
-                axios.get('https://35.198.215.67:3344/testapi').then(function (response) {
-                    mark = response;
-                });
-                console.log(mark);
+                const response = axios.get('https://35.198.215.67:3344/testapi');
                 console.log(response);
+                console.log(response[0]);
             } catch(err) {
                 this.message = "Error";
                 this.error = true;
