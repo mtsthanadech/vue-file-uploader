@@ -16,7 +16,7 @@
                     
                 </label>
 
-                <button v-on:click="getTest" class="btn btn-lg btn-outline-primary">Send</button>
+                <button class="btn btn-lg btn-outline-primary">Send</button>
                 
             </div>
             
@@ -41,25 +41,24 @@ export default {
             filename: "Choose file...",
             message: "",
             dbname: "",
-            mark: "",
+	    errors: [],
             error: false
         }
     },
     methods: {
-        getTest() {
-            try {
-                axios.get('https://35.198.215.67:3344/testapi').then((res) => { 
-                    console.log(res);
-                    return res.json();
-                }).then((data) => { 
-                    console.log(data);
-                    return data;
-                });
-            } catch(err) {
-                this.message = "Error";
-                this.error = true;
-            }
-        },
+        //async getTest() {
+	   // var result;
+           // await axios.get('https://35.198.215.67:3344/testapi').then(response => {
+                // JSON responses are automatically parsed.
+	   //	result = response.data;
+           // })
+           // .catch(e => {
+           //     this.errors.push(e);
+	   //	console.log(this.errors);
+           // });
+	   // console.log(result);
+	   // console.log(Object.keys(result).length);
+        //},
         selectFile() {
             const file = this.$refs.file.files[0];
             const allowedTypes = ["application/json"];
