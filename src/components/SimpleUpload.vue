@@ -49,10 +49,8 @@ export default {
         getTest() {
             try {
                 axios.get('https://35.198.215.67:3344/testapi').then((res) => { 
-                    return res.json();
                     console.log(res.json());
                 }).then((data) => { 
-                    return data; 
                     console.log(data);
                 });
             } catch(err) {
