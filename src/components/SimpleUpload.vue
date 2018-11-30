@@ -1,6 +1,8 @@
 <template>
     <div class="row">
         <div class="col-10 col-sm-4 col-lg-4">
+        </div>
+        <div class="col-10 col-sm-4 col-lg-4">
             <form @submit.prevent="sendFile" enctype="multipart/form-data" >
             <div class="form-group">
                 <div v-if="message">
