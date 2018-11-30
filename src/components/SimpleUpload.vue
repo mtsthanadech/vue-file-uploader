@@ -49,7 +49,7 @@ export default {
         getTest() {
             try {
                 axios.get('https://35.198.215.67:3344/testapi').then((res) => { 
-                    console.log(res.json());
+                    console.log(res);
                 }).then((data) => { 
                     console.log(data);
                 });
