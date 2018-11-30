@@ -41,24 +41,20 @@ export default {
             filename: "Choose file...",
             message: "",
             dbname: "",
-            mark: "",
+            errors: [],
+            mark: [],
             error: false
         }
     },
     methods: {
         getTest() {
-            try {
-                axios.get('https://35.198.215.67:3344/testapi').then((res) => { 
-                    console.log(res);
-                    return res.json();
-                }).then((data) => { 
-                    console.log(data);
-                    return data;
-                });
-            } catch(err) {
-                this.message = "Error";
-                this.error = true;
-            }
+            axios.get('https://35.198.215.67:3344/testapi').then(response => {
+                // JSON responses are automatically parsed.
+                this.mark = response.data
+            })
+            .catch(e => {
+                this.errors.push(e)
+            });
         },
         selectFile() {
             const file = this.$refs.file.files[0];
