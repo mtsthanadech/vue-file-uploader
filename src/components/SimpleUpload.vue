@@ -92,7 +92,7 @@ export default {
                 this.message = err.response.data.error;
                 this.error = true;
             }
-            //setTimeout(this.sendToggle, 3000);
+            setTimeout(this.sendToggle, 3000);
         },
         sendToggle() {
             const formData = new FormData();
