@@ -84,7 +84,7 @@ export default {
             // formData.append('dbnam',this.dbname+".json");
 
             try {
-                //axios.post(url, formData);
+                axios.post(url, formData);
                 this.message = "File has been uploaded";
                 this.file = "";
                 this.error = false;
