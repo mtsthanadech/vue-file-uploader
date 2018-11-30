@@ -41,7 +41,7 @@ export default {
             filename: "Choose file...",
             message: "",
             dbname: "",
-	    errors: [],
+	        errors: [],
             error: false
         }
     },

@@ -17,7 +17,7 @@
 </template>
 
 <script>
-// import SimpleUpload from './components/SimpleUpload.vue'
+import SimpleUpload from './components/SimpleUpload.vue'
 import MatchColumn from './components/MatchColumn.vue'
 
 export default {

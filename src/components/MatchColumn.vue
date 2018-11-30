@@ -3,22 +3,27 @@
         <div class="col-10 col-sm-4 col-lg-4">
         </div>
         <div class="col-10 col-sm-4 col-lg-4">
-            <ul>
-                <!-- <li v-for="column in columns">{{ column }}</li> -->
-            </ul>
-            <!-- <li v-for-key=""></li> -->
-            <li v-for="(column,index) in columns" :key="index">
-                <!-- this is column : {{column}} -->
-                <input type="text" v-model="matchColumns[index]" placeholder="">{{column}}
-            </li>
+
+            <b-card title="Match Column">
+                <b-form>
+                    <li v-for="(column,index) in columns" :key="index" style="list-style-type:none;">
+                        <b-input-group>
+                            <b-input-group-text slot="append">
+                                <strong>{{ column }}</strong>
+                            </b-input-group-text>
+                            <b-form-input></b-form-input>
+                        </b-input-group>
+                        </br>
+
+                    </li>
+                </b-form>
+            </b-card>
         </div>
         
     </div>
 </template>
 
 <script>
-import 'bootstrap/dist/css/bootstrap.css'
-import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 export default {
     name: "MatchColumn",
