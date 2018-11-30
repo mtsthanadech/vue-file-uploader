@@ -41,11 +41,17 @@ export default {
             filename: "Choose file...",
             message: "",
             dbname: "",
+<<<<<<< HEAD
 	    errors: [],
+=======
+            errors: [],
+            mark: [],
+>>>>>>> cc3ec34acdda540fbd009057e41839e3160e01e2
             error: false
         }
     },
     methods: {
+<<<<<<< HEAD
         //async getTest() {
 	   // var result;
            // await axios.get('https://35.198.215.67:3344/testapi').then(response => {
@@ -59,6 +65,17 @@ export default {
 	   // console.log(result);
 	   // console.log(Object.keys(result).length);
         //},
+=======
+        getTest() {
+            axios.get('https://35.198.215.67:3344/testapi').then(response => {
+                // JSON responses are automatically parsed.
+                this.mark = response.data
+            })
+            .catch(e => {
+                this.errors.push(e)
+            });
+        },
+>>>>>>> cc3ec34acdda540fbd009057e41839e3160e01e2
         selectFile() {
             const file = this.$refs.file.files[0];
             const allowedTypes = ["application/json"];
