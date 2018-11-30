@@ -50,8 +50,10 @@ export default {
             try {
                 axios.get('https://35.198.215.67:3344/testapi').then((res) => { 
                     console.log(res);
+                    return res.json();
                 }).then((data) => { 
                     console.log(data);
+                    return data;
                 });
             } catch(err) {
                 this.message = "Error";
