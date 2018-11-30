@@ -41,16 +41,20 @@ export default {
             filename: "Choose file...",
             message: "",
             dbname: "",
+            mark: "",
             error: false
         }
     },
     methods: {
         getTest() {
             try {
-                const response = axios.get('https://35.198.215.67:3344/testapi');
-                console.log(response);
-                console.log(response.PromiseValue);
-                console.log(response.data);
+                axios.get('https://35.198.215.67:3344/testapi').then((res) => { 
+                    return res.json();
+                    console.log(res.json());
+                }).then((data) => { 
+                    return data; 
+                    console.log(data);
+                });
             } catch(err) {
                 this.message = "Error";
                 this.error = true;
