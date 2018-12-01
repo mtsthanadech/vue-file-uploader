@@ -9,9 +9,7 @@
                     <li v-for="column in columns" style="list-style-type:none;">
                         <b-input-group>
                             <b-input-group-text slot="append">
-                            <li v-for="index in 21" :key="index">
-                                <strong>{{ column['index_name'][index]}}</strong>
-                            </li>
+                                <strong>{{ column['index_name']}}</strong>
                             </b-input-group-text>
                             <b-form-input></b-form-input>
                         </b-input-group>
@@ -59,8 +57,6 @@ export default {
             await axios.get(url).then(response => {
                 this.columns.push(response.data);
                 console.log(this.columns);
-		this.length = Object.keys(this.columns['index_name']).length;
-		console.log(length);
 		console.log(Object.keys(this.columns['index_name']).length);
             }).catch(e => {
                 this.errors.push(e);
