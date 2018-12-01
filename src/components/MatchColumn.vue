@@ -9,7 +9,7 @@
                     <li v-for="column in columns" style="list-style-type:none;">
                         <b-input-group>
                             <b-input-group-text slot="append">
-			    <li v-for="index in column['index_name].length" :key="index">
+                            <li v-for="index in length" :key="index">
                                 <strong>{{ column['index_name'][index]}}</strong>
                             </li>
                             </b-input-group-text>
