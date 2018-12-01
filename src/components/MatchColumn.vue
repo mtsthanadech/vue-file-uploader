@@ -7,15 +7,15 @@
             <b-card title="Match Column">
                 <b-form>
                     <li v-for="column in columns" style="list-style-type:none;">
-		    <li v-for="index in length" :key="index">
                         <b-input-group>
+			<li v-for="index in length" :key="index">
                             <b-input-group-text slot="append">
-                                <strong>{{ column[0][index]}}</strong>
+                                <strong>{{ column['index_name'][index]}}</strong>
                             </b-input-group-text>
+			    </li>
                             <b-form-input></b-form-input>
                         </b-input-group>
                         </br>
-			</li>
                     </li>
                 </b-form>
             </b-card>
