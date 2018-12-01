@@ -9,12 +9,12 @@
                     <li v-for="(column,index) in columns" :key="index" style="list-style-type:none;">
                         <b-input-group>
                             <b-input-group-text slot="append">
-                                <strong>{{ column['index_name'] }}</strong>
+                                <strong>{{ column['index_name'][i] }}</strong>
                             </b-input-group-text>
                             <b-form-input></b-form-input>
                         </b-input-group>
                         </br>
-
+			{{ i = i + 1 }}
                     </li>
                 </b-form>
             </b-card>
@@ -36,6 +36,7 @@ export default {
             matchColumns: [],
             error: false,
             errors: [],
+	    i: 0,
         }
     },
     methods: {
