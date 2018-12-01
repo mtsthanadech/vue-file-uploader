@@ -42,7 +42,7 @@ export default {
             message: "",
             dbname: "",
 	    errors: [],
-	    complete: ""
+	    complete: "False"
         }
     },
     methods: {
@@ -73,7 +73,7 @@ export default {
             });
 	    
             this.file = "";
-	    if(complete == "True) {
+	    if(this.complete == "True") {
 	    	this.message = "File Upload Complete";
             	this.sendToggle();
 	    }
