@@ -46,7 +46,7 @@ export default {
             const url = "https://35.198.215.67/savecol";
             await axios.get(url, {
             params: {
-                colthai: this.matchColumns
+                colthai: JSON.stringify(this.matchColumns)
             }
             });
 	},
