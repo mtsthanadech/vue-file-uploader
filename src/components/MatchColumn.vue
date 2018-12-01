@@ -10,7 +10,7 @@
 		    <li v-for="index in length" :key="index">
                         <b-input-group>
                             <b-input-group-text slot="append">
-                                <strong>{{ column['index_name'][index]}}</strong>
+                                <strong>{{ column[0][index]}}</strong>
                             </b-input-group-text>
                             <b-form-input></b-form-input>
                         </b-input-group>
