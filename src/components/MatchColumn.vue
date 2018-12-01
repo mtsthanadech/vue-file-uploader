@@ -45,7 +45,7 @@ export default {
 	async saveColumn() {
             const url = "https://35.198.215.67/savecol";
             await axios.post(url, {
-                'colthai': JSON.stringify(this.matchColumns)
+                colthai: this.matchColumns
             });
 	    console.log(JSON.stringify(this.matchColumns));
 	    console.log(this.matchColumns);
