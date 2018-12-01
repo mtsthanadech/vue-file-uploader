@@ -12,7 +12,7 @@
                             <b-input-group-text slot="append">
                                 <strong>{{ column['index_name'][index - 1]}}</strong>
                             </b-input-group-text>
-                            <b-form-input></b-form-input>
+                            <b-form-input v-model="matchColumns[index]"></b-form-input>
 			    </li>
                         </b-input-group>
                         </br>
@@ -20,6 +20,7 @@
                 </b-form>
             </b-card>
 	    <button v-on:click="sendToggle" class="btn btn-lg btn-outline-primary">Get Column</button>
+	    <button v-on:click="saveColumn" class="btn btn-lg btn-outline-primary">Save</button>
         </div>
         
     </div>
@@ -41,19 +42,14 @@ export default {
         }
     },
     methods: {
-        //async getTest() {
-	   // var result;
-           // await axios.get('https://35.198.215.67:3344/testapi').then(response => {
-                // JSON responses are automatically parsed.
-	   //	result = response.data;
-           // })
-           // .catch(e => {
-           //     this.errors.push(e);
-	   //	console.log(this.errors);
-           // });
-	   // console.log(result);
-	   // console.log(Object.keys(result).length);
-        //},
+	async saveColumn() {
+            const url = "https://35.198.215.67/savecol";
+            await axios.get(url, {
+            params: {
+                colthai: this.matchColumns
+            }
+            });
+	},
         async sendToggle() {
             const url = "https://35.198.215.67/getcol";
             await axios.get(url).then(response => {
