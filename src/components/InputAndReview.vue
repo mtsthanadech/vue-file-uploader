@@ -5,9 +5,9 @@
         <div class="col-10 col-sm-4 col-lg-4">
 
             <b-card title="Input text in Thai">
-                <b-input type="text" v-model="payload" @change="onChange"/>
-                <b-button @click="sendMessage" variant="primary">Preview</b-button>
-                <p>eiei : {{ message }} - {{ payload }}</p>
+                <b-input type="text" v-model="payload"/>
+                <b-button @click="sendMessage" variant="primary">Query!</b-button>
+                //<p>eiei : {{ message }} - {{ payload }}</p>
                 <b-card>
                     <div v-if="data">{{ data }}</div>
                 </b-card>
@@ -24,19 +24,25 @@ export default {
     data() {
         return {
             payload: "",
-            message: "",
-            data: ""
+            data: "",
+            errors: []
         }
     },
     methods: {
-        onChange: function() {
-
-            this.message = this.payload;
-        },
         sendMessage(){
-            const message = this.payload;
-            this.data = "get data"
-            // get data to this.data
+            const url = "https://35.198.215.67/query/" + this.payload;
+            axios.post(url, {
+                query: this.payload
+            }).then(response => {
+                console.log(response.data);
+            }).catch(e => {
+                this.errors.push(e);
+                console.log(this.errors);
+            });           
+            
+            //show result here
+            //this.data = "get data"
+            
         }
     }
 }
