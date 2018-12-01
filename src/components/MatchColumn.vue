@@ -60,7 +60,14 @@ export default {
                 this.errors.push(e);
                 console.log(this.errors);
             });
-	    console.log(Object.keys(this.columns['index_name']).length);
+	    console.log("1");
+	    console.log(this.columns);
+	    console.log("2");
+	    console.log(this.columns.length);
+	    console.log("3");
+	    console.log(this.columns['index_name']);
+	    console.log("4");
+	    console.log(this.columns['index_name'].length);
         }
     }
 }
