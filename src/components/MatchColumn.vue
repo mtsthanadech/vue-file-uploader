@@ -17,10 +17,10 @@
 
                     </li>
                     
-                    <button v-on:click="sendToggle" class="btn btn-lg btn-outline-primary">Get Column</button>
-                    
+		    <b-button v-on:click="sendToggle" type="submit" variant="primary">Submit</b-button>
                 </b-form>
             </b-card>
+	    <button v-on:click="sendToggle" class="btn btn-lg btn-outline-primary">Get Column</button>
         </div>
         
     </div>
