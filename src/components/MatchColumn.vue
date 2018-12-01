@@ -12,7 +12,7 @@
                             <b-input-group-text slot="append">
                                 <strong>{{ column['index_name'][index - 1]}}</strong>
                             </b-input-group-text>
-                            <b-form-input v-model="matchColumns[index]"></b-form-input>
+                            <b-form-input v-model="matchColumn[index - 1]"></b-form-input>
 			    </li>
                         </b-input-group>
                         </br>
@@ -46,7 +46,7 @@ export default {
             const url = "https://35.198.215.67/savecol";
             await axios.get(url, {
             params: {
-                colthai: this.matchColumns
+                colthai: JSON.stringify(this.matchColumns)
             }
             });
 	},
