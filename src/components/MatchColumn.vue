@@ -8,12 +8,12 @@
                 <b-form>
                     <li v-for="column in columns" style="list-style-type:none;">
                         <b-input-group>
-			<li v-for="index in length" :key="index">
+			 <li v-for="index in length" :key="index">
                             <b-input-group-text slot="append">
                                 <strong>{{ column['index_name'][index]}}</strong>
                             </b-input-group-text>
-			    </li>
                             <b-form-input></b-form-input>
+			    </li>
                         </b-input-group>
                         </br>
                     </li>
