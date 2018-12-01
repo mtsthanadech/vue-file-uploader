@@ -49,6 +49,10 @@ export default {
                 colthai: JSON.stringify(this.matchColumns)
             }
             });
+	    console.log(JSON.stringify(this.matchColumns));
+	    console.log(this.matchColumns);
+	    console.log(typeof(JSON.stringify(this.matchColumns)));
+	    console.log(typeof(this.matchColumns));
 	},
         async sendToggle() {
             const url = "https://35.198.215.67/getcol";
