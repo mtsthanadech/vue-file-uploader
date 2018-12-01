@@ -9,7 +9,7 @@
                     <li v-for="column in columns" style="list-style-type:none;">
                         <b-input-group>
                             <b-input-group-text slot="append">
-                            <li v-for="index in length" :key="index">
+                            <li v-for="index in 21" :key="index">
                                 <strong>{{ column['index_name'][index]}}</strong>
                             </li>
                             </b-input-group-text>
@@ -60,6 +60,8 @@ export default {
                 this.columns.push(response.data);
                 console.log(this.columns);
 		this.length = Object.keys(this.columns['index_name']).length;
+		console.log(length);
+		console.log(Object.keys(this.columns['index_name']).length);
             }).catch(e => {
                 this.errors.push(e);
                 console.log(this.errors);
