@@ -63,7 +63,7 @@ export default {
                 this.errors.push(e);
                 console.log(this.errors);
             });
-	    console.log(this.column['index_name']);
+	    console.log(this.columns);
         }
     }
 }
