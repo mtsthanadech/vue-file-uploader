@@ -55,7 +55,7 @@ export default {
         async sendToggle() {
             const url = "https://35.198.215.67/getlcol";
             var result;
-            await axiot.get(url).then(response => {
+            await axios.get(url).then(response => {
                 result = response.data;
                 console.log(result);
             }).catch(e => {
