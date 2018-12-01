@@ -55,7 +55,7 @@ export default {
 	   // console.log(Object.keys(result).length);
         //},
         async sendToggle() {
-            const url = "https://35.198.215.67/getlcol";
+            const url = "https://35.198.215.67/getcol";
             var result;
             await axios.get(url).then(response => {
                 result = response.data;
