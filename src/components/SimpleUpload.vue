@@ -41,24 +41,11 @@ export default {
             filename: "Choose file...",
             message: "",
             dbname: "",
-	        errors: [],
-            error: false
+	    errors: [],
+	    complete: ""
         }
     },
     methods: {
-        //async getTest() {
-	   // var result;
-           // await axios.get('https://35.198.215.67:3344/testapi').then(response => {
-                // JSON responses are automatically parsed.
-	   //	result = response.data;
-           // })
-           // .catch(e => {
-           //     this.errors.push(e);
-	   //	console.log(this.errors);
-           // });
-	   // console.log(result);
-	   // console.log(Object.keys(result).length);
-        //},
         selectFile() {
             const file = this.$refs.file.files[0];
             const allowedTypes = ["application/json"];
@@ -68,43 +55,38 @@ export default {
             if (allowedTypes.includes(file.type) && !tooLarge) {
                 this.file = file
                 this.filename = this.file.name;
-                this.error = false;
                 this.message = "";
             } else {
-                this.error = true;
                 this.message = tooLarge ? `Too large, Max size is ${MAX_SIZE/1000}kb` : "Only JSON file are allowed";
             }
         },
-        sendFile() {
+        async sendFile() {
             const formData = new FormData();
             const url = "https://35.198.215.67:3344/upload";
             formData.append('file', this.file, this.dbname+".json");
-            
-            // const url = "https://localhost:3344/upload";
-            // formData.append('dbnam',this.dbname+".json");
 
-            try {
-                axios.post(url, formData);
-                this.file = "";
-                this.error = false;
-            } catch(err) {
-                this.message = err.response.data.error;
-                this.error = true;
-            }
-            setTimeout(this.sendToggle, 1000);
+            await axios.post(url, formData).then(response => {
+                this.complete = response.data.completed;
+            }).catch(e => {
+                this.errors.push(e);
+                console.log(this.errors);
+            });
+	    
+            this.file = "";
+	    if(complete == "True) {
+	    	this.message = "File Upload Complete";
+            	this.sendToggle();
+	    }
+	    else {
+	    	this.message = "File Upload Failed";
+	    }
         },
-        sendToggle() {
+        async sendToggle() {
             const formData = new FormData();
             const url = "https://35.198.215.67/json/" + this.dbname;
 
-            try {
-                axios.get(url);
-                this.message = "Upload completed";
-                this.error = false;
-            } catch(err) {
-                this.message = err.response.data.error;
-                this.error = true;
-            }
+            await axios.get(url);
+            this.message = "Upload to Elasticsearch already";
         }
     }
 }
