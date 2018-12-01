@@ -85,14 +85,13 @@ export default {
 
             try {
                 axios.post(url, formData);
-                this.message = "File has been uploaded";
                 this.file = "";
                 this.error = false;
             } catch(err) {
                 this.message = err.response.data.error;
                 this.error = true;
             }
-            setTimeout(this.sendToggle, 3000);
+            setTimeout(this.sendToggle, 1000);
         },
         sendToggle() {
             const formData = new FormData();
@@ -100,7 +99,7 @@ export default {
 
             try {
                 axios.get(url);
-                this.message = "Toggle Seccess";
+                this.message = "Upload completed";
                 this.error = false;
             } catch(err) {
                 this.message = err.response.data.error;
