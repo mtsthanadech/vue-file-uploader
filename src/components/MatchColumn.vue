@@ -16,8 +16,6 @@
                         </br>
 
                     </li>
-                    
-		    <b-button v-on:click="sendToggle" type="submit" variant="primary">Submit</b-button>
                 </b-form>
             </b-card>
 	    <button v-on:click="sendToggle" class="btn btn-lg btn-outline-primary">Get Column</button>
@@ -34,7 +32,7 @@ export default {
     name: "MatchColumn",
     data() {
         return {
-            columns: ['ant', 'bird', 'cat', 'dog', 'egg'],
+            columns: [],
             matchColumns: [],
             error: false,
             errors: [],
@@ -56,10 +54,9 @@ export default {
         //},
         async sendToggle() {
             const url = "https://35.198.215.67/getcol";
-            var result;
             await axios.get(url).then(response => {
-                result = response.data;
-                console.log(result);
+                this.columns.push(response.data);
+                console.log(this.columns);
             }).catch(e => {
                 this.errors.push(e);
                 console.log(this.errors);
