@@ -41,18 +41,19 @@ export default {
         }
     },
     methods: {
-	async saveColumn() {
+	saveColumn() {
             const url = "https://35.198.215.67/savecol";
-            await axios.post(url, {
+            axios.post(url, {
                 colthai: this.matchColumns
-            }).then(response => {
-                console.log(typeof(response.data));
-            }).catch(e => {
-                this.errors.push(e);
-                console.log(this.errors);
             });
-	    console.log(this.matchColumns);
-	    console.log(typeof(this.matchColumns));
+	    //.then(response => {
+            //    console.log(typeof(response.data));
+            //}).catch(e => {
+            //    this.errors.push(e);
+            //    console.log(this.errors);
+            //});
+	    //console.log(this.matchColumns);
+	    //console.log(typeof(this.matchColumns));
 	},
         async sendToggle() {
             const url = "https://35.198.215.67/getcol";
