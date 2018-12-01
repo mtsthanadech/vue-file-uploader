@@ -6,15 +6,16 @@
 
             <b-card title="Match Column">
                 <b-form>
-                    <li v-for="(column,index) in columns" :key="index" style="list-style-type:none;">
+                    <li v-for="column in columns" style="list-style-type:none;">
                         <b-input-group>
                             <b-input-group-text slot="append">
-                                <strong>{{ column['index_name'][i] }}</strong>
+			    <li v-for="index in column['index_name].length" :key="index">
+                                <strong>{{ column['index_name'][index]}}</strong>
+                            </li>
                             </b-input-group-text>
                             <b-form-input></b-form-input>
                         </b-input-group>
                         </br>
-			{{ i = i + 1 }}
                     </li>
                 </b-form>
             </b-card>
