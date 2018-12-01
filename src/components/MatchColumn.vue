@@ -50,8 +50,10 @@ export default {
             }
             });
 	    console.log(JSON.stringify(this.matchColumns));
+	    console.log(JSON.parse(this.matchColumns));
 	    console.log(this.matchColumns);
 	    console.log(typeof(JSON.stringify(this.matchColumns)));
+	    console.log(typeof(JSON.parse(this.matchColumns)));
 	    console.log(typeof(this.matchColumns));
 	},
         async sendToggle() {
