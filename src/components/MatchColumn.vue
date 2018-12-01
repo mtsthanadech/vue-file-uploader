@@ -43,7 +43,6 @@ export default {
     },
     methods: {
 	async saveColumn() {
-            var csrftoken = Cookies.get('csrftoken');
             const url = "https://35.198.215.67/savecol";
             await axios.POST(url, {
                 colthai: this.matchColumns
