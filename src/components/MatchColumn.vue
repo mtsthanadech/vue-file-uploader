@@ -16,6 +16,9 @@
                         </br>
 
                     </li>
+                    
+                    <button v-on:click="sendToggle" class="btn btn-lg btn-outline-primary">Get Column</button>
+                    
                 </b-form>
             </b-card>
         </div>
@@ -31,7 +34,34 @@ export default {
         return {
             columns: ['ant', 'bird', 'cat', 'dog', 'egg'],
             matchColumns: [],
-            error: false
+            error: false,
+            errors: [],
+        }
+    },
+    methods: {
+        //async getTest() {
+	   // var result;
+           // await axios.get('https://35.198.215.67:3344/testapi').then(response => {
+                // JSON responses are automatically parsed.
+	   //	result = response.data;
+           // })
+           // .catch(e => {
+           //     this.errors.push(e);
+	   //	console.log(this.errors);
+           // });
+	   // console.log(result);
+	   // console.log(Object.keys(result).length);
+        //},
+        async sendToggle() {
+            const url = "https://35.198.215.67/getlcol";
+            var result;
+            await axiot.get(url).then(response => {
+                result = response.data;
+                console.log(result);
+            }).catch(e => {
+                this.errors.push(e);
+                console.log(this.errors);
+            });
         }
     }
 }
