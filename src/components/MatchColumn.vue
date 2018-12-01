@@ -56,12 +56,11 @@ export default {
             const url = "https://35.198.215.67/getcol";
             await axios.get(url).then(response => {
                 this.columns.push(response.data);
-                console.log(this.columns);
-		console.log(Object.keys(this.columns['index_name']).length);
             }).catch(e => {
                 this.errors.push(e);
                 console.log(this.errors);
             });
+	    console.log(Object.keys(this.columns['index_name']).length);
         }
     }
 }
