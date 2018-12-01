@@ -56,7 +56,7 @@ export default {
             const url = "https://35.198.215.67/getcol";
             await axios.get(url).then(response => {
 	    	console.log(response);
-	    	console.log(reponse.data.length);
+	    	console.log(response.data.length);
 		console.log(response.data['index_name'].length);
                 this.columns.push(response.data);
             }).catch(e => {
