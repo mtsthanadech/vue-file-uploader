@@ -55,10 +55,8 @@ export default {
         async sendToggle() {
             const url = "https://35.198.215.67/getcol";
             await axios.get(url).then(response => {
-	    	console.log(response);
-	    	console.log(response.data.length);
-		console.log(response.data['index_name'].length);
                 this.columns.push(response.data);
+		this.length = response.data['index_name'].length;
             }).catch(e => {
                 this.errors.push(e);
                 console.log(this.errors);
