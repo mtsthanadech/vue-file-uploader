@@ -43,12 +43,24 @@ export default {
     },
     methods: {
 	async saveColumn() {
+            var csrftoken = Cookies.get('csrftoken');
             const url = "https://35.198.215.67/savecol";
-            await axios.get(url, {
-            params: {
-                colthai: JSON.stringify(this.matchColumns)
-            }
-            });
+            //await axios.get(url, {
+            //params: {
+            //    colthai: JSON.stringify(this.matchColumns)
+            //}
+            //});
+	    await axios({ 
+		method: 'post',
+		url: url,
+		data: {
+			'colthai': this.matchColumns
+		},
+		headers: {
+		"X-CSRFToken": csrftoken, 
+		"content-type": "application/json" #tried without content-type too.
+		}
+	    });
 	    console.log(JSON.stringify(this.matchColumns));
 	    console.log(this.matchColumns);
 	    console.log(typeof(JSON.stringify(this.matchColumns)));
