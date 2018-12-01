@@ -46,7 +46,7 @@ export default {
             await axios.post(url, {
                 colthai: this.matchColumns
             }).then(response => {
-                console.log(response.data);
+                console.log(typeof(response.data));
             }).catch(e => {
                 this.errors.push(e);
                 console.log(this.errors);
