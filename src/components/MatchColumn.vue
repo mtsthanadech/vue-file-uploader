@@ -34,10 +34,10 @@ export default {
     data() {
         return {
             columns: [],
+	    length: 0,
             matchColumns: [],
             error: false,
             errors: [],
-	    i: 0,
         }
     },
     methods: {
@@ -59,6 +59,7 @@ export default {
             await axios.get(url).then(response => {
                 this.columns.push(response.data);
                 console.log(this.columns);
+		this.length = Object.keys(this.columns['index_name']).length;
             }).catch(e => {
                 this.errors.push(e);
                 console.log(this.errors);
