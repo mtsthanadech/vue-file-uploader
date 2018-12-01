@@ -8,8 +8,9 @@
                 <b-input type="text" v-model="payload" @change="onChange"/>
                 <b-button @click="sendMessage" variant="primary">Preview</b-button>
                 <p>eiei : {{ message }} - {{ payload }}</p>
-
-                
+                <b-card>
+                    <div v-if="data">{{ data }}</div>
+                </b-card>
             </b-card>
         </div>
         
@@ -23,7 +24,8 @@ export default {
     data() {
         return {
             payload: "",
-            message: ""
+            message: "",
+            data: ""
         }
     },
     methods: {
@@ -33,6 +35,8 @@ export default {
         },
         sendMessage(){
             const message = this.payload;
+            this.data = "get data"
+            // get data to this.data
         }
     }
 }
