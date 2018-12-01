@@ -37,7 +37,6 @@ export default {
             columns: [],
 	    length: 0,
             matchColumns: [],
-            error: false,
             errors: [],
         }
     },
@@ -46,6 +45,11 @@ export default {
             const url = "https://35.198.215.67/savecol";
             await axios.post(url, {
                 colthai: this.matchColumns
+            }).then(response => {
+                console.log(response.data);
+            }).catch(e => {
+                this.errors.push(e);
+                console.log(this.errors);
             });
 	    console.log(this.matchColumns);
 	    console.log(typeof(this.matchColumns));
