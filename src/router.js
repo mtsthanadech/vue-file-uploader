@@ -16,7 +16,7 @@ export default new Router({
   linkExactActiveClass: "active",
   routes: [
     {
-      path: "/",
+      path: "/components",
       name: "components",
       components: {
         header: AppHeader,
@@ -61,8 +61,8 @@ export default new Router({
       }
     },
       {
-          path: "/add-database",
-          name: "add-database",
+          path: "/",
+          name: "adddatabase",
           components: {
               header: AppHeader,
               default: AddDatabase,
