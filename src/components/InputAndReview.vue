@@ -34,7 +34,7 @@ export default {
                 query: this.payload
             }).then(response => {
                 console.log(response.data);
-                this.data = reponse.data;
+                this.data = response.data;
             }).catch(e => {
                 this.errors.push(e);
                 console.log(this.errors);
