@@ -7,7 +7,6 @@
             <b-card title="Input text in Thai">
                 <b-input type="text" v-model="payload"/>
                 <b-button @click="sendMessage" variant="primary">Query!</b-button>
-                //<p>eiei : {{ message }} - {{ payload }}</p>
                 <b-card>
                     <div v-if="data">{{ data }}</div>
                 </b-card>
