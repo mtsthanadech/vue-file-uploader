@@ -29,7 +29,7 @@ export default {
     },
     methods: {
         sendMessage(){
-            const url = "https://35.198.215.67/query/" + this.payload;
+            const url = "https://35.198.215.67/query";
             axios.post(url, {
                 query: this.payload
             }).then(response => {
