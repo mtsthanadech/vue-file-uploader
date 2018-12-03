@@ -7,12 +7,12 @@ import Landing from "./views/Landing.vue";
 import Login from "./views/Login.vue";
 import Register from "./views/Register.vue";
 import Profile from "./views/Profile.vue";
-import Upload from "./views/AddDatabase.vue";
-import AddDatabase from "./views/AddDatabase";
+import AddDatabase from "./views/AddDatabase.vue";
+import firebase from "firebase";
 
 Vue.use(Router);
 
-export default new Router({
+const router = new Router({
   linkExactActiveClass: "active",
   routes: [
     {
@@ -22,6 +22,9 @@ export default new Router({
         header: AppHeader,
         default: Components,
         footer: AppFooter
+      },
+      meta: {
+        requiresAuth: true
       }
     },
     {
@@ -31,6 +34,9 @@ export default new Router({
         header: AppHeader,
         default: Landing,
         footer: AppFooter
+      },
+      meta: {
+        requiresAuth: true
       }
     },
     {
@@ -40,6 +46,9 @@ export default new Router({
         header: AppHeader,
         default: Login,
         footer: AppFooter
+      },
+      meta: {
+        requiresGuest: true
       }
     },
     {
@@ -49,6 +58,9 @@ export default new Router({
         header: AppHeader,
         default: Register,
         footer: AppFooter
+      },
+      meta: {
+        requiresGuest: true
       }
     },
     {
@@ -58,17 +70,23 @@ export default new Router({
         header: AppHeader,
         default: Profile,
         footer: AppFooter
+      },
+      meta: {
+        requiresAuth: true
       }
     },
-      {
-          path: "/",
-          name: "adddatabase",
-          components: {
-              header: AppHeader,
-              default: AddDatabase,
-              footer: AppFooter
-          }
+    {
+      path: "/",
+      name: "adddatabase",
+      components: {
+          header: AppHeader,
+          default: AddDatabase,
+          footer: AppFooter
+      },
+      meta: {
+        requiresAuth: true
       }
+    }
   ],
   scrollBehavior: to => {
     if (to.hash) {
@@ -78,3 +96,42 @@ export default new Router({
     }
   }
 });
+
+
+router.beforeEach((to, from, next) => {
+  // Check for requiresAuth guard
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    // Check if NO logged user
+    if (!firebase.auth().currentUser) {
+      // Go to login
+      next({
+        path: '/login',
+        query: {
+          redirect: to.fullPath
+        }
+      });
+    } else {
+      // Proceed to route
+      next();
+    }
+  } else if (to.matched.some(record => record.meta.requiresGuest)) {
+    // Check if NO logged user
+    if (firebase.auth().currentUser) {
+      // Go to login
+      next({
+        path: '/',
+        query: {
+          redirect: to.fullPath
+        }
+      });
+    } else {
+      // Proceed to route
+      next();
+    }
+  } else {
+    // Proceed to route
+    next();
+  }
+});
+
+export default router;

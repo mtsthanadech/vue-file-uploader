@@ -17,7 +17,7 @@
                           header-classes="bg-white pb-5"
                           body-classes="px-lg-5 py-lg-5"
                           class="border-0">
-                        <template>
+                        <!-- <template>
                             <div class="text-muted text-center mb-3">
                                 <small>Sign in with</small>
                             </div>
@@ -32,50 +32,74 @@
                                     Google
                                 </base-button>
                             </div>
-                        </template>
+                        </template> -->
                         <template>
                             <div class="text-center text-muted mb-4">
-                                <small>Or sign in with credentials</small>
+                                <h6>Sing in / <router-link to="/Register" >Register</router-link></h6>
                             </div>
                             <form role="form">
-                                <base-input alternative
-                                            class="mb-3"
-                                            placeholder="Email"
-                                            addon-left-icon="ni ni-email-83">
-                                </base-input>
-                                <base-input alternative
-                                            type="password"
-                                            placeholder="Password"
-                                            addon-left-icon="ni ni-lock-circle-open">
-                                </base-input>
-                                <base-checkbox>
+                                <input
+                                        v-model="email"
+                                        placeholder="E-mail"
+                                        type="email"
+                                        class="mb-3 form-control input-group-alternative"
+                                        aria-describedby="addon-right addon-left"
+                                        addon-left-icon="ni ni-hat-3"/>
+                                <input
+                                        v-model="pass"
+                                        placeholder="Password"
+                                        type="password"
+                                        class="mb-3 form-control input-group-alternative"
+                                        aria-describedby="addon-right addon-left"
+                                        addon-left-icon="ni ni-hat-3"/>
+                                <!-- <base-checkbox>
                                     Remember me
-                                </base-checkbox>
+                                </base-checkbox> -->
+                                
                                 <div class="text-center">
-                                    <base-button type="primary" class="my-4">Sign In</base-button>
+                                    <a href="#" class="text-light">
+                                        <small>Forgot password?</small>
+                                    </a>
+                                    <br>
+                                    <button v-on:click="login" class="btn btn-large btn-extended grey lighten-4 black-text">Log in</button>
                                 </div>
                             </form>
                         </template>
                     </card>
-                    <div class="row mt-3">
-                        <div class="col-6">
-                            <a href="#" class="text-light">
-                                <small>Forgot password?</small>
-                            </a>
-                        </div>
-                        <div class="col-6 text-right">
-                            <a href="#" class="text-light">
-                                <small>Create new account</small>
-                            </a>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
     </section>
 </template>
 <script>
-export default {};
+import firebase from 'firebase';
+export default {
+    name: "Login",
+    data: function() {
+    return {
+      email: "",
+      pass: ""
+    };
+  },
+  methods: {
+    login: function(e) {
+      firebase
+        .auth()
+        .signInWithEmailAndPassword(this.email, this.pass)
+        .then(
+          user => {
+            alert(`You are logged in`);
+            // alert(`You are logged in as ${user.email}`);
+            // this.$router.go({ path: this.$router.path });
+            this.$router.push('./login');
+          },
+          err => {
+            console.log(err);
+            alert(err.message);
+          }
+        );
+      e.preventDefault();
+    }
+  }
+};
 </script>
-<style>
-</style>

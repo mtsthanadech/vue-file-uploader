@@ -16,7 +16,7 @@
                 </div>
             </div>
 
-            <ul class="navbar-nav navbar-nav-hover align-items-lg-center">
+            <!-- <ul class="navbar-nav navbar-nav-hover align-items-lg-center">
                 <base-dropdown class="nav-item" menu-classes="dropdown-menu-xl">
                     <a slot="title" href="#" class="nav-link" data-toggle="dropdown" role="button">
                         <i class="ni ni-ui-04 d-lg-none"></i>
@@ -57,9 +57,9 @@
                     <router-link to="/login" class="dropdown-item">Login</router-link>
                     <router-link to="/register" class="dropdown-item">Register</router-link>
                 </base-dropdown>
-            </ul>
+            </ul> -->
             <ul class="navbar-nav align-items-lg-center ml-lg-auto">
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                     <a class="nav-link nav-link-icon" href="https://www.facebook.com/creativetim" target="_blank"
                        data-toggle="tooltip" title="Like us on Facebook">
                         <i class="fa fa-facebook-square"></i>
@@ -79,14 +79,26 @@
                         <i class="fa fa-twitter-square"></i>
                         <span class="nav-link-inner--text d-lg-none">Twitter</span>
                     </a>
-                </li>
+                </li> -->
+                
                 <li class="nav-item">
-                    <a class="nav-link nav-link-icon" href="https://github.com/creativetimofficial/vue-argon-design-system"
+                    <a class="nav-link nav-link-icon" href="https://github.com/mtsthanadech/vue-file-uploader"
                        target="_blank" data-toggle="tooltip" title="Star us on Github">
                         <i class="fa fa-github"></i>
                         <span class="nav-link-inner--text d-lg-none">Github</span>
                     </a>
                 </li>
+                <base-dropdown tag="li" class="nav-item">
+                    <a slot="title" href="#" class="nav-link" data-toggle="dropdown" role="button">
+                        <i class="ni ni-collection d-lg-none"></i>
+                        <span class="nav-link-inner--text">Register / Login</span>
+                    </a>
+                    <router-link to="/landing" class="dropdown-item">Landing</router-link>
+                    <router-link to="/profile" class="dropdown-item">Profile</router-link>
+                    <router-link to="/login" class="dropdown-item">Login</router-link>
+                    <router-link to="/register" class="dropdown-item">Register</router-link>
+                    <a v-on:click="logout" class="dropdown-item">Logout</a>
+                </base-dropdown>
                 <li class="nav-item d-none d-lg-block ml-lg-4">
                     <a href="https://www.creative-tim.com/product/vue-argon-design-system" target="_blank"
                        class="btn btn-neutral btn-icon">
@@ -104,8 +116,23 @@
 import BaseNav from "@/components/BaseNav";
 import BaseDropdown from "@/components/BaseDropdown";
 import CloseButton from "@/components/CloseButton";
+import firebase from "firebase";
 
 export default {
+  name: "Appheader",
+  data() { 
+      return {
+          isLoggedIn: false,
+          currentUser: false
+      }
+  },
+  methods: {
+      logout: function() {
+          firebase.auth().signOut().then(() => {
+              this.$router.push('./login');
+          })
+      }
+  },
   components: {
     BaseNav,
     CloseButton,
