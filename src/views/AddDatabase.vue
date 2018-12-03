@@ -78,6 +78,11 @@ import InputAndReview from '@/components/InputAndReview.vue';
 
 export default {
   name: "adddatabase",
+  data(){
+      return {
+          user: "",
+      }
+  },
   components: {
     "simple-upload": Upload,
     "match-column": MatchColumn,

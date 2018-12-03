@@ -5,7 +5,7 @@ import Argon from "./plugins/argon-kit";
 import firebase from 'firebase';
 import './components/firebaseInit';
 
-Vue.config.productionTip = false;
+// Vue.config.productionTip = false;
 Vue.use(Argon);
 
 firebase.auth().onAuthStateChanged(function(user) {

@@ -24,6 +24,9 @@
                                 hidden>
                    </label>
                    <br>
+                   <div v-if="uid">
+                     {{ uid }}
+                   </div>
                    <div v-if="message">
                        {{ message }}
                    </div>
@@ -35,6 +38,7 @@
 
 
 <script>
+import firebase from 'firebase';
 import axios from 'axios';
 export default {
   name: "upload",
@@ -42,6 +46,7 @@ export default {
     return {
       file: "",
       filename: "Choose file...",
+      uid: firebase.auth().currentUser.uid,
       message: "",
       dbname: "",
       errors: [],
