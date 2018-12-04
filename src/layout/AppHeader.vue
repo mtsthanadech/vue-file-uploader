@@ -91,7 +91,8 @@
                 <base-dropdown tag="li" class="nav-item">
                     <a slot="title" href="#" class="nav-link" data-toggle="dropdown" role="button">
                         <i class="ni ni-collection d-lg-none"></i>
-                        <span class="nav-link-inner--text">Register / Login</span>
+                        <span v-if="!currentUser" class="nav-link-inner--text">Register / Login</span>
+                        <span v-if="currentUser" class="nav-link-inner--text">{{ currentUser }}</span>
                     </a>
                     <router-link v-if="isLoggedIn" to="/landing" class="dropdown-item">Landing</router-link>
                     <router-link v-if="isLoggedIn" to="/profile" class="dropdown-item">Profile</router-link>
