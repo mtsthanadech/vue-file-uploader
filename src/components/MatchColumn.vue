@@ -22,38 +22,44 @@
 </template>
 
 <script>
+import { ElasticIndex } from './ElasticIndex.js';
 import axios from "axios";
 import firebase from "firebase";
 export default {
   name: "MatchColumn",
+  props: ['column_thai','column_eng'],
   data() {
     return {
       columns: [],
       length: 0,
       matchColumns: [],
-      theuser: "",
+      index: "",
       errors: []
     };
   },
+  created() {
+        ElasticIndex.$on('ElasticIndex', index => {
+                this.index = index;
+        });
+  }, 
   methods: {
     saveColumn() {
       const url = "https://35.198.215.67/savecol";
-      axios.post(url, {
-        colthai: this.matchColumns
-      });
-      //.then(response => {
-      //    console.log(typeof(response.data));
-      //}).catch(e => {
-      //    this.errors.push(e);
-      //    console.log(this.errors);
-      //});
-      //console.log(this.matchColumns);
-      //console.log(typeof(this.matchColumns));
+      this.column_thai = this.matchColumns;
+            ElasticIndex.$emit('ColumnThai', this.column_thai);
+            axios.post(url, {
+                index: this.index,
+                colthai: this.matchColumns
+            });
     },
     async sendToggle() {
       const url = "https://35.198.215.67/getcol";
       await axios
-        .get(url)
+        .get(url, {
+          params: {
+            index: this.index
+          }
+        })
         .then(response => {
           this.columns = response.data["index_name"];
           this.length = response.data["index_name"].length;
@@ -62,6 +68,8 @@ export default {
           this.errors.push(e);
           console.log(this.errors);
         });
+        this.column_eng = this.columns;
+        ElasticIndex.$emit('ColumnEng', this.column_eng);
     }
   }
 };

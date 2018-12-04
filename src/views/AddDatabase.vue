@@ -22,9 +22,7 @@
                                 <h1 class="display-3  text-white">A beautiful Design System
                                     <span>completed with examples</span>
                                 </h1>
-                                <p class="lead  text-white">The design system comes with four pre-built pages to help
-                                    you get started faster. You can change the text and images and you're good to
-                                    go.</p>
+                                <p v-if="theUserUid" class="lead  text-white">The uid is <strong style="color:red;">{{ theUserUid }}</strong></p>
                                 <div class="btn-wrapper">
                                     <base-button tag="a"
                                                  href="https://demos.creative-tim.com/argon-design-system/docs/components/alerts.html"
@@ -81,6 +79,11 @@ export default {
   data(){
       return {
           user: "",
+      }
+  },
+  computed: {
+      theUserUid () {
+          return this.$store.getters.getUid;
       }
   },
   components: {

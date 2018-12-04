@@ -93,13 +93,13 @@
                         <i class="ni ni-collection d-lg-none"></i>
                         <span class="nav-link-inner--text">Register / Login</span>
                     </a>
-                    <router-link to="/landing" class="dropdown-item">Landing</router-link>
-                    <router-link to="/profile" class="dropdown-item">Profile</router-link>
-                    <router-link to="/login" class="dropdown-item">Login</router-link>
-                    <router-link to="/register" class="dropdown-item">Register</router-link>
-                    <a v-on:click="logout" class="dropdown-item">Logout</a>
+                    <router-link v-if="isLoggedIn" to="/landing" class="dropdown-item">Landing</router-link>
+                    <router-link v-if="isLoggedIn" to="/profile" class="dropdown-item">Profile</router-link>
+                    <router-link v-if="!isLoggedIn" to="/login" class="dropdown-item">Login</router-link>
+                    <router-link v-if="!isLoggedIn" to="/register" class="dropdown-item">Register</router-link>
+                    <a v-if="isLoggedIn" v-on:click="logout" class="dropdown-item">Logout</a>
                 </base-dropdown>
-                <li class="nav-item d-none d-lg-block ml-lg-4">
+                <!-- <li class="nav-item d-none d-lg-block ml-lg-4">
                     <a href="https://www.creative-tim.com/product/vue-argon-design-system" target="_blank"
                        class="btn btn-neutral btn-icon">
                 <span class="btn-inner--icon">
@@ -107,7 +107,7 @@
                 </span>
                         <span class="nav-link-inner--text">Download</span>
                     </a>
-                </li>
+                </li> -->
             </ul>
         </base-nav>
     </header>
@@ -124,6 +124,12 @@ export default {
       return {
           isLoggedIn: false,
           currentUser: false
+      }
+  },
+  created() {
+      if(firebase.auth().currentUser) {
+          this.isLoggedIn = true,
+          this.currentUser = firebase.auth().currentUser.email;
       }
   },
   methods: {

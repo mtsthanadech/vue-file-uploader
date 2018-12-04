@@ -8,39 +8,59 @@
                 aria-describedby="addon-right addon-left"/>
         <br>
         <button v-on:click="sendMessage" class="btn btn-1 btn-warning">Query</button>
+        <card>
+          <div v-if="data">
+            {{ data }}
+          </div>
+        </card>
     </card>
 </template>
 
 <script>
 import axios from 'axios';
+import { ElasticIndex } from './ElasticIndex.js'
 export default {
   name: "InputAndReview",
   data() {
-    return {
-      payload: "",
-      data: "",
-      errors: []
-    };
-  },
-  methods: {
-    sendMessage() {
-      const url = "https://35.198.215.67/query";
-      axios
-        .post(url, {
-          query: this.payload
-        })
-        .then(response => {
-          console.log(response.data);
-          this.data = response.data;
-        })
-        .catch(e => {
-          this.errors.push(e);
-          console.log(this.errors);
+        return {
+            payload: "",
+            data: "",
+            errors: [],
+            index: "",
+            column_thai: [],
+            column_eng: []
+        }
+    },
+    created() {
+        ElasticIndex.$on('ElasticIndex', index => {
+                this.index = index;
         });
-
-      //show result here
-      //this.data = "get data"
+        ElasticIndex.$on('ColumnThai', column_thai => {
+                this.column_thai = column_thai;
+        });
+        ElasticIndex.$on('ColumnEng', column_eng => {
+                this.column_eng = column_eng;
+        });
+    },
+    methods: {
+        sendMessage(){
+            const url = "https://35.198.215.67/query";
+            axios.post(url, {
+                index: this.index,
+                query: this.payload,
+                colthai: this.column_thai,
+                coleng: this.column_eng
+            }).then(response => {
+                this.data = response.data;
+            }).catch(e => {
+                this.errors.push(e);
+                console.log(this.errors);
+            });           
+            
+            //show result here
+            //this.data = "get data"
+            
+        }
     }
-  }
-};
+}
 </script>

@@ -24,9 +24,9 @@
                                 hidden>
                    </label>
                    <br>
-                   <div v-if="uid">
+                   <!-- <div v-if="uid">
                      {{ uid }}
-                   </div>
+                   </div> -->
                    <div v-if="message">
                        {{ message }}
                    </div>
@@ -38,15 +38,17 @@
 
 
 <script>
+import { ElasticIndex } from './ElasticIndex.js';
 import firebase from 'firebase';
 import axios from 'axios';
 export default {
   name: "upload",
+  props: ['index'],
   data() {
     return {
       file: "",
       filename: "Choose file...",
-      uid: firebase.auth().currentUser.uid,
+      // uid: firebase.auth().currentUser.uid,
       message: "",
       dbname: "",
       errors: [],
@@ -87,7 +89,7 @@ export default {
 
       this.file = "";
       if (this.complete == "True") {
-        this.message = "File Upload Complete";
+        // this.message = "File Upload Complete";
         this.sendToggle();
       } else {
         this.message = "File Upload Failed";
@@ -96,9 +98,11 @@ export default {
     async sendToggle() {
       const formData = new FormData();
       const url = "https://35.198.215.67/json/" + this.dbname;
+      this.index = this.dbname;
 
+      ElasticIndex.$emit('ElasticIndex', this.index);
       await axios.get(url);
-      this.message = "Upload to Elasticsearch already";
+      this.message = "Upload " + this.filename + "to Elasticsearch already";
     }
   }
 };
