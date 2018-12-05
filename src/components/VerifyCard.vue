@@ -21,9 +21,15 @@
                         </template> -->
                         <template>
                             <div class="text-center text-muted mb-4">
-                                <h6>Sing in / <router-link to="/Register" >Register</router-link></h6>
+                                <h6>Please Verify your e-mail</h6>
                             </div>
-                            <form role="form">
+                            <div class="text-center">
+                                <!-- <div v-if="!verified"></div> -->
+                                <button class="btn primary" v-on:click="sendEmailVerify">Send Verification Email</button>
+                                <!-- <div v-if="verified"></div> -->
+                            </div>
+                            
+                            <!-- <form role="form">
                                 <input
                                         v-model="email"
                                         placeholder="E-mail"
@@ -37,62 +43,54 @@
                                         type="password"
                                         class="mb-3 form-control input-group-alternative"
                                         aria-describedby="addon-right addon-left"
-                                        addon-left-icon="ni ni-hat-3"/>
+                                        addon-left-icon="ni ni-hat-3"/> -->
                                 <!-- <base-checkbox>
                                     Remember me
                                 </base-checkbox> -->
                                 
-                                <div class="text-center">
+                                <!-- <div class="text-center">
                                     <a href="#" class="text-light">
                                         <small>Forgot password?</small>
                                     </a>
                                     <br>
                                     <button v-on:click="login" class="btn btn-large btn-extended grey lighten-4 black-text">Log in</button>
                                 </div>
-                            </form>
+                            </form> -->
                         </template>
-                        <div v-if="theuser"> {{ theuser }} </div>
                     </card>
 </template>
-
 <script>
 import firebase from 'firebase';
+
 export default {
-    name: "LoginCard",
-    data: function() {
-    return {
-      email: "",
-      pass: "",
-      theuser: ""
-    };
+  name: "VerifyCard",
+  data(){
+      return {
+          user: "",
+          sentemail: firebase.auth().currentUser.sendEmailVerification(),
+          email: firebase.auth().currentUser.email,
+          verified: firebase.auth().currentUser.emailVerified,
+          goToPath: this.$router.push({path : '/app'})
+      }
+  },
+  computed: {
+      theUserUid () {
+          return this.$store.getters.getUid;
+      }
   },
   methods: {
-    login: function(e) {
-      firebase
-        .auth()
-        .signInWithEmailAndPassword(this.email, this.pass)
-        .then(
-          user => {
-            this.theuser = user.user;
-            if (firebase.auth().currentUser.emailVerified){
-                alert(`You are logged in as ${user.user.email}`);
-                this.$router.push({path : '/app'});
-            } else {
-                this.$router.push({path : '/verify'});
-            }
-            // alert(`You are logged in`);
-            // console.log(user.user.uid);
-            // alert(`You are logged in as ${user.user.email}`);
-            // this.$router.go({ path: this.$router.path('/') });
-            // this.$router.push({path : '/app'});
-          },
-          err => {
-            console.log(err);
-            alert(err.message);
-          }
-        );
-      e.preventDefault();
-    }
+      sendEmailVerify() {
+           firebase
+                .auth()
+                .currentUser
+                .sendEmailVerification()
+                .then(verifyEmail => {
+                    alert('Email Verification sent')
+                })
+                .catch((err)=>{
+                    alert(err.message);
+                })
+      }
   }
 };
 </script>

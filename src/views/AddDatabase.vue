@@ -22,7 +22,7 @@
                                 <h1 class="display-3  text-white">A beautiful Design System
                                     <span>completed with examples</span>
                                 </h1>
-                                <p v-if="theUserUid" class="lead  text-white">The uid is <strong style="color:red;">{{ theUserUid }}</strong></p>
+                                <p v-if="theUserUid" class="lead  text-white">{{ tt }}The uid is <strong style="color:red;">{{ theUserUid }}</strong></p>
                                 <div class="btn-wrapper">
                                     <base-button tag="a"
                                                  href="https://demos.creative-tim.com/argon-design-system/docs/components/alerts.html"
@@ -73,12 +73,14 @@
 import Upload from '@/components/Upload.vue';
 import MatchColumn from '@/components/MatchColumn.vue';
 import InputAndReview from '@/components/InputAndReview.vue';
+import firebase from 'firebase';
 
 export default {
   name: "adddatabase",
   data(){
       return {
           user: "",
+          tt: firebase.auth().currentUser.emailVerified
       }
   },
   computed: {

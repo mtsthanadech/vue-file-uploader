@@ -13,20 +13,21 @@
         <div class="container pt-lg-md">
             <div class="row justify-content-center">
                 <div class="col-lg-5">
-                    <register-card/>
+                    <verify-card/>
                 </div>
             </div>
         </div>
     </section>
+    
 </template>
+
 <script>
-import firebase from 'firebase';
-import RegisterCard from '@/components/RegisterCard.vue';
+import VerifyCard from '@/components/VerifyCard.vue';
 
 export default {
-    name: 'register',
+    name: "verify",
     components: {
-        "register-card": RegisterCard
+        "verify-card": VerifyCard
     }
 };
 </script>
