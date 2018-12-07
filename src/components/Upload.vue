@@ -38,12 +38,12 @@
 
 
 <script>
-import { ElasticIndex } from './ElasticIndex.js';
-import firebase from 'firebase';
-import axios from 'axios';
+import { ElasticIndex } from "./ElasticIndex.js";
+// import firebase from "firebase";
+import axios from "axios";
 export default {
   name: "upload",
-  props: ['index'],
+  props: ["index"],
   data() {
     return {
       file: "",
@@ -96,13 +96,13 @@ export default {
       }
     },
     async sendToggle() {
-      const formData = new FormData();
+      // const formData = new FormData();
       const url = "https://35.198.215.67/json/" + this.dbname;
       this.index = this.dbname;
 
-      ElasticIndex.$emit('ElasticIndex', this.index);
+      ElasticIndex.$emit("ElasticIndex", this.index);
       await axios.get(url);
-      this.message = "Upload " + this.filename + "to Elasticsearch already";
+      this.message = "Upload " + this.filename + " to Elasticsearch already";
     }
   }
 };

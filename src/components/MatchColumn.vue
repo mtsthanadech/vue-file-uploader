@@ -1,33 +1,34 @@
 <template>
-    <card class="border-0" hover shadow body-classes="py-5">
-        <h6 class="text-success text-uppercase">Match Column</h6>
+  <card class="border-0" hover shadow body-classes="py-5">
+    <h6 class="text-success text-uppercase">Match Column</h6>
 
-            <li v-for="(column, indexs) in columns" :key="indexs" style="list-style-type:none; margin-top: 10px;">
-                <!--<li v-for="index in length" :key="index" style="list-style-type:none;">-->
+    <li
+      v-for="(column, indexs) in columns"
+      :key="indexs"
+      style="list-style-type:none; margin-top: 10px;"
+    >
+      <!--<li v-for="index in length" :key="index" style="list-style-type:none;">-->
+      <strong>{{ column }}</strong>
+      <input
+        v-model="matchColumns[indexs]"
+        placeholder="Enter Thai name"
+        class="form-control input-group-alternative"
+        aria-describedby="addon-right addon-left"
+      >
+    </li>
 
-                    <strong>{{ column }}</strong>
-                    <input
-                            v-model="matchColumns[indexs]"
-                            placeholder="Enter Thai name"
-                            class="form-control input-group-alternative"
-                            aria-describedby="addon-right addon-left"/>
-                </li>
-            </li>
-
-            <button v-on:click="sendToggle" class="btn btn-1 btn-success">Get Column</button>
-            <button v-on:click="saveColumn" class=" btn btn-1 btn-success">Save</button>
-
-    </card>
-
+    <button v-on:click="sendToggle" class="btn btn-1 btn-success">Get Column</button>
+    <button v-on:click="saveColumn" class="btn btn-1 btn-success">Save</button>
+  </card>
 </template>
 
 <script>
-import { ElasticIndex } from './ElasticIndex.js';
+import { ElasticIndex } from "./ElasticIndex.js";
 import axios from "axios";
-import firebase from "firebase";
+// import firebase from "firebase";
 export default {
   name: "MatchColumn",
-  props: ['column_thai','column_eng'],
+  props: ["column_thai", "column_eng"],
   data() {
     return {
       columns: [],
@@ -38,19 +39,14 @@ export default {
     };
   },
   created() {
-        ElasticIndex.$on('ElasticIndex', index => {
-                this.index = index;
-        });
-  }, 
+    ElasticIndex.$on("ElasticIndex", index => {
+      this.index = index;
+    });
+  },
   methods: {
     saveColumn() {
-      const url = "https://35.198.215.67/savecol";
       this.column_thai = this.matchColumns;
-            ElasticIndex.$emit('ColumnThai', this.column_thai);
-            axios.post(url, {
-                index: this.index,
-                colthai: this.matchColumns
-            });
+      ElasticIndex.$emit("ColumnThai", this.column_thai);
     },
     async sendToggle() {
       const url = "https://35.198.215.67/getcol";
@@ -68,8 +64,8 @@ export default {
           this.errors.push(e);
           console.log(this.errors);
         });
-        this.column_eng = this.columns;
-        ElasticIndex.$emit('ColumnEng', this.column_eng);
+      this.column_eng = this.columns;
+      ElasticIndex.$emit("ColumnEng", this.column_eng);
     }
   }
 };
