@@ -36,8 +36,7 @@ export default {
       length: 0,
       matchColumns: [],
       index: "",
-      errors: [],
-      column_eiei: ["q","w","e","r","y"]
+      errors: []
     };
   },
   computed: {

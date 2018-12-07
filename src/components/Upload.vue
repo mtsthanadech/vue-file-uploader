@@ -114,7 +114,6 @@ export default {
       ElasticIndex.$emit("ElasticIndex", this.index);
       await axios.get(url);
       this.message = "Upload " + this.filename + " to Elasticsearch already";
-      console.log("eeeeeee");
       this.database();
     }
   }
