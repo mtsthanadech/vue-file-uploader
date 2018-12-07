@@ -80,13 +80,9 @@ export default {
     return {
       name: "",
       email: "",
-      pass: ""
+      pass: "",
+      theUserUid: "",
     };
-  },
-  computed: {
-    theUserUid() {
-      return this.$store.getters.getUid;
-    }
   },
   methods: {
     register: function(e) {
@@ -94,6 +90,7 @@ export default {
         .auth()
         .createUserWithEmailAndPassword(this.email, this.pass)
         .then(user => {
+            this.theUserUid = firebase.auth().currentUser.uid
             firebase
                 .database()
                 .ref("users/" + this.theUserUid)

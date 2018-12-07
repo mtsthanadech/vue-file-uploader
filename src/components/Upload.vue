@@ -41,16 +41,9 @@ export default {
       message: "",
       dbname: "",
       errors: [],
-      complete: "False"
+      complete: "False",
+      theUserUid: firebase.auth().currentUser.uid
     };
-  },
-  computed: {
-    theUserUid() {
-      return this.$store.getters.getUid;
-    },
-    theUserVerified() {
-      return this.$store.getters.getVertheUserVerified;
-    }
   },
   methods: {
     database() {

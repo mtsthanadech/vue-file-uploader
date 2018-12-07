@@ -69,16 +69,11 @@ export default {
   data() {
     return {
       user: "",
-      //   sentemail: firebase.auth().currentUser.sendEmailVerification(),
+      theUserUid: "",
       email: firebase.auth().currentUser.email,
       verified: firebase.auth().currentUser.emailVerified,
       goToPath: this.$router.push({ path: "/app" })
     };
-  },
-  computed: {
-    theUserUid() {
-      return this.$store.getters.getUid;
-    }
   },
   methods: {
     sendEmailVerify() {
@@ -86,6 +81,7 @@ export default {
         .auth()
         .currentUser.sendEmailVerification()
         .then(verifyEmail => {
+          this.theUserUid = firebase.auth().currentUser.uid
           firebase
             .database()
             .ref("users/" + this.theUserUid)

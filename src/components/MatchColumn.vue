@@ -36,19 +36,9 @@ export default {
       length: 0,
       matchColumns: [],
       index: "",
-      errors: []
+      errors: [],
+      theUserUid: firebase.auth().currentUser.uid
     };
-  },
-  computed: {
-      theUserUid () {
-          return this.$store.getters.getUid;
-      },
-      theUserEmail () {
-          return this.$store.getters.getEmail;
-      },
-      theUserVerified () {
-          return this.$store.getters.getVerified;
-      }
   },
   created() {
     ElasticIndex.$on("ElasticIndex", index => {
@@ -62,8 +52,13 @@ export default {
       firebase
         .database()
         .ref("users/" + this.theUserUid)
-        .child("MatchColumns")
+        .child("MatchColumns_thai")
         .update(this.column_thai)
+      firebase
+        .database()
+        .ref("users/" + this.theUserUid)
+        .child("MatchColumns_eng")
+        .update(this.column_eng)
     },
     async sendToggle() {
       const url = "https://35.198.215.67/getcol";
