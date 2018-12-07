@@ -70,22 +70,27 @@
 
 <script>
 
-import Upload from '@/components/Upload.vue';
-import MatchColumn from '@/components/MatchColumn.vue';
-import InputAndReview from '@/components/InputAndReview.vue';
-import firebase from 'firebase';
+import Upload from "@/components/Upload.vue";
+import MatchColumn from "@/components/MatchColumn.vue";
+import InputAndReview from "@/components/InputAndReview.vue";
+import firebase from "firebase";
 
 export default {
   name: "adddatabase",
   data(){
       return {
-          user: "",
-          tt: firebase.auth().currentUser.emailVerified
+          user: ""
       }
   },
   computed: {
       theUserUid () {
           return this.$store.getters.getUid;
+      },
+      theUserEmail () {
+          return this.$store.getters.getEmail;
+      },
+      theUserVerified () {
+          return this.$store.getters.getVerified;
       }
   },
   components: {

@@ -86,7 +86,13 @@ export default {
         .auth()
         .currentUser.sendEmailVerification()
         .then(verifyEmail => {
-          alert("Email Verification sent " + verifyEmail);
+          firebase
+            .database()
+            .ref("users/" + this.theUserUid)
+            .update({
+                Verified: this.verified
+            });
+          alert("Email Verification sent " + this.email);
         })
         .catch(err => {
           alert(err.message);

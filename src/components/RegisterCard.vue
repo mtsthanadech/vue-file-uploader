@@ -83,13 +83,25 @@ export default {
       pass: ""
     };
   },
+  computed: {
+    theUserUid() {
+      return this.$store.getters.getUid;
+    }
+  },
   methods: {
     register: function(e) {
       firebase
         .auth()
         .createUserWithEmailAndPassword(this.email, this.pass)
         .then(user => {
-          alert("Account created for " + user.email);
+            firebase
+                .database()
+                .ref("users/" + this.theUserUid)
+                .set({
+                Name: this.name,
+                Email: this.email
+            });
+          alert("Account created for " + this.email);
           // alert(`Account created for ${user.email}`);
           // this.router.push('/');
           // this.$router.go({ path: this.$router. });

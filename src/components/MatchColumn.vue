@@ -25,7 +25,8 @@
 <script>
 import { ElasticIndex } from "./ElasticIndex.js";
 import axios from "axios";
-// import firebase from "firebase";
+import firebase from "firebase";
+
 export default {
   name: "MatchColumn",
   props: ["column_thai", "column_eng"],
@@ -35,8 +36,20 @@ export default {
       length: 0,
       matchColumns: [],
       index: "",
-      errors: []
+      errors: [],
+      column_eiei: ["q","w","e","r","y"]
     };
+  },
+  computed: {
+      theUserUid () {
+          return this.$store.getters.getUid;
+      },
+      theUserEmail () {
+          return this.$store.getters.getEmail;
+      },
+      theUserVerified () {
+          return this.$store.getters.getVerified;
+      }
   },
   created() {
     ElasticIndex.$on("ElasticIndex", index => {
@@ -47,6 +60,11 @@ export default {
     saveColumn() {
       this.column_thai = this.matchColumns;
       ElasticIndex.$emit("ColumnThai", this.column_thai);
+      firebase
+        .database()
+        .ref("users/" + this.theUserUid)
+        .child("MatchColumns")
+        .update(this.column_thai)
     },
     async sendToggle() {
       const url = "https://35.198.215.67/getcol";
