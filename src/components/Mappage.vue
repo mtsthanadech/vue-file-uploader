@@ -4,12 +4,18 @@
     <div class="row justify-content-center">
       <div class="col-lg-4"></div>
       <div class="col-lg-4">
+
+        
+
+
         <li
           v-for="(column, indexs) in columns"
+          v-bind:visible="visible"
+          v-bind:currentPage="currentPage"
+          v-bind:column="column"
           :key="indexs"
           style="list-style-type:none; margin-top: 10px;"
         >
-          <!--<li v-for="index in length" :key="index" style="list-style-type:none;">-->
           <strong>{{ column }}</strong>
           <input
             v-model="matchColumns[indexs]"
@@ -19,7 +25,7 @@
           >
         </li>
         
-        <nav aria-label="...">
+        <!-- <nav aria-label="...">
           <ul class="pagination">
             <li class="page-item disabled">
               <a class="page-link" href="#" tabindex="-1">
@@ -39,7 +45,7 @@
               </a>
             </li>
           </ul>
-        </nav>
+        </nav> -->
         
       </div>
       <div class="col-lg-4"></div>
@@ -67,7 +73,21 @@ export default {
       matched: "",
       index: "",
       errors: [],
-      theUserUid: firebase.auth().currentUser.uid
+      theUserUid: firebase.auth().currentUser.uid,
+      nextId: 8,
+      currentPage: 0,
+      pageSize: 4,
+      visible: [],
+      todos:[
+          {id: 0, text: "aaaaaaaaaaa"},
+          {id: 1, text: "bbbbbbbbbbb"},
+          {id: 2, text: "ccccccccccc"},
+          {id: 3, text: "ddddddddddd"},
+          {id: 4, text: "eeeeeeeeeee"},
+          {id: 5, text: "fffffffffff"},
+          {id: 6, text: "ggggggggggg"},
+          {id: 7, text: "hhhhhhhhhhh"},
+      ]
     };
   },
   computed: {
@@ -87,7 +107,31 @@ export default {
       this.index = index;
     });
   },
+  beforeMount: function(){
+      this.updateVisible()
+  },
   methods: {
+    addTodo(text) {
+        this.todos.push({id: this.nextId, text: text});
+        this.nextId++
+        this.updateVisible()
+    },
+    removeTodos(id){
+        const todos = this.todos
+        this.todos = todos.filter((todo) => todo.id != id)
+        this.updateVisible()
+    },
+    updatePage(pageNumber){
+        this.currentPage = pageNumber
+        this.updateVisible()
+    },
+    updateVisible(){
+        this.visible = this.todos.slice(this.currentPage * this.pageSize, (this.currentPage * this.pageSize) + this.pageSize)
+
+        if (this.visible.length == 0 && this.currentPage >0) {
+            this.updatePage(this.currentPage - 1)
+        }
+    },
     saveColumn() {
       this.column_thai = this.matchColumns;
       ElasticIndex.$emit("ColumnThai", this.column_thai);

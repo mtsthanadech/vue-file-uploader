@@ -93,7 +93,7 @@ export default {
 
       this.file = "";
       if (this.complete == "True") {
-        // this.message = "File Upload Complete";
+        this.message = "File Upload Complete";
         this.sendToggle();
       } else {
         this.message = "File Upload Failed";

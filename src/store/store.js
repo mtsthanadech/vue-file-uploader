@@ -8,21 +8,31 @@ export const store = new Vuex.Store({
     state: {
         theUserUid: "",
         theUserEmail: "",
-        theUserVerified: ""
+        theUserVerified: "",
+        ddata: ""
     },
     getters: {
         getUid: state => {
-            const userUid = firebase.auth().currentUser.uid;
+            const userUid = firebase.
+                                    auth()
+                                    .currentUser
+                                    .uid;
             state.theUserUid = userUid
             return state.theUserUid;
         },
         getEmail: state => {
-            const userEmail = firebase.auth().currentUser.email;
+            const userEmail = firebase
+                                    .auth()
+                                    .currentUser
+                                    .email;
             state.theUserEmail = userEmail
             return state.theUserEmail;
         },
         getVerified: state => {
-            const userVerified = firebase.auth().currentUser.emailVerified;
+            const userVerified = firebase
+                                    .auth()
+                                    .currentUser
+                                    .emailVerified;
             state.theUserVerified = userVerified
             return state.theUserVerified;
         }

@@ -23,10 +23,10 @@ const router = new Router({
         default: Components,
         footer: AppFooter
       },
-      meta: {
-        requiresAuth: false,
-        requiresVerify: true
-      }
+      // meta: {
+      //   requiresAuth: false,
+      //   requiresVerify: true
+      // }
     },
     {
       path: "/landing",
