@@ -19,7 +19,7 @@
           >
         </li>
         
-        <nav aria-label="...">
+        <!-- <nav aria-label="...">
           <ul class="pagination">
             <li class="page-item disabled">
               <a class="page-link" href="#" tabindex="-1">
@@ -39,7 +39,7 @@
               </a>
             </li>
           </ul>
-        </nav>
+        </nav> -->
         
       </div>
       <div class="col-lg-4"></div>
