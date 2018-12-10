@@ -2,7 +2,7 @@
   <card class="border-0" hover shadow body-classes="py-5">
     <h6 class="text-success text-uppercase">Match Column</h6>
     <div class="row justify-content-center">
-      <div class="col-lg-6">
+      <div class="col-lg-12">
         <li
           v-for="(column, indexs) in visible"
           v-bind:visible="visible"
@@ -11,7 +11,8 @@
           :key="indexs"
           style="list-style-type:none; margin-top: 10px;"
         >
-          <strong>{{indexs+((currentPage)*5)}}/{{length-1}} - {{ column }}</strong>
+            <!-- {{indexs+((currentPage)*5)}}/{{length-1}} -  -->
+          <strong>{{ column }}</strong>
           <input
             v-model="matchColumns[indexs+(currentPage*5)]"
             placeholder="Enter Thai name"
@@ -20,8 +21,9 @@
           >
         </li>
       </div>
-      <div class="col-lg-6">
-        <li
+      <div class="col-lg-4"></div>
+      <div class="col-lg-4 text-center center">
+        <!-- <li
           v-for="(column, indexs) in visible"
           v-bind:visible="visible"
           v-bind:currentPage="currentPage"
@@ -36,7 +38,7 @@
             class="form-control input-group-alternative"
             aria-describedby="addon-right addon-left"
           >
-        </li>
+        </li> -->
         <br>
         <div
             v-if="totalPages() > 0"
@@ -45,7 +47,7 @@
             v-bind:currentPage="currentPage"
             v-bind:pageSize="pageSize"
             >
-                <ul class="pagination">
+                <ul class="pagination center">
                     <li class="page-item disabled" v-if="currentPage === 1">
                         <a class="page-link" v-on:click="updatePage(currentPage - 1)">
                             <i class="fa fa-angle-left"></i>
@@ -87,6 +89,7 @@
                 <button v-on:click="saveColumn" v-if="fromDatabase" class="btn btn-1 btn-success">Edit</button>
                 <button v-on:click="saveColumn" v-if="!fromDatabase" class="btn btn-1 btn-success">Save</button>
         </div>
+        <div class="col-lg-4"></div>
 
         <!-- <span v-if="showPreviousLink()" class="pagination-btn" v-on:click="updatePage(currentPage - 1)"> < </span>
                 {{ currentPage + 1 }} of {{ totalPages() }}
@@ -127,6 +130,7 @@ export default {
         .ref("users/" + this.theUserUid)
         .on("value", snapshot => {
           this.matched = snapshot.child("Matched").val();
+          this.index = snapshot.child("Index").val();
         });
         
         if(this.gotcolumn == 0){
@@ -179,8 +183,8 @@ export default {
       await axios
         .get(url, {
           params: {
-            // index: this.index
-            index: "Da0tyraVUMMzynInrnFOvrPkacg1_helloworld"
+            index: this.index
+            // index: "Da0tyraVUMMzynInrnFOvrPkacg1_helloworld"
           }
         })
         .then(response => {
