@@ -48,7 +48,7 @@
             v-bind:pageSize="pageSize"
             >
                 <ul class="pagination center">
-                    <li class="page-item disabled" v-if="currentPage === 1">
+                    <li class="page-item disabled" v-if="currentPage === 0">
                         <a class="page-link" v-on:click="updatePage(currentPage - 1)">
                             <i class="fa fa-angle-left"></i>
                             <span class="sr-only">Previous</span>
