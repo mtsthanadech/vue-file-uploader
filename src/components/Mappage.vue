@@ -2,58 +2,97 @@
   <card class="border-0" hover shadow body-classes="py-5">
     <h6 class="text-success text-uppercase">Match Column</h6>
     <div class="row justify-content-center">
-      <div class="col-lg-4"></div>
-      <div class="col-lg-4">
-
-        
-
-
+      <div class="col-lg-6">
         <li
-          v-for="(column, indexs) in columns"
+          v-for="(column, indexs) in visible"
           v-bind:visible="visible"
           v-bind:currentPage="currentPage"
           v-bind:column="column"
           :key="indexs"
           style="list-style-type:none; margin-top: 10px;"
         >
-          <strong>{{ column }}</strong>
+          <strong>{{indexs+((currentPage)*5)}}/{{length-1}} - {{ column }}</strong>
           <input
-            v-model="matchColumns[indexs]"
+            v-model="matchColumns[indexs+(currentPage*5)]"
             placeholder="Enter Thai name"
             class="form-control input-group-alternative"
             aria-describedby="addon-right addon-left"
           >
         </li>
-        
-        <!-- <nav aria-label="...">
-          <ul class="pagination">
-            <li class="page-item disabled">
-              <a class="page-link" href="#" tabindex="-1">
-                <i class="fa fa-angle-left"></i>
-                <span class="sr-only">Previous</span>
-              </a>
-            </li>
-            <li class="page-item"><a class="page-link" href="#">1</a></li>
-            <li class="page-item active">
-              <a class="page-link" href="#">2 <span class="sr-only">(current)</span></a>
-            </li>
-            <li class="page-item"><a class="page-link" href="#">3</a></li>
-            <li class="page-item">
-              <a class="page-link" href="#">
-                <i class="fa fa-angle-right"></i>
-                <span class="sr-only">Next</span>
-              </a>
-            </li>
-          </ul>
-        </nav> -->
-        
       </div>
-      <div class="col-lg-4"></div>
+      <div class="col-lg-6">
+        <li
+          v-for="(column, indexs) in visible"
+          v-bind:visible="visible"
+          v-bind:currentPage="currentPage"
+          v-bind:column="column"
+          :key="indexs"
+          style="list-style-type:none; margin-top: 10px;"
+        >
+          <strong>{{indexs+((currentPage)*5)}}/{{length-1}} - {{ column }}</strong>
+          <input
+            v-model="matchColumns[indexs+(currentPage*5)]"
+            placeholder="Enter Thai name"
+            class="form-control input-group-alternative"
+            aria-describedby="addon-right addon-left"
+          >
+        </li>
+        <br>
+        <div
+            v-if="totalPages() > 0"
+            v-bind:columns="columns"
+            v-on:page:update="updatePage"
+            v-bind:currentPage="currentPage"
+            v-bind:pageSize="pageSize"
+            >
+                <ul class="pagination">
+                    <li class="page-item disabled" v-if="currentPage === 1">
+                        <a class="page-link" v-on:click="updatePage(currentPage - 1)">
+                            <i class="fa fa-angle-left"></i>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                    </li>
+                    <li class="page-item" v-else>
+                        <a class="page-link" v-on:click="updatePage(currentPage - 1)">
+                            <i class="fa fa-angle-left"></i>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                    </li>
+                    
+                    <li class="page-item">
+                            <a class="page-link" v-on:click="updatePage(0)">1</a>
+                    </li>
+                        
+                    <div v-for="(pageNumber, index) in theTotalPages" :key="index">
+                        <li class="page-item" v-if="pageNumber < theTotalPages">
+                            <a class="page-link" v-on:click="updatePage(pageNumber)">{{pageNumber+1}}</a>
+                        </li>
+                    </div>
+
+                    <li class="page-item disabled" v-if="currentPage === totalPages()-1">
+                        <a class="page-link" v-on:click="updatePage(currentPage + 1)">
+                            <i class="fa fa-angle-right"></i>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </li>
+
+                    <li class="page-item" v-else>
+                        <a class="page-link" v-on:click="updatePage(currentPage + 1)">
+                            <i class="fa fa-angle-right"></i>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </li>
+                </ul>
+        </div>
+                <button v-on:click="saveColumn" v-if="fromDatabase" class="btn btn-1 btn-success">Edit</button>
+                <button v-on:click="saveColumn" v-if="!fromDatabase" class="btn btn-1 btn-success">Save</button>
+        </div>
+
+        <!-- <span v-if="showPreviousLink()" class="pagination-btn" v-on:click="updatePage(currentPage - 1)"> < </span>
+                {{ currentPage + 1 }} of {{ totalPages() }}
+              <span v-if="showNextLink()" class="pagination-btn" v-on:click="updatePage(currentPage + 1)"> > </span> -->
     </div>
-    <!-- <button v-on:click="sendToggle" class="btn btn-1 btn-success">Get Column</button> -->
-    
-    <button v-on:click="saveColumn" v-if="fromDatabase" class="btn btn-1 btn-success">Edit</button>
-    <button v-on:click="saveColumn" v-if="!fromDatabase" class="btn btn-1 btn-success">Save</button>
+
   </card>
 </template>
 
@@ -74,20 +113,11 @@ export default {
       index: "",
       errors: [],
       theUserUid: firebase.auth().currentUser.uid,
-      nextId: 8,
-      currentPage: 0,
-      pageSize: 4,
+      currentPage: 1,
+      pageSize: 5,
       visible: [],
-      todos:[
-          {id: 0, text: "aaaaaaaaaaa"},
-          {id: 1, text: "bbbbbbbbbbb"},
-          {id: 2, text: "ccccccccccc"},
-          {id: 3, text: "ddddddddddd"},
-          {id: 4, text: "eeeeeeeeeee"},
-          {id: 5, text: "fffffffffff"},
-          {id: 6, text: "ggggggggggg"},
-          {id: 7, text: "hhhhhhhhhhh"},
-      ]
+      theTotalPages: "",
+      gotcolumn: 0
     };
   },
   computed: {
@@ -98,7 +128,12 @@ export default {
         .on("value", snapshot => {
           this.matched = snapshot.child("Matched").val();
         });
-      this.sendToggle();
+        
+        if(this.gotcolumn == 0){
+            this.sendToggle();
+            this.gotcolumn = 1
+        }
+      this.theTotalPages = this.totalPages();
       return this.matched;
     }
   },
@@ -111,22 +146,15 @@ export default {
       this.updateVisible()
   },
   methods: {
-    addTodo(text) {
-        this.todos.push({id: this.nextId, text: text});
-        this.nextId++
-        this.updateVisible()
-    },
-    removeTodos(id){
-        const todos = this.todos
-        this.todos = todos.filter((todo) => todo.id != id)
-        this.updateVisible()
-    },
     updatePage(pageNumber){
         this.currentPage = pageNumber
         this.updateVisible()
     },
+    totalPages() {
+      return Math.ceil(this.columns.length / this.pageSize);
+    },
     updateVisible(){
-        this.visible = this.todos.slice(this.currentPage * this.pageSize, (this.currentPage * this.pageSize) + this.pageSize)
+        this.visible = this.columns.slice(this.currentPage * this.pageSize, (this.currentPage * this.pageSize) + this.pageSize)
 
         if (this.visible.length == 0 && this.currentPage >0) {
             this.updatePage(this.currentPage - 1)
@@ -165,6 +193,7 @@ export default {
         });
       this.column_eng = this.columns;
       ElasticIndex.$emit("ColumnEng", this.column_eng);
+      this.updatePage(0)
     }
   }
 };
