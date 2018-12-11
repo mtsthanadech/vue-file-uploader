@@ -13,6 +13,10 @@
       <div v-if="data">{{ data }}</div>
       <!-- <div>{{de}} - {{fromDatabase()}}</div> -->
     </card>
+    <card>index is {{index}}</card>
+    <card>payload is {{payload}}</card>
+    <card>column_thai are {{column_thai}}</card>
+    <card>column_eng are {{column_eng}}</card>
   </card>
 </template>
 
@@ -48,17 +52,9 @@ export default {
     }
   },
   created() {
-      firebase
-        .database()
-        .ref("users/" + this.theUserUid)
-        .on("value", snapshot => {
-          this.index = snapshot.child("Index").val();
-          this.column_thai = snapshot.child("MatchColumns_thai").val();
-          this.column_eng = snapshot.child("MatchColumns_eng").val();
-        });
-    //  ElasticIndex.$on("ElasticIndex", index => {
-    //    this.index = index;
-    //  });
+     ElasticIndex.$on("ElasticIndex", index => {
+       this.index = index;
+     });
      ElasticIndex.$on("ColumnThai", column_thai => {
        this.column_thai = column_thai;
      });
@@ -74,12 +70,14 @@ export default {
         .database()
         .ref("users/" + this.theUserUid)
         .on("value", snapshot => {
+        //   this.index = snapshot.child("Index").val();
+        //   this.column_thai = snapshot.child("MatchColumns_thai").val();
+        //   this.column_eng = snapshot.child("MatchColumns_eng").val();
           this.matched = snapshot.child("Matched").val();
         });
 
-      if (this.matched == false) {
-        this.data = "You don't map the column in Thai language";
-      } else {
+
+      
         axios
           .post(url, {
             index: this.index,
@@ -94,7 +92,7 @@ export default {
             this.errors.push(e);
             console.log(this.errors);
           });
-      }
+      
 
       //show result here
       //this.data = "get data"

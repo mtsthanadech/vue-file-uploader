@@ -19,25 +19,7 @@
             aria-describedby="addon-right addon-left"
           >
         </li>
-      </div>
-      <div class="col-lg-4"></div>
-      <div class="col-lg-4 text-center center">
-        <!-- <li
-          v-for="(column, indexs) in visible"
-          v-bind:visible="visible"
-          v-bind:currentPage="currentPage"
-          v-bind:column="column"
-          :key="indexs"
-          style="list-style-type:none; margin-top: 10px;"
-        >
-          <strong>{{indexs+((currentPage)*5)}}/{{length-1}} - {{ column }}</strong>
-          <input
-            v-model="matchColumns[indexs+(currentPage*5)]"
-            placeholder="Enter Thai name"
-            class="form-control input-group-alternative"
-            aria-describedby="addon-right addon-left"
-          >
-        </li>-->
+
         <br>
         <div
           v-if="totalPages() > 0"
@@ -88,11 +70,6 @@
         <button v-on:click="saveColumn" v-if="fromDatabase" class="btn btn-1 btn-success">Edit</button>
         <button v-on:click="saveColumn" v-if="!fromDatabase" class="btn btn-1 btn-success">Save</button>
       </div>
-      <div class="col-lg-4"></div>
-
-      <!-- <span v-if="showPreviousLink()" class="pagination-btn" v-on:click="updatePage(currentPage - 1)"> < </span>
-                {{ currentPage + 1 }} of {{ totalPages() }}
-      <span v-if="showNextLink()" class="pagination-btn" v-on:click="updatePage(currentPage + 1)"> > </span>-->
     </div>
   </card>
 </template>
@@ -100,7 +77,7 @@
 <script>
 import { ElasticIndex } from "./ElasticIndex.js";
 import axios from "axios";
-import firebase, { database }  from "firebase";
+import firebase, { database } from "firebase";
 
 export default {
   name: "MatchColumn",
@@ -118,51 +95,66 @@ export default {
       pageSize: 5,
       visible: [],
       theTotalPages: "",
-      gotcolumn: 0
+      gotPageFirst: true,
+      gotCol: false
     };
   },
   computed: {
     fromDatabase() {
-    
       firebase
-        .database()
-        .ref("users/" + this.theUserUid)
-        .on("value", snapshot => {
-          this.matched = snapshot.child("Matched").val();
-          this.index = snapshot.child("Index").val();
-        });
-      
-      if (this.matched == true) {
-        // this.gotcolumn = 1;
-        firebase
-        .database()
-        .ref("users/" + this.theUserUid)
-        .on("value", snapshot => {
-          this.columns = snapshot.child("MatchColumns_eng").val();
-          this.matchColumns = snapshot.child("MatchColumns_thai").val();
-          ElasticIndex.$emit("ColumnThai", this.column_thai);
-          ElasticIndex.$emit("ColumnEng", this.column_eng);
-        });
-      }
-
-      if (this.gotcolumn == 0) {
+          .database()
+          .ref("users/" + this.theUserUid)
+          .on("value", snapshot => {
+            this.matched = snapshot.child("Matched").val();
+            this.index = snapshot.child("Index").val();
+            ElasticIndex.$emit("ElasticIndex", this.index);
+          });
+      if (this.gotCol == true) {
+        this.columns = this.ColumnsFromDB();
+        if (this.gotPageFirst == true) {
+          this.matchColumns = this.MatchColumnsFromDB();
+          this.theTotalPages = this.totalPages();
+          this.updatePage(0);
+        }
+        this.gotPageFirst = false;
+        return this.matched;
+      } else {
         this.sendToggle();
-        this.updatePage(0);
-        this.gotcolumn = 1;
+        return this.matched;
       }
-      this.theTotalPages = this.totalPages();
-      return this.matched;
     }
-  },
-  created() {
-    ElasticIndex.$on("ElasticIndex", index => {
-      this.index = index;
-    });
   },
   beforeMount: function() {
     this.updateVisible();
   },
   methods: {
+    ColumnsFromDB() {
+      console.log("begin")
+      if (this.gotPageFirst || this.matched == true) {
+        firebase
+          .database()
+          .ref("users/" + this.theUserUid)
+          .on("value", snapshot => {
+            this.columns = snapshot.child("MatchColumns_eng").val();
+            ElasticIndex.$emit("ColumnEng", this.columns);
+          });
+      } else {
+        this.sendToggle();
+      }
+      return this.columns;
+    },
+    MatchColumnsFromDB() {
+      if (this.gotPageFirst || this.matched == true) {
+        firebase
+          .database()
+          .ref("users/" + this.theUserUid)
+          .on("value", snapshot => {
+            this.matchColumns = snapshot.child("MatchColumns_thai").val();
+            ElasticIndex.$emit("ColumnThai", this.matchColumns);
+          });
+      }
+      return this.matchColumns;
+    },
     updatePage(pageNumber) {
       this.currentPage = pageNumber;
       this.updateVisible();
@@ -172,8 +164,8 @@ export default {
     },
     updateVisible() {
       this.visible = this.columns.slice(
-        this.currentPage * this.pageSize,
-        this.currentPage * this.pageSize + this.pageSize
+        (this.currentPage * this.pageSize),
+        ((this.currentPage * this.pageSize) + this.pageSize)
       );
 
       if (this.visible.length == 0 && this.currentPage > 0) {
@@ -213,12 +205,13 @@ export default {
           this.length = response.data["index_name"].length;
           this.column_eng = this.columns;
           ElasticIndex.$emit("ColumnEng", this.column_eng);
+          this.updateVisible()
+          this.gotCol = true;
         })
         .catch(e => {
           this.errors.push(e);
           console.log(this.errors);
         });
-      
     }
   }
 };

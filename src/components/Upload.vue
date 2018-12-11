@@ -54,7 +54,10 @@ export default {
           Verified: true,
           Uploaded: true,
           Matched: false,
-          Index: this.index
+          Index: this.index,
+          columns: [],
+          MatchColumns_thai: ["","",""],
+          length: ""
         });
     },
     selectFile() {
@@ -104,10 +107,39 @@ export default {
       // const formData = new FormData();
       this.index = this.theUserUid + "_" + this.dbname;
       const url = "https://35.198.215.67/json/" + this.index;
+      const getColUrl = "https://35.198.215.67/getcol";
 
       ElasticIndex.$emit("ElasticIndex", this.index);
       await axios.get(url);
       this.message = "Upload " + this.filename + " to Elasticsearch already";
+      
+      await axios
+        .get(getColUrl, {
+          params: {
+            index: this.index
+          }
+        })
+        .then(response => {
+          this.columns = response.data["index_name"];
+          this.length = response.data["index_name"].length;
+          firebase
+            .database()
+            .ref("users/" + this.theUserUid)
+            .child("MatchColumns_eng")
+            .update(this.columns);
+          firebase
+            .database()
+            .ref("users/" + this.theUserUid)
+            .child("MatchColumns_thai")
+            .update(this.MatchColumns_thai);
+            })
+          
+        .catch(e => {
+          this.errors.push(e);
+          console.log(this.errors);
+        });
+
+
       this.database();
     }
   }

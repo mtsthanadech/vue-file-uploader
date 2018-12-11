@@ -26,7 +26,7 @@
                   The uid is
                   <strong style="color:red;">{{ theUserUid }}</strong>
                 </p>
-                <div class="btn-wrapper">
+                <!-- <div class="btn-wrapper">
                   <base-button
                     tag="a"
                     href="https://demos.creative-tim.com/argon-design-system/docs/components/alerts.html"
@@ -41,7 +41,7 @@
                     type="white"
                     icon="ni ni-cloud-download-95"
                   >Download HTML</base-button>
-                </div>
+                </div> -->
               </div>
             </div>
           </div>
@@ -54,12 +54,17 @@
         <div class="row justify-content-center">
           <div class="col-lg-12">
             <div class="row row-grid">
-              <div class="col-lg-4" v-if="!fromDatabase">
+
+              <div class="col-lg-4">
+                <match-column/>
+              </div>
+
+              <div class="col-lg-4">
                 <simple-upload/>
               </div>
 
-              <div class="col-lg-12" v-if="fromDatabase">
-                <match-column/>
+              <div class="col-lg-4">
+                <input-review/>
               </div>
             </div>
           </div>
@@ -71,8 +76,8 @@
           <div class="col-lg-12">
             <div class="row row-grid">
               <div class="col-lg-4"></div>
-              <div class="col-lg-4">
-                <input-review/>
+              <div class="col-lg-4" v-if="index">
+                <!-- <input-review/> -->
               </div>
               <div class="col-lg-4"></div>
             </div>
@@ -85,7 +90,7 @@
 
 <script>
 import Upload from "@/components/Upload.vue";
-import MatchColumn from "@/components/Mappage.vue";
+import MatchColumn from "@/components/Mappage_com.vue";
 import InputAndReview from "@/components/InputAndReview.vue";
 import firebase, { database } from "firebase";
 
@@ -95,7 +100,8 @@ export default {
     return {
       user: "",
       uploaded: false,
-      index: ""
+      index: "",
+      matched: ""
     };
   },
   computed: {
@@ -109,6 +115,7 @@ export default {
         .on("value", snapshot => {
           this.uploaded = snapshot.child("Uploaded").val();
           this.index = snapshot.child("Index").val();
+          this.matched = snapshot.child("Matched").val();
         });
       return this.uploaded;
     }
