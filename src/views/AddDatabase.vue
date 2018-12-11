@@ -51,12 +51,13 @@
     </div>
     <section class="section section-lg pt-lg-0 mt--200">
       <div class="container">
-        <div class="row justify-content-center">
+
+        <div class="row justify-content-center" v-if="uploaded() === false">
           <div class="col-lg-12">
             <div class="row row-grid">
 
               <div class="col-lg-4">
-                <match-column/>
+                <!-- <match-column/> -->
               </div>
 
               <div class="col-lg-4">
@@ -64,25 +65,31 @@
               </div>
 
               <div class="col-lg-4">
+                <!-- <input-review/> -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row justify-content-center" v-else>
+          <div class="col-lg-12">
+            <div class="row row-grid">
+
+              <div class="col-lg-4" v-if="uploaded">
+                <match-column/>
+              </div>
+
+              <!-- <div class="col-lg-4">
+                <simple-upload/>
+              </div> -->
+
+              <div class="col-lg-8" v-if="uploaded">
                 <input-review/>
               </div>
             </div>
           </div>
         </div>
 
-        <br>
-
-        <div class="row justify-content-center">
-          <div class="col-lg-12">
-            <div class="row row-grid">
-              <div class="col-lg-4"></div>
-              <div class="col-lg-4" v-if="index">
-                <!-- <input-review/> -->
-              </div>
-              <div class="col-lg-4"></div>
-            </div>
-          </div>
-        </div>
       </div>
     </section>
   </div>
@@ -99,7 +106,6 @@ export default {
   data() {
     return {
       user: "",
-      uploaded: false,
       index: "",
       matched: ""
     };
@@ -120,7 +126,19 @@ export default {
       return this.uploaded;
     }
   },
-  methods: {},
+  methods: {
+    uploaded() {
+      firebase
+        .database()
+        .ref("users/" + this.theUserUid)
+        .on("value", snapshot => {
+          this.uploaded = snapshot.child("Uploaded").val();
+          this.index = snapshot.child("Index").val();
+          this.matched = snapshot.child("Matched").val();
+        });
+      return this.uploaded;
+    }
+  },
   components: {
     "simple-upload": Upload,
     "match-column": MatchColumn,

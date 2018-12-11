@@ -151,8 +151,6 @@ export default {
             this.columns = snapshot.child("MatchColumns_eng").val();
             ElasticIndex.$emit("ColumnEng", this.columns);
           });
-      } else {
-        // this.sendToggle();
       }
       return this.columns;
     },
