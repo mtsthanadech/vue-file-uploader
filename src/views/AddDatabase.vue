@@ -51,12 +51,9 @@
     </div>
     <section class="section section-lg pt-lg-0 mt--200">
       <div class="container">
-
         <div class="row justify-content-center">
-
           <div class="col-lg-12">
             <div class="row row-grid">
-
               <div class="col-lg-4" v-if="!fromDatabase">
                 <simple-upload/>
               </div>
@@ -64,32 +61,23 @@
               <div class="col-lg-12" v-if="fromDatabase">
                 <match-column/>
               </div>
-
             </div>
           </div>
-          
         </div>
 
         <br>
 
         <div class="row justify-content-center">
-
           <div class="col-lg-12">
             <div class="row row-grid">
-
+              <div class="col-lg-4"></div>
               <div class="col-lg-4">
-              </div>
-              <div class="col-lg-4" v-if="fromDatabase">
                 <input-review/>
               </div>
-              <div class="col-lg-4">
-              </div>
-
+              <div class="col-lg-4"></div>
             </div>
           </div>
-          
         </div>
-
       </div>
     </section>
   </div>
@@ -99,14 +87,15 @@
 import Upload from "@/components/Upload.vue";
 import MatchColumn from "@/components/Mappage.vue";
 import InputAndReview from "@/components/InputAndReview.vue";
-import firebase,{ database } from "firebase";
+import firebase, { database } from "firebase";
 
 export default {
   name: "adddatabase",
   data() {
     return {
       user: "",
-      uploaded: false
+      uploaded: false,
+      index: ""
     };
   },
   computed: {
@@ -114,16 +103,17 @@ export default {
       return this.$store.getters.getUid;
     },
     fromDatabase() {
-          firebase.database().ref("users/" + this.theUserUid)
-          .on('value', (snapshot) =>{
-              this.uploaded = snapshot.child("Uploaded").val()
-          })
-          return this.uploaded
-      }
+      firebase
+        .database()
+        .ref("users/" + this.theUserUid)
+        .on("value", snapshot => {
+          this.uploaded = snapshot.child("Uploaded").val();
+          this.index = snapshot.child("Index").val();
+        });
+      return this.uploaded;
+    }
   },
-  methods: {
-      
-    }, 
+  methods: {},
   components: {
     "simple-upload": Upload,
     "match-column": MatchColumn,

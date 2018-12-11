@@ -53,6 +53,7 @@ export default {
         .update({
           Verified: true,
           Uploaded: true,
+          Matched: false,
           Index: this.index
         });
     },
