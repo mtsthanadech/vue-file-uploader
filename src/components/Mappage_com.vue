@@ -83,7 +83,7 @@
             </li>
           </ul>
         </div>
-        <button v-on:click="saveColumn" v-if="fromDatabase" class="btn btn-1 btn-success">Edit</button>
+        <button v-on:click="editColumns" v-if="fromDatabase" class="btn btn-1 btn-success">Edit</button>
         <button v-on:click="saveColumn" v-if="!fromDatabase" class="btn btn-1 btn-success">Save</button>
         <!-- <button v-on:click="updatePage(0)" class="btn btn-1 btn-success">00000</button> -->
       </div>
@@ -203,6 +203,15 @@ export default {
         .update({
           Matched: true
         });
+    },
+    editColumns() {
+      this.column_thai = this.matchColumns;
+      firebase
+        .database()
+        .ref("users/" + this.theUserUid)
+        .child("MatchColumns_thai")
+        .update(this.column_thai);
+        ElasticIndex.$emit("ColumnThai", this.column_thai);
     },
     // async sendToggle() {
     //   const url = "https://35.198.215.67/getcol";

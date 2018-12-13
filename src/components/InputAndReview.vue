@@ -1,7 +1,6 @@
 <template>
   <card class="border-0" hover shadow body-classes="py-5">
     <h6 class="text-warning text-uppercase">Query The Database</h6>
-    {{getDB()}}
     <input
       v-model="payload"
       placeholder="Query your data"
@@ -11,6 +10,7 @@
     <br>
     <button v-on:click="sendMessage" class="btn btn-1 btn-warning">Query</button>
     <card>
+      <!-- {{ getDB() }} -->
       <div v-if="data">data is {{ data }}</div>
     </card>
     <card>index is {{index}}</card>
@@ -40,16 +40,17 @@ export default {
   },
   computed: {
     fromDatabase() {
-      firebase
-        .database()
-        .ref("users/" + this.theUserUid)
-        .on("value", snapshot => {
-          this.index = snapshot.child("Index").val();
-          this.column_thai = snapshot.child("MatchColumns_thai").val();
-          this.column_eng = snapshot.child("MatchColumns_eng").val();
-          this.matched = snapshot.child("Matched").val();
-        });
-      return this.index;
+      this.getDB();
+    //   firebase
+    //     .database()
+    //     .ref("users/" + this.theUserUid)
+    //     .on("value", snapshot => {
+    //       this.index = snapshot.child("Index").val();
+    //       this.column_thai = snapshot.child("MatchColumns_thai").val();
+    //       this.column_eng = snapshot.child("MatchColumns_eng").val();
+    //       this.matched = snapshot.child("Matched").val();
+    //     });
+    //   return this.index;
     }
   },
   created() {
