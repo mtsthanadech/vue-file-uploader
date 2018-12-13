@@ -185,6 +185,7 @@ export default {
     },
     saveColumn() {
       this.column_thai = this.matchColumns;
+      this.column_eng = this.columns;
       ElasticIndex.$emit("ColumnThai", this.column_thai);
       firebase
         .database()
