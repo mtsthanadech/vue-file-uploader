@@ -24,7 +24,7 @@
     </template>-->
     <template>
       <div class="text-center text-muted mb-4">
-        <h6><router-link to="/Login">Sign in</router-link>/ Register</h6>
+        <h6><router-link to="/">Sign in</router-link>/ Register</h6>
       </div>
       <form role="form">
         <input

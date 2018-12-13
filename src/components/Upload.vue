@@ -55,9 +55,9 @@ export default {
           Uploaded: true,
           Matched: false,
           Index: this.index,
+          length: this.length,
           columns: [],
-          MatchColumns_thai: ["","",""],
-          length: ""
+          MatchColumns_thai: [""]
         });
     },
     selectFile() {
@@ -122,24 +122,18 @@ export default {
         .then(response => {
           this.columns = response.data["index_name"];
           this.length = response.data["index_name"].length;
-          firebase
-            .database()
-            .ref("users/" + this.theUserUid)
-            .child("MatchColumns_eng")
-            .update(this.columns);
-          firebase
-            .database()
-            .ref("users/" + this.theUserUid)
-            .child("MatchColumns_thai")
-            .update(this.MatchColumns_thai);
-            })
-          
+
+        })
         .catch(e => {
           this.errors.push(e);
           console.log(this.errors);
         });
-
-
+      firebase
+        .database()
+        .ref("users/" + this.theUserUid)
+        .child("MatchColumns_eng")
+        .update(this.columns);
+        
       this.database();
     }
   }
