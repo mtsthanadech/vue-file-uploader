@@ -4,27 +4,20 @@
       <!-- shape Hero -->
       <section class="section-shaped my-0">
         <div class="shape shape-style-1 shape-default shape-skew">
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
+          <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
         </div>
         <div class="container shape-container d-flex">
           <div class="col px-0">
             <div class="row">
               <div class="col-lg-6">
                 <h1 class="display-3 text-white">
-                  A beautiful Design System
-                  <span>completed with examples</span>
+                  A beautiful Design System<span>completed with examples</span>
                 </h1>
                 <p v-if="theUserUid" class="lead text-white">
                   The uid is
-                  <strong style="color:red;">{{ theUserUid }}</strong>
+                  <strong style="color:red;">
+                    {{ theUserUid }} {{ getCheck() }}
+                  </strong>
                 </p>
                 <!-- <div class="btn-wrapper">
                   <base-button
@@ -41,7 +34,7 @@
                     type="white"
                     icon="ni ni-cloud-download-95"
                   >Download HTML</base-button>
-                </div> -->
+                </div>-->
               </div>
             </div>
           </div>
@@ -51,45 +44,22 @@
     </div>
     <section class="section section-lg pt-lg-0 mt--200">
       <div class="container">
-
-        <div class="row justify-content-center" v-if="uploaded() === false">
+        <div class="row justify-content-center">
           <div class="col-lg-12">
-            <div class="row row-grid">
+            <div class="row row-grid" v-if="show === true">
+              <div class="col-lg-4"></div>
 
-              <div class="col-lg-4">
-                <!-- <match-column/> -->
-              </div>
+              <div class="col-lg-4"><simple-upload></simple-upload></div>
 
-              <div class="col-lg-4">
-                <simple-upload/>
-              </div>
+              <div class="col-lg-4"></div>
+            </div>
+            <div class="row row-grid" v-if="show === false">
+              <div class="col-lg-4"><match-column></match-column></div>
 
-              <div class="col-lg-4">
-                <!-- <input-review/> -->
-              </div>
+              <div class="col-lg-8"><input-review></input-review></div>
             </div>
           </div>
         </div>
-
-        <div class="row justify-content-center" v-else>
-          <div class="col-lg-12">
-            <div class="row row-grid">
-
-              <div class="col-lg-4" v-if="uploaded">
-                <match-column/>
-              </div>
-
-              <!-- <div class="col-lg-4">
-                <simple-upload/>
-              </div> -->
-
-              <div class="col-lg-8" v-if="uploaded">
-                <input-review/>
-              </div>
-            </div>
-          </div>
-        </div>
-
       </div>
     </section>
   </div>
@@ -99,44 +69,38 @@
 import Upload from "@/components/Upload.vue";
 import MatchColumn from "@/components/Mappage_com.vue";
 import InputAndReview from "@/components/InputAndReview.vue";
-import firebase, { database } from "firebase";
+import firebase from "firebase";
 
 export default {
   name: "adddatabase",
   data() {
     return {
-      user: "",
       index: "",
-      matched: ""
+      verified: "",
+      theUserUid: firebase.auth().currentUser.uid,
+      uploaded: "",
+      show: ""
     };
   },
   computed: {
-    theUserUid() {
-      return this.$store.getters.getUid;
-    },
-    fromDatabase() {
-      firebase
-        .database()
-        .ref("users/" + this.theUserUid)
-        .on("value", snapshot => {
-          this.uploaded = snapshot.child("Uploaded").val();
-          this.index = snapshot.child("Index").val();
-          this.matched = snapshot.child("Matched").val();
-        });
-      return this.uploaded;
-    }
+    // fromDB() {
+    //   this.getCheck();
+    // }
   },
   methods: {
-    uploaded() {
+    getCheck() {
       firebase
         .database()
         .ref("users/" + this.theUserUid)
         .on("value", snapshot => {
+          this.verified = snapshot.child("Verified").val();
           this.uploaded = snapshot.child("Uploaded").val();
-          this.index = snapshot.child("Index").val();
-          this.matched = snapshot.child("Matched").val();
         });
-      return this.uploaded;
+      if (this.verified == false) {
+        this.show = true;
+      } else {
+        this.show = false;
+      }
     }
   },
   components: {
