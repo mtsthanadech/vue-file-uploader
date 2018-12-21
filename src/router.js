@@ -9,6 +9,7 @@ import Register from "./views/Register.vue";
 import Profile from "./views/Profile.vue";
 import AddDatabase from "./views/AddDatabase.vue";
 import Verify from "./views/Verify.vue";
+import Query from "./views/Query.vue"
 import firebase from "firebase";
 
 Vue.use(Router);
@@ -37,12 +38,11 @@ const router = new Router({
         footer: AppFooter
       },
       meta: {
-        requiresAuth: false
-        // requiresVerify: true
+        requiresVerify: true
       }
     },
     {
-      path: "/",
+      path: "/login",
       name: "login",
       components: {
         header: AppHeader,
@@ -72,10 +72,13 @@ const router = new Router({
         header: AppHeader,
         default: Profile,
         footer: AppFooter
+      },
+      meta: {
+        requiresVerify: true
       }
     },
     {
-      path: "/app",
+      path: "/",
       name: "adddatabase",
       components: {
         header: AppHeader,
@@ -83,8 +86,19 @@ const router = new Router({
         footer: AppFooter
       },
       meta: {
-        requiresAuth: false
-        // requiresVerify: true
+        requiresVerify: true
+      }
+    },
+    {
+      path: "/query",
+      name: "query",
+      components: {
+        header: AppHeader,
+        default: Query,
+        footer: AppFooter
+      },
+      meta: {
+        requiresVerify: true
       }
     },
     {
@@ -97,6 +111,7 @@ const router = new Router({
       },
       meta: {
         requiresAuth: true
+
       }
     }
   ],
@@ -112,58 +127,98 @@ const router = new Router({
 router.beforeEach((to, from, next) => {
   const loggedIn = firebase.auth().currentUser;
   // Check for requiresAuth guard
-  if (to.matched.some(record => record.meta.requiresAuth)) {
-    // Check if NO logged user
-    if (!loggedIn) {
-      // Go to login
-      next({
-        path: "/"
-      });
+  if (to.matched.some(record => record.meta.requiresGuest)) {
+    if(loggedIn){
+      if (loggedIn.emailVerified) {
+        next({
+          path : "/"
+        });
+      } else {
+        next({
+          path : "/verify"
+        });
+      }
     } else {
-      // Proceed to route
       next();
     }
-  } else if (to.matched.some(record => record.meta.requiresGuest)) {
-    // Check if logged user
-    if (loggedIn) {
-      // Go to login
+  } else if (to.matched.some(record => record.meta.requiresAuth)) {
+    if (!loggedIn) {
       next({
-        path: "/app"
+        path : "/login"
       });
     } else {
-      // Proceed to route
       next();
     }
   } else if (to.matched.some(record => record.meta.requiresVerify)) {
     if (!loggedIn) {
       next({
-        path: "/"
+        path : "/login"
       });
-    } else {
-      if (loggedIn.emailVerified) {
-        to({
-          path: "/app"
-        });
-      } else {
-        next({
-          // path: "/verify"
-        });
-      }
-    }
-  } else if (to.matched.some(record => !record.meta.requiresAuth)) {
-    if (!loggedIn.emailVerified) {
-      to({
-        path: "/app"
+    } else if (!loggedIn.emailVerified){
+      next({
+        path : "/verify"
       });
     } else {
       next();
     }
   } else {
-    // Proceed to route
-    to({
-      path: "/app"
+    next({
+      path : "/login"
     });
   }
 });
+//   if (to.matched.some(record => record.meta.requiresAuth)) {
+//     // Check if NO logged user
+//     if (!loggedIn) {
+//       // Go to login
+//       next({
+//         path: "/login"
+//       });
+//     } else {
+//       // Proceed to route
+//       next();
+//     }
+//   } else if (to.matched.some(record => record.meta.requiresGuest)) {
+//     // Check if logged user
+//     if (loggedIn) {
+//       // Go to login
+//       next({
+//         path: "/app"
+//       });
+//     } else {
+//       // Proceed to route
+//       next();
+//     }
+//   } else if (to.matched.some(record => record.meta.requiresVerify)) {
+//     if (!loggedIn) {
+//       next({
+//         path: "/"
+//       });
+//     } else {
+//       if (loggedIn.emailVerified) {
+//         to({
+//           path: "/app"
+//         });
+//       } else {
+//         next({
+//           // path: "/verify"
+//         });
+//       }
+//     }
+//   } else if (to.matched.some(record => !record.meta.requiresAuth)) {
+//     if (!loggedIn.emailVerified) {
+//       to({
+//         path: "/app"
+//       });
+//     } else {
+//       next();
+//     }
+//   } else {
+//     // Proceed to route
+//     to({
+//       path: "/app"
+//     });
+//   }
+// });
 
 export default router;

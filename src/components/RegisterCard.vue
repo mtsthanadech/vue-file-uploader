@@ -24,9 +24,7 @@
     </template>-->
     <template>
       <div class="text-center text-muted mb-4">
-        <h6>
-          <router-link to="/Login">Sign in</router-link>/ Register
-        </h6>
+        <h6><router-link to="/Login">Sign in</router-link>/ Register</h6>
       </div>
       <form role="form">
         <input
@@ -36,7 +34,7 @@
           class="mb-3 form-control input-group-alternative"
           aria-describedby="addon-right addon-left"
           addon-left-icon="ni ni-hat-3"
-        >
+        />
         <input
           v-model="email"
           placeholder="E-mail"
@@ -44,7 +42,7 @@
           class="mb-3 form-control input-group-alternative"
           aria-describedby="addon-right addon-left"
           addon-left-icon="ni ni-hat-3"
-        >
+        />
         <input
           v-model="pass"
           placeholder="Password"
@@ -52,7 +50,7 @@
           class="mb-3 form-control input-group-alternative"
           aria-describedby="addon-right addon-left"
           addon-left-icon="ni ni-hat-3"
-        >
+        />
 
         <!-- <div class="text-muted font-italic">
                                     <small>password strength:
@@ -66,7 +64,9 @@
         </base-checkbox>-->
         <div class="text-center">
           <!-- <base-button type="primary" class="my-4">Create account</base-button> -->
-          <button v-on:click="register" class="btn btn-1 btn-primary">Create account</button>
+          <button v-on:click="register" class="btn btn-1 btn-primary">
+            Create account
+          </button>
         </div>
       </form>
     </template>
@@ -82,6 +82,7 @@ export default {
       email: "",
       pass: "",
       theUserUid: "",
+      theUser: ""
     };
   },
   methods: {
@@ -90,14 +91,15 @@ export default {
         .auth()
         .createUserWithEmailAndPassword(this.email, this.pass)
         .then(user => {
-            this.theUserUid = firebase.auth().currentUser.uid
-            firebase
-                .database()
-                .ref("users/" + this.theUserUid)
-                .set({
-                Name: this.name,
-                Email: this.email,
-                Uploaded: false
+          this.theUser = user;
+          this.theUserUid = firebase.auth().currentUser.uid;
+          firebase
+            .database()
+            .ref("users/" + this.theUserUid)
+            .set({
+              Name: this.name,
+              Email: this.email,
+              Uploaded: false
             });
           alert("Account created for " + this.email);
           // alert(`Account created for ${user.email}`);
