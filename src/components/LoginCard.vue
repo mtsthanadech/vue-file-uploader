@@ -82,7 +82,7 @@ export default {
             this.theuser = user.user;
             if (firebase.auth().currentUser.emailVerified) {
               alert(`You are logged in as ${user.user.email}`);
-              this.$router.push({ path: "/" });
+              this.$router.push({ path: "/app" });
             } else {
               this.$router.push({ path: "/verify" });
             }
