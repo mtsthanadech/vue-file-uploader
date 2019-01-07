@@ -39,9 +39,9 @@
             <span v-if="!currentUser" class="nav-link-inner--text">Register / Login</span>
             <span v-if="currentUser" class="nav-link-inner--text">{{ currentUser }}</span>
           </a>
-          <router-link v-if="isLoggedIn" to="/landing" class="dropdown-item">Landing</router-link>
+          <!-- <router-link v-if="isLoggedIn" to="/landing" class="dropdown-item">Landing</router-link> -->
           <router-link v-if="isLoggedIn" to="/app" class="dropdown-item">App</router-link>
-          <router-link v-if="isLoggedIn" to="/profile" class="dropdown-item">Profile</router-link>
+          <!-- <router-link v-if="isLoggedIn" to="/profile" class="dropdown-item">Profile</router-link> -->
           <router-link v-if="isLoggedIn" to="/query" class="dropdown-item">Query</router-link>
           <router-link v-if="!isLoggedIn" to="/" class="dropdown-item">Login</router-link>
           <router-link v-if="!isLoggedIn" to="/register" class="dropdown-item">Register</router-link>
