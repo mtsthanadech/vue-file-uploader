@@ -10,6 +10,7 @@ import Profile from "./views/Profile.vue";
 import AddDatabase from "./views/AddDatabase.vue";
 import Verify from "./views/Verify.vue";
 import firebase from "firebase";
+import Query from "./views/QueryDatabase.vue";
 
 Vue.use(Router);
 const router = new Router({
@@ -97,6 +98,18 @@ const router = new Router({
       },
       meta: {
         requiresAuth: true
+      }
+    },
+    {
+      path : "/query",
+      name : "query",
+      components: {
+        header: AppHeader,
+        default: Query,
+        footer: AppFooter
+      },
+      meta: {
+        requiresAuth: false
       }
     }
   ],

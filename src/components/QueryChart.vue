@@ -1,22 +1,7 @@
 <template>
   <card class="border-0" hover shadow body-classes="py-5">
     <h6 class="text-warning text-uppercase">Query The Database</h6>
-    <input
-      v-model="payload"
-      placeholder="Query your data"
-      class="form-control input-group-alternative"
-      aria-describedby="addon-right addon-left"
-    >
-    <br>
-    <button v-on:click="queryData" class="btn btn-1 btn-warning">Query</button>
-    <card>
-      <div v-if="data">{{ data }}</div>
-    </card>
-    <card></card>
-    <card>index is {{index}}</card>
-    <card>payload is {{payload}}</card>
-    <card>column_thai are {{column_thai}}</card>
-    <card>column_eng are {{column_eng}}</card>
+    
   </card>
 </template>
 
@@ -25,6 +10,7 @@ import axios from "axios";
 import firebase, { database } from "firebase";
 import Chart from "vue-chartjs"
 import { generateChart } from "vue-chartjs"
+import { Bar } from "vue-chartjs"
 
 export default {
   name: "QueryChart",

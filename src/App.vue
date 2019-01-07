@@ -9,6 +9,7 @@
         <router-view name="footer"></router-view>
     </div>
 </template>
+
 <script>
 import { FadeTransition } from "vue2-transitions";
 
@@ -18,3 +19,11 @@ export default {
   }
 };
 </script>
+
+<style>
+    #app{
+        background-color:#f6f6f6;
+        justify-content: center;
+        align-items: center;
+    }
+</style>
