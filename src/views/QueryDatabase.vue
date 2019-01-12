@@ -2,9 +2,9 @@
     <section class="section section-lg">
       <div class="container">
         <div class="row justify-content-center">
-          <div class="col-lg-2"></div>
-          <div class="col-lg-8"><query-graph></query-graph></div>
-          <div class="col-lg-2"></div>
+          <!-- <div class="col-lg-2"></div> -->
+          <div class="col-lg-12"><query-graph></query-graph></div>
+          <!-- <div class="col-lg-2"></div> -->
         </div>
       </div>
     </section>
