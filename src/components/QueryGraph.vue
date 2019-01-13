@@ -1,6 +1,6 @@
 <template>
   <card class="border-0" hover shadow body-classes="py-5">
-    <h6 class="text-warning text-uppercase">Query The Database</h6> - {{createdata}}
+    <h6 class="text-warning text-uppercase">Query The Database</h6> - {{graph_data_y}} - {{graph_label_y}}
     <div class="row">
       <div class="col-12">
         <card>
@@ -24,11 +24,19 @@
       </div> -->
       <div class="col-6" v-if="data">
         <card><bar-chart
-                v-bind:graphdatabar="createdata"
+                v-bind:graph_data_y="graph_data_y"
+                v-bind:graph_label_y="graph_label_y"
+              >
+              </bar-chart></card>
+      </div>
+      <div class="col-6">
+        <card><bar-chart
+                v-bind:graphdatabar="graphdatabar"
               >
               </bar-chart></card>
       </div>
     </div>
+    
   </card>
 </template>
 
@@ -38,6 +46,8 @@ import firebase, { database } from "firebase";
 import { ElasticIndex } from "./ElasticIndex.js";
 import LineChart from "@/components/ChartLine.vue";
 import BarChart from "@/components/ChartBar.vue";
+import CircularJSON from "circular-json"
+
 export default {
   name: "QueryGraph",
   data() {
@@ -74,56 +84,12 @@ export default {
         labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
         datasets: [
           {
-            label: '',
+            label: 'one bar graph',
             backgroundColor: 'rgba(248, 121, 121, .5)',
-            data: [],
+            data: [4.8, 12.1, 12.7, 6.7, 139.8, 116.4, 50.7, 49.2, 139.8, 116.4, 50.7, 49.2],
           }
         ]
       },
-      graphdataline: {
-        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-        datasets: [
-          {
-            label: 'Data One',
-            backgroundColor: 'rgba(248, 121, 121, .5)',
-            data: [40, 39, 10, 40, 39, 80, 40],
-            borderWidth: 1
-          },
-          {
-            label: 'Data Two',
-            backgroundColor: 'rgba(119, 255, 0, .5)',
-            data: [50, 29, 15, 44, 29, 70, 20],
-            borderWidth: 1
-          }
-        ]
-      },
-      // graphdataline: {
-      //   labels: ['Mercury', 'Venus', 'Earth', 'Mars', 'Jupiter', 'Saturn', 'Uranus', 'Neptune'],
-      //   datasets: [
-      //     { // one line graph
-      //       label: 'Number of Moons',
-      //       data: [0, 0, 1, 2, 67, 62, 27, 14],
-      //       backgroundColor: [
-      //         'rgba(54,73,93,.5)', // Blue
-      //       ],
-      //       borderColor: [
-      //         '#36495d'
-      //       ],
-      //       borderWidth: 3
-      //     },
-      //     { // another line graph
-      //       label: 'Planet Mass (x1,000 km)',
-      //       data: [4.8, 12.1, 12.7, 6.7, 139.8, 116.4, 50.7, 49.2],
-      //       backgroundColor: [
-      //         'rgba(71, 183,132,.5)', // Green
-      //       ],
-      //       borderColor: [
-      //         '#47b784',
-      //       ],
-      //       borderWidth: 3
-      //     }
-      //   ]
-      // },
       graphoptionsline: {
         responsive: true,
         lineTension: 1,
@@ -204,41 +170,6 @@ export default {
         this.graph_label_y = Object.values(data.data);
         // console.log(">=1")
       }  
-
-      var dataforgraph;
-
-      // for(let idd of Object.keys(data.graph_data_y).length){
-      //   dataforgraph = {
-      //     label: this.graph_label_y,
-      //     backgroundColor:'rgba(248, 121, 121, .5)',
-      //     data: this.graph_data_y,
-      //   }
-      //   this.createdata.labels.push(this.graph_label_y);
-      //   this.createdata.datasets.push(dataforgraph)
-      // }
-
-      this.createdata = {
-        labels: this.graph_label_y,
-        datasets: [
-          {
-            label: this.graph_label_y,
-            backgroundColor: 'rgba(248, 121, 121, .5)',
-            data: this.graph_data_y
-          }
-        ]
-      }
-
-      // this.createdata = {
-      //   labels:[],
-      //   datasets: [
-      //     {
-      //       label: '',
-      //       backgroundColor: 'rgba(248, 121, 121, .5)',
-      //       data: []
-      //     }
-      //   ]
-      // }
-
     }
   }
 };
