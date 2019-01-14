@@ -1,6 +1,7 @@
 <template>
   <card class="border-0" hover shadow body-classes="py-5">
-    <h6 class="text-warning text-uppercase">Query The Database</h6> - {{graph_data_y}} - {{graph_label_y}}
+    <h6 class="text-warning text-uppercase">Query The Database</h6>
+     <!-- - {{graph_data_y}} - {{graph_label_y}} -->
     <div class="row">
       <div class="col-12">
         <card>
@@ -13,6 +14,7 @@
           <br>
            
           <button v-on:click="sendMessage" class="btn btn-1 btn-warning">Query</button>{{ getDB() }}
+          {{ graphs }}
         </card>
       </div>
       <!-- <div class="col-6" v-for="(graph, index) in graphsname">
@@ -22,18 +24,37 @@
               >
               </line-chart></card>
       </div> -->
-      <div class="col-6" v-if="data">
-        <card><bar-chart
+      
+      <div class="col-6" v-if="graph" v-for="(graph,index) in graphs" @key="index">
+        <card>
+          <button type="button" @click="delGraph(index)">
+            <span>×</span>
+          </button>
+          <h6>{{ index }} - {{ graph }}</h6>
+          <bar-chart
                 v-bind:graph_data_y="graph_data_y"
                 v-bind:graph_label_y="graph_label_y"
               >
-              </bar-chart></card>
-      </div>
-      <div class="col-6">
-        <card><bar-chart
-                v-bind:graphdatabar="graphdatabar"
+          </bar-chart>
+          <!-- <line-chart
+                v-bind:graph_data_y="graph_data_y"
+                v-bind:graph_label_y="graph_label_y"
               >
-              </bar-chart></card>
+          </line-chart> -->
+        </card>
+      </div>
+      <div class="col-6" v-if="graph" v-for="(graph,index) in graphs" @key="index">
+        <card>
+          <button type="button" @click="delGraph(index)">
+            <span>×</span>
+          </button>
+          <h6>{{ index }} - {{ graph }}</h6>
+          <line-chart
+                v-bind:graph_data_y="graph_data_y"
+                v-bind:graph_label_y="graph_label_y"
+              >
+          </line-chart>
+        </card>
       </div>
     </div>
     
@@ -55,8 +76,7 @@ export default {
       queryword: "",
 
       data: "",
-      data_size: [],
-      graph: "",
+      graphs: [],
       graph_data_x: "",
       graph_data_y: "",
       graph_label_x: "",
@@ -64,7 +84,6 @@ export default {
 
       errors: [],
       index: "",
-      showw: "",
       column_thai: [],
       column_eng: [],
       matched: "",
@@ -79,29 +98,6 @@ export default {
           }
         ]
       },
-
-      graphdatabar: {
-        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-        datasets: [
-          {
-            label: 'one bar graph',
-            backgroundColor: 'rgba(248, 121, 121, .5)',
-            data: [4.8, 12.1, 12.7, 6.7, 139.8, 116.4, 50.7, 49.2, 139.8, 116.4, 50.7, 49.2],
-          }
-        ]
-      },
-      graphoptionsline: {
-        responsive: true,
-        lineTension: 1,
-        scales: {
-          yAxes: [{
-            ticks: {
-              beginAtZero: true,
-              padding: 25,
-            }
-          }]
-        }
-      }
     };
   },
   computed: {
@@ -109,22 +105,25 @@ export default {
       this.getDB();
     }
   },
-  created() {
-    //  ElasticIndex.$on("ElasticIndex", index => {
-    //    this.index = index;
-    //  });
-    //  ElasticIndex.$on("ColumnThai", column_thai => {
-    //    this.column_thai = column_thai;
-    //  });
-    //  ElasticIndex.$on("ColumnEng", column_eng => {
-    //    this.column_eng = column_eng;
-    //  });
-  },
   components:{
     "line-chart" : LineChart,
     "bar-chart" : BarChart
   },
   methods: {
+    addGraph() {
+      this.graphs.push(this.queryword);
+      firebase
+            .database()
+            .ref("users/" + this.theUserUid + "Graphs")
+            .update({
+              Graphs: this.graphs,
+              Email: this.email,
+              Uploaded: false
+            });
+    },
+    delGraph(index) {
+      this.graphs.splice(index,1,null);
+    },
     getDB() {
       firebase
         .database()
@@ -169,7 +168,8 @@ export default {
         this.graph_data_y = Object.values(data.graph_data_y);
         this.graph_label_y = Object.values(data.data);
         // console.log(">=1")
-      }  
+      }
+      this.addGraph();
     }
   }
 };
