@@ -7,7 +7,7 @@ import './components/firebaseInit';
 
 import { store } from './store/store'
 
-// Vue.config.productionTip = false;
+Vue.config.productionTip = true;
 Vue.use(Argon);
 
 firebase.auth().onAuthStateChanged(function(user) {

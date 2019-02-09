@@ -43,6 +43,7 @@
           <router-link v-if="isLoggedIn" to="/app" class="dropdown-item">App</router-link>
           <!-- <router-link v-if="isLoggedIn" to="/profile" class="dropdown-item">Profile</router-link> -->
           <router-link v-if="isLoggedIn" to="/query" class="dropdown-item">Query</router-link>
+          <router-link v-if="isLoggedIn" to="/test" class="dropdown-item">Test</router-link>
           <router-link v-if="!isLoggedIn" to="/" class="dropdown-item">Login</router-link>
           <router-link v-if="!isLoggedIn" to="/register" class="dropdown-item">Register</router-link>
           <a v-if="isLoggedIn" v-on:click="logout" class="dropdown-item">Logout</a>

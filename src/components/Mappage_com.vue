@@ -42,7 +42,7 @@
               </a>
             </li>
 
-            <div v-if="currentPage==0">
+            <div v-if="currentPage===0">
               <li class="page-item active">
                 <a class="page-link" v-on:click="updatePage(0)">1</a>
               </li>

@@ -9,14 +9,13 @@
     >
     <br>
     <button v-on:click="sendMessage" class="btn btn-1 btn-warning">Query</button>
-    <card>
-      <!-- {{ getDB() }} -->
+    <!-- <card>
       <div v-if="data">data is {{ data }}</div>
     </card>
     <card>index is {{index}}</card>
     <card>payload is {{payload}}</card>
     <card>column_thai are {{column_thai}}</card>
-    <card>column_eng are {{column_eng}}</card>
+    <card>column_eng are {{column_eng}}</card> -->
   </card>
 </template>
 

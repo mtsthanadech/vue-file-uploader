@@ -3,27 +3,29 @@ import { Bar } from 'vue-chartjs'
 
 export default {
   extends: Bar,
+  // mixins: [mixins.reactiveProp],
   data() {
     return {
-      old_graph_data_y: "",
-      old_graph_label_y: ""
+      graphoptionsbar: {
+        responsive: true
+      }
     }
   },
-  props: ['graph_data_y', 'graph_label_y'],
+  props: ['graph_data', 'graph_label', 'graph_name'],
   mounted () {
     // Overwriting base render method with actual data.
     this.renderChart({
       // labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-      labels: this.graph_label_y,
+      labels: this.graph_label,
       datasets: [
         {
           // label: 'GitHub Commits',
-          label: this.graph_label_y,
+          label: this.graph_name,
           backgroundColor: '#f87979',
-          data: this.graph_data_y
+          data: this.graph_data
         }
       ]
-    })
+    },{responsive: true})
   }
 }
 </script>

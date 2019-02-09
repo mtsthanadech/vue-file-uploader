@@ -20,16 +20,16 @@ export default {
       }
     }
   },
-  props: ['graph_data_y', 'graph_label_y'],
+  props: ['graph_data', 'graph_label', 'graph_name'],
   mounted () {
     // this.renderChart(this.chartdata, this.options)
     this.renderChart({
-        labels: this.graph_label_y,
+        labels: this.graph_label,
         datasets: [
           {
-            label: this.graph_label_y,
+            label: this.graph_label,
             backgroundColor: 'rgba(248, 121, 121, .5)',
-            data: this.graph_data_y,
+            data: this.graph_data,
           }
         ]
       },this.graphoptionsline)
