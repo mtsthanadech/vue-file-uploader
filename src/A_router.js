@@ -9,7 +9,7 @@ import Register from "./views/Register.vue";
 import Profile from "./views/Profile.vue";
 import AddDatabase from "./views/AddDatabase.vue";
 import Verify from "./views/Verify.vue";
-import Query from "./views/Query.vue"
+import Query from "./views/Query.vue";
 import firebase from "firebase";
 
 Vue.use(Router);
@@ -23,11 +23,7 @@ const router = new Router({
         header: AppHeader,
         default: Components,
         footer: AppFooter
-      },
-      // meta: {
-      //   requiresAuth: false,
-      //   requiresVerify: true
-      // }
+      }
     },
     {
       path: "/landing",

@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "animate.css": "^3.7.0",
+    "autocomplete-vue": "^1.1.0",
     "axios": "^0.18.0",
     "bootstrap-vue": "^2.0.0-rc.11",
     "chart.js": "^2.7.3",
@@ -19,22 +20,32 @@
     "flatpickr": "^4.5.1",
     "nouislider": "^11.1.0",
     "parallax-js": "^3.1.0",
+    "typescript": "^3.4.5",
+    "v-autocomplete": "^1.8.2",
+    "v-autosuggest": "^1.0.1",
     "vue": "^2.5.16",
     "vue-chartjs": "^3.4.0",
     "vue-flatpickr-component": "^7.0.4",
+    "vue-jquery": "^1.0.6",
     "vue-lazyload": "^1.2.6",
+    "vue-masonry": "^0.11.7",
+    "vue-masonry-css": "^1.0.3",
     "vue-parallaxy": "^1.1.1",
     "vue-router": "^3.0.1",
     "vue2-transitions": "^0.2.3",
-    "vuex": "^3.0.1"
+    "vuex": "^3.0.1",
+    "wordcut": "^0.9.0",
+    "wordcut-ts": "^0.0.3"
   },
   "devDependencies": {
+    "@types/node": "^11.13.8",
     "@vue/cli-plugin-babel": "^3.0.0-rc.10",
     "@vue/cli-plugin-eslint": "^3.0.0-rc.10",
     "@vue/cli-service": "^3.0.0-rc.10",
     "@vue/eslint-config-prettier": "^3.0.0-rc.10",
     "node-sass": "^4.11.0",
     "sass-loader": "^7.0.1",
+    "vue-class-component": "^7.0.2",
     "vue-template-compiler": "^2.5.16"
   }
 }

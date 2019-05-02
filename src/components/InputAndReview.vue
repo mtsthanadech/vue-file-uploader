@@ -23,6 +23,8 @@
 import axios from "axios";
 import firebase, { database } from "firebase";
 import { ElasticIndex } from "./ElasticIndex.js";
+import  {wordcut} from "./../../node_modules/wordcut"
+
 export default {
   name: "InputAndReview",
   data() {
@@ -74,6 +76,7 @@ export default {
           this.column_eng = snapshot.child("MatchColumns_eng").val();
           this.matched = snapshot.child("Matched").val();
         });
+      console.log(wordcut.cut("กากา"));
     },
     sendMessage() {
       const url = "https://35.198.215.67/query";
@@ -101,3 +104,10 @@ export default {
   }
 };
 </script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+<script src="https://unpkg.com/keras-js"></script>
+<!-- utils functions -->
+<script src="./js/utils.js"></script>
+<!-- main js -->
+<script src="./js/index.js"></script>

@@ -1,35 +1,35 @@
 <template>
-    <section class="section section-lg">
-      <div class="container">
-        <div class="row justify-content-center">
-          <div class="col-lg-12">
-            <div class="heartBeat animated"><h6>Example</h6></div>
-              <parallax>
-                <img src="path/cool-background-image.jpg" alt="very cool bg">
-              </parallax>
-          </div>
-        </div>
-      </div>
-    </section>
+  <v-autocomplete :items="items" v-model="item" :get-label="getLabel" :component-item='template' @update-items="updateItems">
+  </v-autocomplete>
 </template>
 
 <script>
-// import Parallax from "parallax-js";
-import Parallax from "vue-parallaxy";
+    // import ItemTemplate from './ItemTemplate.vue'
+    import Vue from 'vue'
 
+    import Autocomplete from 'v-autocomplete'
 
-export default {
-  name: "test",
-  data() {
-    return {
+    // You need a specific loader for CSS files like https://github.com/webpack/css-loader
+    import 'v-autocomplete/dist/v-autocomplete.css'
 
+    Vue.use(Autocomplete);
+    export default {
+        data () {
+            return {
+                item: {id: 9, name: 'Lion', description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit.'},
+                items: [],
+                // template: ItemTemplate
+            }
+        },
+        methods: {
+            getLabel (item) {
+                return item.name
+            },
+            updateItems (text) {
+                yourGetItemsMethod(text).then( (response) => {
+                    this.items = response
+                })
+            }
+        }
     }
-  },
-  methods: {
-    
-  },
-  components: {
-    
-  }
-};
 </script>

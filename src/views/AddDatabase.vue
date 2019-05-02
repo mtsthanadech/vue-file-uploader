@@ -1,21 +1,15 @@
 <template>
     <section class="section section-lg">
       <div class="container">
-        <!-- {{ getCheck() }} -->
         <div class="row justify-content-center">
           <div class="col-lg-12">
             <div class="row row-grid" v-if="fromdb === true">
-
               <div class="col-lg-4"></div>
-
               <div class="col-lg-4"><simple-upload></simple-upload></div>
-
               <div class="col-lg-4"></div>
-
             </div>
             <div class="row row-grid" v-if="fromdb === false">
               <div class="col-lg-5"><match-column></match-column></div>
-
               <div class="col-lg-7"><query-graph></query-graph></div>
             </div>
           </div>
@@ -27,9 +21,9 @@
 <script>
 import Upload from "@/components/Upload.vue";
 import MatchColumn from "@/components/Mappage_com.vue";
-import InputAndReview from "@/components/InputAndReview.vue";
 import QueryGraph from "@/components/QueryGraph.vue";
-import firebase,{ functions } from "firebase";
+import firebase from "firebase";
+import { Wordcut } from "wordcut-ts/lib/wordcut";
 
 export default {
   name: "adddatabase",
