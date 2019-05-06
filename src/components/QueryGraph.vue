@@ -6,7 +6,6 @@
       <div class="col-12">
         <!-- <card> -->
         <input
-          id="message"
           v-model="queryword"
           v-on:keyup="onBtnPredictClicked"
           placeholder="Query your data"
@@ -15,8 +14,11 @@
         />
 
         <button @click="sendMessage" class="btn btn-1 btn-warning">Query</button>
+
         <!--{{ getDB()}}-->
         <card>{{ deepword }}</card>
+        <card>{{ testword }}</card>
+
       </div>
     </div>
     <div class="row no-gutters masonry">
@@ -65,15 +67,7 @@
     </div>
   </div>
  -->
-    <VAutosuggest
-            v-model="searchData"
-            :getItemFromAjax="ajaxCall"
-            :suggValue="'name'"
-            :suggStatusComp="statusComponent"
-            :suggItemComp="suggItemComponent"
-            :items="staticSuggArray"
-            :maxSuggestion="maxSugg"
-    />
+
   </card>
 </template>
 
@@ -82,18 +76,23 @@ import axios from "axios";
 import firebase from "firebase";
 import LineChart from "@/components/ChartLine.vue";
 import BarChart from "@/components/ChartBar.vue";
-import VAutoSuggest from 'v-autosuggest'
 
 export default {
   name: "QueryGraph",
-  create: function () {
+  created: function() {
     this.getDB();
+    console.log(this.column_thai);
+    console.log(this.column_eng);
   },
   data() {
     return {
       queryword: "",
-      // Deepcutresult: document.getElementById('result').value,
       deepword: "",
+      testword:[],
+
+      // selectedCountry: null,
+      selectWord: [],
+      options: {},
 
       data: "",
       graphs: [],
@@ -142,7 +141,6 @@ export default {
   components: {
     "line-chart": LineChart,
     "bar-chart": BarChart,
-    'VAutosuggest': VAutoSuggest
   },
   methods: {
     // getword() {
@@ -245,10 +243,19 @@ export default {
 
           predictions.push(output.dense_2[0]);
         }
-        var result = this.parse_prediction(text, predictions);
+        this.selectWord = this.parse_prediction(text, predictions);
         console.log("completed");
-        console.log(result);
-        this.deepword = result[result.length - 1];
+        console.log(this.selectWord);
+        this.deepword = this.selectWord[this.selectWord.length - 1];
+        var deepword = this.deepword;
+        this.column_thai.forEach(function (column) {
+          if (column.includes(deepword)) {
+            console.log(column);
+            batch.push(column);
+          }
+        });
+        this.testword = batch;
+        console.log(this.deepword);
       })();
     },
     gen_input(text) {
@@ -370,68 +377,37 @@ export default {
     },
 
     createGraphVariable(data) {
-      if (Object.keys(data.graph_data_y).length == 0) {
-        if (data.graph == 2) {
+      if (Object.keys(data.graph_data_y).length === 0) {
+        if (data.graph === 2) {
           //avg
           // compare_agg -> Min
           // compare_agg_! -> Max
-          this.graphGenOneData(
-            data.graph_data_y,
-            data.graph_label_y,
-            data.compare_agg,
-            data.compare_agg_1,
-            "Min",
-            "Max"
-          );
-        } else if (data.graph == 4) {
+          this.graphGenOneData(data.graph_data_y, data.graph_label_y, data.compare_agg, data.compare_agg_1, "Min", "Max");
+        } else if (data.graph === 4) {
           //min
           // compare_agg -> Avg
           // compare_agg_! -> Max
-          this.graphGenOneData(
-            data.graph_data_y,
-            data.graph_label_y,
-            data.compare_agg,
-            data.compare_agg_1,
-            "Avg",
-            "Max"
-          );
-        } else if (data.graph == 5) {
+          this.graphGenOneData(data.graph_data_y, data.graph_label_y, data.compare_agg, data.compare_agg_1, "Avg", "Max");
+        } else if (data.graph === 5) {
           //max
           // compare_agg -> Min
           // compare_agg_! -> Avg
-          this.graphGenOneData(
-            data.graph_data_y,
-            data.graph_label_y,
-            data.compare_agg,
-            data.compare_agg_1,
-            "Min",
-            "Avg"
-          );
-        }
+          this.graphGenOneData(data.graph_data_y, data.graph_label_y, data.compare_agg, data.compare_agg_1, "Min", "Avg");}
       } else {
-        this.graphGenConditions(
-          Object.values(data.graph_data_y),
-          Object.values(data.graph_label_y),
-          Object.values(data.graph_data_x),
-          Object.values(data.graph_label_x)
-        );
+        this.graphGenConditions(Object.values(data.graph_data_y), Object.values(data.graph_label_y), Object.values(data.graph_data_x), Object.values(data.graph_label_x));
       }
     },
     graphGenConditions(dataY, labelY, dataX, labelX) {
       this.graph_data = dataY;
-
       if (this.graph_data[0] > -1 && this.graph_data.length > 1) {
         this.graph_datamin = Math.min.apply(null, this.graph_data);
         this.graph_datamax = Math.max.apply(null, this.graph_data);
-        this.graph_range =
-          (this.graph_datamin + this.graph_datamax) / this.graph_count;
-
+        this.graph_range = (this.graph_datamin + this.graph_datamax) / this.graph_count;
         for (let i = 0; i < this.graph_count; i++) {
           this.graph_check_range.push(
             Math.ceil(this.graph_datamin + this.graph_range * (i + 1))
           );
         }
-
         for (let j = 0; j < this.graph_data.length; j++) {
           if (this.graph_data[j] <= this.graph_check_range[0]) {
             this.graph_datacount[0] = this.graph_datacount[0] + 1;
@@ -462,14 +438,7 @@ export default {
         this.graph_check_range = [];
       }
     },
-    graphGenOneData(
-      aggData,
-      label,
-      comAgg,
-      comAgg1,
-      comAgg_label,
-      comAgg_label_1
-    ) {
+    graphGenOneData(aggData, label, comAgg, comAgg1, comAgg_label, comAgg_label_1) {
       var index = this.graphs.length;
       this.agg_data[index] = aggData.toFixed(2);
       this.compare_agg[index] = comAgg.toFixed(2);
@@ -479,7 +448,7 @@ export default {
       this.agg_label[index] = label;
       this.addGraph();
       // this.addOneData();
-    }
+    },
   }
 };
 </script>

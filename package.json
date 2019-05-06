@@ -23,6 +23,7 @@
     "typescript": "^3.4.5",
     "v-autocomplete": "^1.8.2",
     "v-autosuggest": "^1.0.1",
+    "v-suggestions": "^1.1.1",
     "vue": "^2.5.16",
     "vue-chartjs": "^3.4.0",
     "vue-flatpickr-component": "^7.0.4",
