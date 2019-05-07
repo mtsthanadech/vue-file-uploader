@@ -14,7 +14,9 @@
         />
         <div v-if="wordsuggest.length > 0">
           <div v-for="(word, index) in wordsuggest" :key="index">
-            <button @click="replaceWord(word, index)" class="btn btn-1 btn-neutral btn-suggest">#{{ index }} - {{ word }}</button>
+            <div v-if="index <= 10">
+              <button @click="replaceWord(word, index)" class="btn btn-1 btn-neutral btn-suggest">#{{ index }} - {{ word }}</button>
+            </div>
           </div>
         </div>
 
@@ -93,7 +95,9 @@ export default {
     return {
       queryword: "",
       deepword: "",
-      wordsuggest:[],
+      wordsuggest: [],
+      treedata: [],
+      suggestdata: [],
 
       // selectedCountry: null,
       selectWord: [],
@@ -253,7 +257,7 @@ export default {
         console.log(this.selectWord);
         this.deepword = this.selectWord[this.selectWord.length - 1];
         var deepword = this.deepword;
-        this.column_thai.forEach(function (column) {
+        this.suggestdata.forEach(function (column) {
           if (column.includes(deepword)) {
             console.log(column);
             batch.push(column);
@@ -375,6 +379,15 @@ export default {
           this.column_eng = snapshot.child("MatchColumns_eng").val();
           this.matched = snapshot.child("Matched").val();
         });
+      const tree_url = 'http://35.198.215.67:5555/getallword.php';
+      axios.get(tree_url).then(response => {
+          // this.treedata = JSON.parse(response.data);
+          this.treedata = response.data;
+          console.log(response.data);
+          console.log(this.treedata);
+          this.suggestdata = this.treedata.concat(this.column_thai);
+          console.log(this.suggestdata);
+      })
     },
     sendMessage() {
       const url = "https://35.198.215.67/query";
