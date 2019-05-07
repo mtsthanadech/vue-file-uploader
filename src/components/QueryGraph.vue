@@ -389,7 +389,7 @@ export default {
           console.log(this.suggestdata);
       }).catch(error => {
           this.suggestdata = this.column_thai;
-          console.log('can\'t get the tree data')
+          console.log('can\'t get the tree data because => '+error);
       })
     },
     sendMessage() {
