@@ -12,12 +12,17 @@
           class="form-control input-group-alternative"
           aria-describedby="addon-right addon-left"
         />
+        <div v-if="wordsuggest.length > 0">
+          <div v-for="(word, index) in wordsuggest" :key="index">
+            <button @click="replaceWord(word, index)" class="btn btn-1 btn-neutral btn-suggest">#{{ index }} - {{ word }}</button>
+          </div>
+        </div>
 
         <button @click="sendMessage" class="btn btn-1 btn-warning">Query</button>
 
         <!--{{ getDB()}}-->
         <card>{{ deepword }}</card>
-        <card>{{ testword }}</card>
+        <card>{{ wordsuggest }}</card>
 
       </div>
     </div>
@@ -88,7 +93,7 @@ export default {
     return {
       queryword: "",
       deepword: "",
-      testword:[],
+      wordsuggest:[],
 
       // selectedCountry: null,
       selectWord: [],
@@ -254,7 +259,7 @@ export default {
             batch.push(column);
           }
         });
-        this.testword = batch;
+        this.wordsuggest = batch;
         console.log(this.deepword);
       })();
     },
@@ -315,6 +320,24 @@ export default {
       }
       return tokenized_text;
     },
+    replaceWord(word, index) {
+      var combind = '';
+      console.log('#'+index+' '+word+' '+this.selectWord);
+      this.selectWord[this.selectWord.length-1] = word;
+      for(let i=0; i<this.selectWord.length; i++){
+          combind += this.selectWord[i];
+          console.log('in loop '+combind);
+          if (i==this.selectWord.length-1) {
+            this.queryword = combind;
+            this.deepword = this.selectWord[this.selectWord.length-1];
+            console.log(this.queryword);
+            // this.deepword = '';
+            this.wordsuggest = [];
+          }
+      }
+      console.log('out loop '+combind);
+    },
+
     addGraph() {
       this.graphs.push(this.queryword);
       firebase
@@ -473,5 +496,10 @@ export default {
 
 .box {
   width: 100vw;
+}
+
+.btn-suggest {
+  text-align: justify !important;
+  width: 100%;
 }
 </style>
