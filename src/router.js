@@ -12,6 +12,10 @@ import Verify from "./views/Verify.vue";
 import firebase from "firebase";
 import Query from "./views/QueryDatabase.vue";
 import Test from "./views/Test.vue";
+import BootstrapVue from "bootstrap-vue";
+
+Vue.use(BootstrapVue);
+
 
 Vue.use(Router);
 const router = new Router({

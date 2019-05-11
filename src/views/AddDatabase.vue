@@ -3,12 +3,12 @@
       <div class="container">
         <div class="row justify-content-center">
           <div class="col-lg-12">
-            <div class="row row-grid" v-if="fromdb === true">
+            <div class="row row-grid" v-if="show === true">
               <div class="col-lg-4"></div>
               <div class="col-lg-4"><simple-upload></simple-upload></div>
               <div class="col-lg-4"></div>
             </div>
-            <div class="row row-grid" v-if="fromdb === false">
+            <div class="row row-grid" v-else>
               <div class="col-lg-5"><match-column></match-column></div>
               <div class="col-lg-7"><query-graph></query-graph></div>
             </div>
@@ -27,22 +27,21 @@ import { Wordcut } from "wordcut-ts/lib/wordcut";
 
 export default {
   name: "adddatabase",
-  computed: {
-    fromdb: function() {
+  created: function() {
       firebase
         .database()
         .ref("users/" + this.theUserUid)
         .on("value", snapshot => {
           this.verified = snapshot.child("Verified").val();
           this.uploaded = snapshot.child("Uploaded").val();
+            if (this.verified == false) {
+                this.show = true;
+            } else {
+                this.show = false;
+            }
         });
-      if (this.verified == false) {
-        this.show = true;
-      } else {
-        this.show = false;
-      }
       return this.show;
-    }
+
   },
   data() {
     return {

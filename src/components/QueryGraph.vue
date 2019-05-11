@@ -14,7 +14,7 @@
         />
         <div v-if="wordsuggest.length > 0">
           <div v-for="(word, index) in wordsuggest" :key="index">
-            <div v-if="index <= 10">
+            <div>
               <button @click="replaceWord(word, index)" class="btn btn-1 btn-neutral btn-suggest">#{{ index }} - {{ word }}</button>
             </div>
           </div>
@@ -261,6 +261,7 @@ export default {
           if (column.includes(deepword)) {
             console.log(column);
             batch.push(column);
+            console.log('wwww')
           }
         });
         this.wordsuggest = batch;
@@ -379,9 +380,9 @@ export default {
           this.column_eng = snapshot.child("MatchColumns_eng").val();
           this.matched = snapshot.child("Matched").val();
         });
-      const tree_url = 'http://35.198.215.67:5555/getallword.php';
+      const tree_url = 'https://35.198.215.67:1064/getallword.php';
       axios.get(tree_url).then(response => {
-          // this.treedata = JSON.parse(response.data);
+      //     // this.treedata = JSON.parse(response.data);
           this.treedata = response.data;
           console.log(response.data);
           console.log(this.treedata);
