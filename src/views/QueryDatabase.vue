@@ -49,6 +49,9 @@ export default {
 </script>
 
 <style>
+    div.card-body div.tabs div.tab-content {
+        margin-top: 0 !important;
+    }
     ul[role='tablist'] {
         border-bottom: 0;
     }

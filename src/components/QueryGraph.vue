@@ -79,12 +79,12 @@
 </template>
 
 <script>
-import axios from "axios";
-import firebase from "firebase";
-import LineChart from "@/components/ChartLine.vue";
-import BarChart from "@/components/ChartBar.vue";
+    import axios from "axios";
+    import firebase from "firebase";
+    import LineChart from "@/components/ChartLine.vue";
+    import BarChart from "@/components/ChartBar.vue";
 
-export default {
+    export default {
   name: "QueryGraph",
   created: function() {
     this.getDB();
@@ -494,6 +494,10 @@ export default {
 </script>
 
 <style>
+.col-md-12 {
+  margin: 0 !important;
+  padding: 0 !important;
+}
 .agg {
   width: 100%;
   font-size: 2em;
