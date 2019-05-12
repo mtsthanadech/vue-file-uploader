@@ -2,30 +2,66 @@
 import { Bar } from 'vue-chartjs'
 
 export default {
+  // data_x = ["January", "February"]
+  // data_y = [40, 20]
+  // label_x = "XXXXXXX"
+  // label_y = "YYYYYYY"
+  // graph_label = "Data One"
   extends: Bar,
-  // mixins: [mixins.reactiveProp],
+  props: ["graph_label", "data_x", "data_y", "label_x", "label_y"],
   data() {
     return {
-      graphoptionsbar: {
-        responsive: true
+      chartData: {
+        labels: this.data_x,
+        datasets: [
+          {
+            label: this.label_y,
+            backgroundColor: "#f87979",
+            data: this.data_y
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        title: {
+          display: true,
+          text: this.graph_label
+        },
+        tooltips: {
+          mode: "index",
+          intersect: false,
+        },
+        legend: {
+          display: false,
+        },
+        scales: {
+          yAxes: [
+            {
+              scaleLabel: {
+                labelString: this.label_y,
+                display: true
+              },
+              ticks: {
+                beginAtZero: true
+              }
+            }
+          ],
+          xAxes: [
+            {
+              scaleLabel: {
+                labelString: this.label_x,
+                display: true
+              }
+            }
+          ]
+        }
       }
     }
   },
-  props: ['graph_data', 'graph_label', 'graph_name'],
-  mounted () {
+  mounted() {
     // Overwriting base render method with actual data.
-    this.renderChart({
-      // labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-      labels: this.graph_label,
-      datasets: [
-        {
-          // label: 'GitHub Commits',
-          label: this.graph_name,
-          backgroundColor: '#f87979',
-          data: this.graph_data
-        }
-      ]
-    },{responsive: true})
+    this.renderChart(this.chartData, this.options);
   }
-}
+};
 </script>

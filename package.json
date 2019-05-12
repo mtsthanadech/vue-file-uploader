@@ -20,6 +20,7 @@
     "flatpickr": "^4.5.1",
     "nouislider": "^11.1.0",
     "parallax-js": "^3.1.0",
+    "thread-loader": "^2.1.2",
     "typescript": "^3.4.5",
     "v-autocomplete": "^1.8.2",
     "v-autosuggest": "^1.0.1",
