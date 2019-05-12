@@ -1,14 +1,5 @@
 {
   "projects": {
     "default": "senior-project-cpe-kmutt"
-  },
-  "targets": {
-    "senior-project-cpe-kmutt": {
-      "hosting": {
-        "upload-vue": [
-          "upload-senior-project"
-        ]
-      }
-    }
   }
 }

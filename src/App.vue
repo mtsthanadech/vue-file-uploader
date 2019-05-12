@@ -1,36 +1,29 @@
 <template>
-
-  <!-- <div class="section"> -->
-    <div class="container">
-
-      <div>
-        <simple-upload />
-      </div>
-      
-      <div>
-        <match-column />
-      </div>
-      
-      <div>
-        <input-and-review />
-      </div>
-      
+    <div id="app">
+        <router-view name="header"></router-view>
+        <main>
+            <fade-transition origin="center" mode="out-in" :duration="250">
+                <router-view/>
+            </fade-transition>
+        </main>
+        <router-view name="footer"></router-view>
     </div>
-  <!-- </div> -->
-
 </template>
 
 <script>
-import SimpleUpload from './components/SimpleUpload.vue'
-import MatchColumn from './components/MatchColumn.vue'
-import InputAndReview from './components/InputAndReview.vue'
+import { FadeTransition } from "vue2-transitions";
 
 export default {
-  name: 'app',
-  components: { 
-    'simple-upload': SimpleUpload,
-    'match-column': MatchColumn,
-    'input-and-review': InputAndReview
+  components: {
+    FadeTransition
   }
-}
+};
 </script>
+
+<style>
+    #app{
+        background-color:#f6f6f6;
+        justify-content: center;
+        align-items: center;
+    }
+</style>

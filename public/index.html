@@ -3,20 +3,35 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <link rel="icon" href="<%= BASE_URL %>favicon.ico">
-    <title>vue</title>
-    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-    <!-- <link href="./css/bootstrap.css"> -->
-    <!-- <link href="./css/layout.bootstrap.css" -->
-    <!-- <script src="./js/bootstrap.js"></script> -->
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=1, shrink-to-fit=no" name="viewport">
+    <meta name="description" content="Start your development with a Design System for Bootstrap 4 and Vue.js.">
+    <meta name="author" content="Creative Tim, Cristi Jora">
+    <link rel="icon" href="<%= BASE_URL %>favicon.png">
+    <title>NLPQuery</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-133297006-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-133297006-1');
+    </script>
   </head>
   <body>
     <noscript>
-      <strong>We're sorry but upload-vue doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
+      <strong>We're sorry but vue-argon-design-system doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
     </noscript>
-    
     <div id="app"></div>
     <!-- built files will be auto injected -->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <script src="./js/keras.min.js"></script>
+    <!-- utils functions -->
+    <script src="./js/utils.js"></script>
+    <!-- main js -->
+    <script src="./js/index.js"></script>
   </body>
 </html>
