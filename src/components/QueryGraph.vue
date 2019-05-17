@@ -25,20 +25,23 @@
           </div>
         </div>
 
-        <button @click="sendMessage" class="btn btn-1 btn-warning">
+        <button @click="sendMessage()" class="btn btn-1 btn-warning">
           Query
+        </button>
+        <button @click="generatePDF()" class="btn btn-1 btn-info">
+          PDF
         </button>
 
         <!--{{ getDB()}}-->
         <!--<card>{{ data }}</card> <card>{{ data.type }}</card>-->
-        <!--<card>{{ deepword }}</card>-->
-        <!--<card>{{ wordsuggest }}</card>-->
+        <card>{{ deepword }}</card>
+        <card>{{ wordsuggest }}</card>
       </div>
     </div>
     <div class="row no-gutters masonry">
       <div class="graphfullwidth" v-for="(graph, index) in graphs" :key="index">
         <div class="col-md-12 box" v-if="graph && !agg_data[index]">
-          <card>
+          <card ref="oop">
             <button type="button" class="close" @click="delGraph(index)">
               <span>×</span>
             </button>
@@ -91,9 +94,18 @@ import axios from "axios";
 import firebase from "firebase";
 import LineChart from "@/components/ChartLine.vue";
 import BarChart from "@/components/ChartBar.vue";
+// import 'vue-jquery' from 'vue-jquery';
+import * as jsPDF from "jspdf";
 
 export default {
   name: "QueryGraph",
+  head: {
+    script: [
+      {
+        src: "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js"
+      }
+    ]
+  },
   created: function() {
     this.getDB();
   },
@@ -156,7 +168,7 @@ export default {
             batch.push(column);
           }
         });
-        this.wordsuggest = batch;
+        // this.wordsuggest = batch;
       })();
     },
     gen_input(text) {
@@ -377,6 +389,22 @@ export default {
           console.log(this.errors);
         });
       //show result here
+    },
+    generatePDF() {
+      // jsPDF
+      var x = 5;
+      var y = 5;
+      var width = 143.5;
+      var height = 66.67;
+
+      var doc = new jsPDF();
+      for (let i = 0 ; i < this.$refs.oop.length ; i++) {
+          var imgData = this.$refs.oop[i].$children[0].$refs.canvas.toDataURL('image/png');
+          doc.addImage(imgData, 'PNG', x, y, width, height);
+          y = y + height + 10;
+      }
+
+      doc.save('sample-file.pdf');
     }
   }
 };
