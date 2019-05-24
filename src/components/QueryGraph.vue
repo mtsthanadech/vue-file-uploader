@@ -1,41 +1,45 @@
 <template>
   <card class="border-0" hover shadow body-classes="py-5">
-    <h6 class="text-warning text-uppercase">Query The Database</h6>
+    <h6 class="text-primary text-uppercase">{{ title }}</h6>
+    <button @click="generatePDF()" class="btn btn-1 btn-primary btn-pdf">
+      <i class="fa fa-download"></i>
+    </button>
     <!-- - {{graph_data_y}} - {{graph_label_y}} -->
     <div class="row">
-      <div class="col-12">
+      <div class="col-9">
         <!-- <card> -->
         <input
+          type="text"
           v-model="queryword"
           v-on:keyup="onBtnPredictClicked"
+          @keypress.enter="sendMessage()"
           placeholder="Query your data"
           class="form-control input-group-alternative"
           aria-describedby="addon-right addon-left"
         />
-        <div v-if="wordsuggest.length > 0">
-          <div v-for="(word, index) in wordsuggest" :key="index">
-            <div>
-              <button
+        <ul v-if="wordsuggest.length > 0" class="ul-suggest">
+          <li v-for="(word, index) in wordsuggest" :key="index">
+            <div v-if="index < 5" class="btn-suggest-parent">
+              <a
                 @click="replaceWord(word, index)"
-                class="btn btn-1 btn-neutral btn-suggest"
+                class="btn btn-suggest"
               >
                 #{{ index }} - {{ word }}
-              </button>
+              </a>
             </div>
-          </div>
-        </div>
+          </li>
+        </ul>
 
-        <button @click="sendMessage()" class="btn btn-1 btn-warning">
-          Query
-        </button>
-        <button @click="generatePDF()" class="btn btn-1 btn-info">
-          PDF
-        </button>
 
         <!--{{ getDB()}}-->
         <!--<card>{{ data }}</card> <card>{{ data.type }}</card>-->
-        <card>{{ deepword }}</card>
-        <card>{{ wordsuggest }}</card>
+        <!--<card>{{ deepword }}</card>-->
+        <!--<card>{{ wordsuggest }}</card>-->
+      </div>
+      <div class="col-3">
+        <button type="submit" @click="sendMessage()" class="btn btn-1 btn-primary">
+          <i class="fa fa-send"></i> Search
+        </button>
       </div>
     </div>
     <div class="row no-gutters masonry">
@@ -74,18 +78,6 @@
         </div>
       </div>
     </div>
-    <!--
-    <div class="col-12"  v-if="graph">
-      <card>
-        <button type="button" class="close" @click="delGraph(index)">
-          <span>×</span>
-        </button>
-        <h6>{{ graph }}</h6>
-        <div class="agg">{{graph_data}}</div>
-      </card>
-    </div>
-  </div>
- -->
   </card>
 </template>
 
@@ -94,18 +86,11 @@ import axios from "axios";
 import firebase from "firebase";
 import LineChart from "@/components/ChartLine.vue";
 import BarChart from "@/components/ChartBar.vue";
-// import 'vue-jquery' from 'vue-jquery';
 import * as jsPDF from "jspdf";
 
 export default {
   name: "QueryGraph",
-  head: {
-    script: [
-      {
-        src: "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js"
-      }
-    ]
-  },
+  props: ["title"],
   created: function() {
     this.getDB();
   },
@@ -116,6 +101,7 @@ export default {
       wordsuggest: [],
       treedata: [],
       suggestdata: [],
+      suggeststage: 0,
 
       selectWord: [],
       options: {},
@@ -150,7 +136,6 @@ export default {
     onBtnPredictClicked() {
       var text = this.queryword;
       var input = this.gen_input(text);
-      var batch = [];
       (async () => {
         var predictions = [];
         for (var i = 0; i < text.length; i++) {
@@ -163,12 +148,23 @@ export default {
         this.selectWord = this.parse_prediction(text, predictions);
         this.deepword = this.selectWord[this.selectWord.length - 1];
         var deepword = this.deepword;
-        this.suggestdata.forEach(function(column) {
-          if (column.includes(deepword)) {
-            batch.push(column);
-          }
-        });
-        // this.wordsuggest = batch;
+        var batch = [];
+
+        console.log(this.queryword.length);
+        console.log(this.suggeststage);
+
+        if(this.queryword.length < 8 && this.suggeststage !== 1) {
+            this.suggeststage = 0;
+            this.suggestdata = this.treedata;
+        } else if(this.suggeststage === 0 && this.queryword.length >= 8) {
+            this.suggeststage = 1;
+            this.suggestdata = this.column_thai;
+        } else if(this.queryword.length > 20){
+            this.suggeststage = 2;
+            this.suggestdata = [];
+            this.wordsuggest = [];
+        }
+        this.showSuggestions(deepword,batch);
       })();
     },
     gen_input(text) {
@@ -235,7 +231,7 @@ export default {
       for (let i = 0; i < this.selectWord.length; i++) {
         combind += this.selectWord[i];
         console.log("in loop " + combind);
-        if (i == this.selectWord.length - 1) {
+        if (i === this.selectWord.length - 1) {
           this.queryword = combind;
           this.deepword = this.selectWord[this.selectWord.length - 1];
           console.log(this.queryword);
@@ -245,7 +241,6 @@ export default {
       }
       console.log("out loop " + combind);
     },
-
     addGraph() {
       this.graphs.push(this.queryword);
       console.log("add");
@@ -256,6 +251,12 @@ export default {
           Graphs_label: this.graphs,
           Query: this.queryword
         });
+    },
+    delGraph(index) {
+      this.graphs.splice(index, 1, null);
+      this.agg_data.splice(index, 1, null);
+      this.compare_agg.splice(index, 1, null);
+      this.compare_agg_1.splice(index, 1, null);
     },
     condition_graph(data) {
       //  Clear Data
@@ -271,12 +272,9 @@ export default {
           this.data_y.push(data.data_y[i]);
           this.data_x.push(data.data_x[i]);
         }
-        // this.graph_label = data.graph_label;
         this.graph_label = this.queryword;
         this.label_x = data.label_x;
         this.label_y = data.label_y;
-        // this.data_x = data.data_x;
-        // this.data_y = data.data_y;
         this.addGraph();
       } else if (type === 2 || type === 3 || type === 4 || type === 5) {
         // 2 - Avg
@@ -317,8 +315,6 @@ export default {
         sorttable.sort(function (a, b) {
             return a[1] - b[1];
         });
-        // console.log(data.data_y);
-        // console.log(sorttable);
 
         for (let index in sorttable){
           this.data_x.push("Percentile : " + sorttable[index][0]);
@@ -335,13 +331,14 @@ export default {
         console.log("Don't have data");
       }
     },
-    delGraph(index) {
-      this.graphs.splice(index, 1, null);
-      this.agg_data.splice(index, 1, null);
-      this.compare_agg.splice(index, 1, null);
-      this.compare_agg_1.splice(index, 1, null);
+    showSuggestions(deepword, batch){
+        this.suggestdata.forEach(function(column) {
+            if (column.includes(deepword)) {
+                batch.push(column);
+            }
+        });
+        this.wordsuggest = batch;
     },
-
     getDB() {
       firebase
         .database()
@@ -356,15 +353,11 @@ export default {
       axios
         .get(tree_url)
         .then(response => {
-          //     // this.treedata = JSON.parse(response.data);
           this.treedata = response.data;
-          // console.log(response.data);
-          // console.log(this.treedata);
-          this.suggestdata = this.treedata.concat(this.column_thai);
-          // console.log(this.suggestdata);
+          // this.suggestdata = this.treedata.concat(this.column_thai);
         })
         .catch(error => {
-          this.suggestdata = this.column_thai;
+          // this.suggestdata = this.column_thai;
           console.log("can't get the tree data because => " + error);
         });
     },
@@ -440,4 +433,53 @@ export default {
   text-align: justify !important;
   width: 100%;
 }
+.btn-suggest-parent {
+  /*position: relative !important;*/
+  color: #5e72e4;
+}
+  div ul li {
+    list-style: none;
+    background-image: none;
+    /*background-repeat: none;*/
+    background-position: 0;
+    /*margin-bottom: 5px;*/
+
+  }
+  div ul {
+    list-style-type: none;
+    padding: 0;
+    margin-bottom: 5px;
+    /*z-index: 111;*/
+  }
+
+  .ul-suggest {
+    position: absolute;
+    width: 100%;
+    z-index: 1;
+    text-transform: uppercase;
+    -webkit-transition: all 0.15s ease;
+    transition: all 0.15s ease;
+    will-change: transform;
+    letter-spacing: 0.025em;
+    font-size: 0.875rem;
+    user-select: none;
+    border: 1px solid transparent;
+    border-radius: 0.25rem;
+    -webkit-box-shadow: 0 7px 14px rgba(50, 50, 93, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 7px 14px rgba(50, 50, 93, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08);
+    -webkit-transform: translateY(-1px);
+    transform: translateY(-1px);
+    background-color: white;
+  }
+  div.col-4 button.btn:not(:last-child) {
+    /*margin-right: 0;*/
+  }
+  /*button.btn.btn-1.btn-primary.btn-pdf {*/
+   /*position: absolute;*/
+   /*left: 87%;*/
+   /*top: 12%;*/
+   /*background-color: #cccccc;*/
+   /*border-color: #cccccc;*/
+    /*color: #000000;*/
+ /*}*/
 </style>
