@@ -13,10 +13,10 @@
                       <b-tab :key="index" :title="tab" @click="changeTabName(index,1)" active v-for="(tab, index) in tabs">
                           <div v-if="tab !== '+'">
                               <button type="button" class="btn btn-1 btn-danger btn-close" @click="delTabs(index)">
-                                  <i class="fa fa-trash" aria-hidden="true"></i>Delete
+                                  <i class="fa fa-trash" aria-hidden="true"></i> Delete
                               </button>
                               <button type="button" class="btn btn-1 btn-primary btn-edit" @click="changeTabName(index,999)">
-                                  <i class="fa fa-pencil" aria-hidden="true"></i>Edit
+                                  <i class="fa fa-pencil" aria-hidden="true"></i> Edit
                               </button>
                               <query-graph :title="tabs[index]"></query-graph>
                               <modal :show.sync="modals">

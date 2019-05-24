@@ -105,9 +105,9 @@ export default {
 };
 </script>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
-<script src="https://unpkg.com/keras-js"></script>
-<!-- utils functions -->
-<script src="./js/utils.js"></script>
-<!-- main js -->
-<script src="./js/index.js"></script>
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>-->
+<!--<script src="https://unpkg.com/keras-js"></script>-->
+<!--&lt;!&ndash; utils functions &ndash;&gt;-->
+<!--<script src="./js/utils.js"></script>-->
+<!--&lt;!&ndash; main js &ndash;&gt;-->
+<!--<script src="./js/index.js"></script>-->

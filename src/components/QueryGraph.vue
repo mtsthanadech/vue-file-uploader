@@ -12,7 +12,7 @@
           type="text"
           v-model="queryword"
           v-on:keyup="onBtnPredictClicked"
-          @keypress.enter="sendMessage()"
+          @keypress.enter="sendMessage(queryword)"
           placeholder="Query your data"
           class="form-control input-group-alternative"
           aria-describedby="addon-right addon-left"
@@ -37,7 +37,7 @@
         <!--<card>{{ wordsuggest }}</card>-->
       </div>
       <div class="col-3">
-        <button type="submit" @click="sendMessage()" class="btn btn-1 btn-primary">
+        <button type="submit" @click="sendMessage(queryword)" class="btn btn-1 btn-primary">
           <i class="fa fa-send"></i> Search
         </button>
       </div>
@@ -241,15 +241,16 @@ export default {
       }
       console.log("out loop " + combind);
     },
-    addGraph() {
-      this.graphs.push(this.queryword);
+    addGraph(queryword) {
+      this.graphs.push(queryword);
+      console.log("addGraph"+queryword);
       console.log("add");
       firebase
         .database()
         .ref("users/" + this.theUserUid)
         .update({
           Graphs_label: this.graphs,
-          Query: this.queryword
+          Query: queryword
         });
     },
     delGraph(index) {
@@ -258,7 +259,7 @@ export default {
       this.compare_agg.splice(index, 1, null);
       this.compare_agg_1.splice(index, 1, null);
     },
-    condition_graph(data) {
+    condition_graph(data ,queryword) {
       //  Clear Data
       this.graph_label = "";
       this.label_x = "";
@@ -272,10 +273,10 @@ export default {
           this.data_y.push(data.data_y[i]);
           this.data_x.push(data.data_x[i]);
         }
-        this.graph_label = this.queryword;
+        this.graph_label = queryword;
         this.label_x = data.label_x;
         this.label_y = data.label_y;
-        this.addGraph();
+        this.addGraph(queryword);
       } else if (type === 2 || type === 3 || type === 4 || type === 5) {
         // 2 - Avg
         // 3 - Count
@@ -288,19 +289,19 @@ export default {
         if (type === 2) {
           this.agg_label = "Min :";
           this.agg_label_1 = "Max :";
-          this.addGraph();
+          this.addGraph(queryword);
         } else if (type === 3) {
           this.agg_label = "No Agg :";
           this.agg_label_1 = "No Agg :";
-            this.addGraph();
+            this.addGraph(queryword);
         } else if (type === 4) {
           this.agg_label = "Avg :";
           this.agg_label_1 = "Max :";
-            this.addGraph();
+            this.addGraph(queryword);
         } else if (type === 5) {
           this.agg_label = "Min :";
           this.agg_label_1 = "Avg :";
-            this.addGraph();
+            this.addGraph(queryword);
         }
       } else if (type === 6) {
         //SD
@@ -361,26 +362,25 @@ export default {
           console.log("can't get the tree data because => " + error);
         });
     },
-    sendMessage() {
+    sendMessage(queryword) {
       const url = "https://35.198.215.67/query";
-
       this.getDB();
-
       axios
         .post(url, {
           index: this.index,
-          query: this.queryword,
+          query: queryword,
           colthai: this.column_thai,
           coleng: this.column_eng
         })
         .then(response => {
           this.data = response.data;
-          this.condition_graph(response.data);
+          this.condition_graph(response.data, queryword);
         })
         .catch(e => {
           this.errors.push(e);
           console.log(this.errors);
         });
+      this.queryword = "";
       //show result here
     },
     generatePDF() {

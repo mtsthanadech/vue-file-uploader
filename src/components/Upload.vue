@@ -60,28 +60,33 @@ export default {
         });
     },
     selectFile() {
+
       const file = this.$refs.file.files[0];
-      const allowedTypes = ["application/json"];
-      const MAX_SIZE = 50000000;
+      const allowedTypes = ["text/csv"];
+      const MAX_SIZE = 102400000;
       const tooLarge = file.size > MAX_SIZE;
 
+
+      // if (!tooLarge) {
       if (allowedTypes.includes(file.type) && !tooLarge) {
         this.file = file;
         this.filename = this.file.name;
         this.message = "";
       } else {
+        console.log(file);
         this.message = tooLarge
-          ? `Too large, Max size is ${MAX_SIZE / 1000}kb`
-          : "Only JSON file are allowed";
+          ? `Too large, Max size is ${MAX_SIZE / 1024}kb`
+          : "Only CSV file are allowed";
       }
     },
     async sendFile() {
       const formData = new FormData();
       const url = "https://35.198.215.67:3344/upload";
+      // const url = "https://localhost:3344/upload"
       formData.append(
         "file",
         this.file,
-        this.theUserUid + "_" + this.dbname + ".json"
+        this.theUserUid + "_" + this.dbname + ".csv"
       );
 
       await axios
@@ -105,7 +110,7 @@ export default {
     async sendToggle() {
       // const formData = new FormData();
       this.index = this.theUserUid + "_" + this.dbname;
-      const url = "https://35.198.215.67/json/" + this.index;
+      const url = "https://35.198.215.67/csv/" + this.index;
       const getColUrl = "https://35.198.215.67/getcol";
 
       ElasticIndex.$emit("ElasticIndex", this.index);
