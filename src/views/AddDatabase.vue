@@ -9,8 +9,7 @@
               <div class="col-lg-4"></div>
             </div>
             <div class="row row-grid" v-else>
-              <div class="col-lg-5"><match-column></match-column></div>
-              <div class="col-lg-7"><query-graph></query-graph></div>
+              <div class="col-lg-12"><match-column :db="db" :length_col="collength"></match-column></div>
             </div>
           </div>
         </div>
@@ -23,7 +22,6 @@ import Upload from "@/components/Upload.vue";
 import MatchColumn from "@/components/Mappage_com.vue";
 import QueryGraph from "@/components/QueryGraph.vue";
 import firebase from "firebase";
-import { Wordcut } from "wordcut-ts/lib/wordcut";
 
 export default {
   name: "adddatabase",
@@ -32,16 +30,18 @@ export default {
         .database()
         .ref("users/" + this.theUserUid)
         .on("value", snapshot => {
+          this.db = snapshot.val();
+          this.collength = this.db.MatchColumns_eng.length;
           this.verified = snapshot.child("Verified").val();
           this.uploaded = snapshot.child("Uploaded").val();
-            if (this.verified == false) {
+            if (this.verified === false) {
                 this.show = true;
             } else {
                 this.show = false;
             }
         });
-      return this.show;
 
+      return this.show;
   },
   data() {
     return {
@@ -49,7 +49,9 @@ export default {
       verified: "",
       theUserUid: firebase.auth().currentUser.uid,
       uploaded: "",
-      show: ""
+      show: "",
+      db: [],
+      collength: ""
     };
   },
   methods: {

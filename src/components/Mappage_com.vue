@@ -1,237 +1,194 @@
 <template>
   <card class="border-0" hover shadow body-classes="py-5">
-    <h6 class="text-success text-uppercase">Match Column</h6>
+    <h6 class="text-success text-uppercase">Match Column and Set data type</h6>
     <div class="row justify-content-center">
-      <div class="col-lg-12">
-        <li
-          v-for="(column, indexs) in visible"
-          v-bind:visible="visible"
-          v-bind:currentPage="currentPage"
-          v-bind:column="column"
-          :key="indexs"
-          style="list-style-type:none; margin-top: 10px;"
-        >
-          <strong>{{ column }}</strong>
-          <input
-            v-model="matchColumns[indexs+(currentPage*pageSize)]"
-            placeholder="Enter Thai name"
-            class="form-control input-group-alternative"
-            aria-describedby="addon-right addon-left"
-          >
-        </li>
-
-        <br>
-        <div
-          v-if="totalPages() > 0"
-          v-bind:columns="columns"
-          v-on:page:update="updatePage"
-          v-bind:currentPage="currentPage"
-          v-bind:pageSize="pageSize"
-        >
-          <ul class="pagination center">
-            <li class="page-item disabled" v-if="currentPage === 0">
-              <a class="page-link" v-on:click="updatePage(currentPage - 1)">
-                <i class="fa fa-angle-left"></i>
-                <span class="sr-only">Previous</span>
-              </a>
-            </li>
-            <li class="page-item" v-else>
-              <a class="page-link" v-on:click="updatePage(currentPage - 1)">
-                <i class="fa fa-angle-left"></i>
-                <span class="sr-only">Previous</span>
-              </a>
-            </li>
-
-            <div v-if="currentPage===0">
-              <li class="page-item active">
-                <a class="page-link" v-on:click="updatePage(0)">1</a>
-              </li>
+      <div class="col-lg-6">
+        <div v-for="(column, index) in db.MatchColumns_eng" :key="index">
+          <div v-if="index < length_col/2">
+            <strong>{{ column }}</strong>
+            <div class="row no-gutters">
+              <div class="col-6">
+                <input
+                        v-model="thai_columns[index]"
+                        :keyup="compare_text(thai_columns[index], index)"
+                        placeholder="Enter Thai name"
+                        class="form-control input-group-alternative"
+                        aria-describedby="addon-right addon-left"
+                >
+              </div>
+              <div class="col-6">
+                <select v-model="datatype_col[index]" class="form-control input-group-alternative">
+                  <option v-for="type in datatypes" :disabled="savetype" :value="type">{{ type }}</option>
+                </select>
+              </div>
             </div>
-            <div v-else>
-              <li class="page-item">
-                <a class="page-link" v-on:click="updatePage(0)">1</a>
-              </li>
-            </div>
-            
-
-            <div v-for="(pageNumber, index) in theTotalPages" :key="index">
-              
-                <div v-if="currentPage==pageNumber">
-                  <li class="page-item active" v-if="pageNumber < theTotalPages">
-                    <a class="page-link" v-on:click="updatePage(pageNumber)">{{pageNumber+1}}</a>
-                  </li>
-                </div>
-                <div v-else>
-                  <li class="page-item" v-if="pageNumber < theTotalPages">
-                    <a class="page-link" v-on:click="updatePage(pageNumber)">{{pageNumber+1}}</a>
-                  </li>
-                </div>
-            </div>
-
-            <li class="page-item disabled" v-if="currentPage === totalPages()-1">
-              <a class="page-link" v-on:click="updatePage(currentPage + 1)">
-                <i class="fa fa-angle-right"></i>
-                <span class="sr-only">Next</span>
-              </a>
-            </li>
-
-            <li class="page-item" v-else>
-              <a class="page-link" v-on:click="updatePage(currentPage + 1)">
-                <i class="fa fa-angle-right"></i>
-                <span class="sr-only">Next</span>
-              </a>
-            </li>
-          </ul>
+            <p class="text-danger">{{ remind[index] }}</p>
+          </div>
         </div>
-        <button v-on:click="editColumns" v-if="fromDatabase" class="btn btn-1 btn-success">Edit</button>
-        <button v-on:click="saveColumn" v-if="!fromDatabase" class="btn btn-1 btn-success">Save</button>
-        <!-- <button v-on:click="updatePage(0)" class="btn btn-1 btn-success">00000</button> -->
+      </div>
+      <div class="col-lg-6">
+        <div v-for="(column, index) in db.MatchColumns_eng" :key="index">
+          <div v-if="index >= length_col/2">
+            <strong>{{ column }}</strong>
+            <div class="row no-gutters">
+              <div class="col-6">
+                <input
+                        v-model="thai_columns[index]"
+                        :keyup="compare_text(thai_columns[index], index)"
+                        placeholder="Enter Thai name"
+                        class="form-control input-group-alternative"
+                        aria-describedby="addon-right addon-left"
+                >
+              </div>
+              <div class="col-6">
+                <select v-model="datatype_col[index]" class="form-control input-group-alternative">
+                  <option v-for="type in datatypes" :disabled="savetype" :value="type">{{ type }}</option>
+                </select>
+              </div>
+            </div>
+            <p class="text-danger">{{ remind[index] }}</p>
+          </div>
+        </div>
       </div>
     </div>
+    <button class="btn btn-1 btn-primary" @click="savedata()">Save Data</button>
+    <modal :show.sync="modals">
+      <template slot="header">
+        <h5 class="modal-title">Are you sure?</h5>
+      </template>
+      <div v-if="fillcompleted === 0">
+        The datatype of database can't change, are you sure to save it ?.
+      </div>
+      <div v-else-if="fillcompleted > 0 && fillcompleted < 100">
+        Please insert the thai column name every field.
+      </div>
+      <div v-else-if="fillcompleted > 100 && fillcompleted < 200">
+        Please insert the thai column name before click save data.
+      </div>
+      <div v-else-if="fillcompleted > 200">
+        Some columns name as same as another column.
+      </div>
+      <template slot="footer">
+        <div v-if="fillcompleted === 0">
+          <base-button type="primary" @click="writeDB()">Save</base-button>
+        </div>
+        <div v-if="fillcompleted > 0">
+          <base-button type="primary" @click="modals=false">Close</base-button>
+        </div>
+      </template>
+    </modal>
   </card>
 </template>
 
 <script>
 import { ElasticIndex } from "./ElasticIndex.js";
 import axios from "axios";
+import Modal from "../components/Modal";
 import firebase, { database } from "firebase";
 
 export default {
   name: "MatchColumn",
-  props: ["column_thai", "column_eng"],
+  props: ["db", "length_col"],
   data() {
     return {
-      columns: [],
-      length: 0,
-      matchColumns: [],
-      matched: "",
-      index: "",
-      errors: [],
       theUserUid: firebase.auth().currentUser.uid,
-      currentPage: 1,
-      pageSize: 4,
-      visible: [],
-      theTotalPages: "",
-      gotPageFirst: true,
-      i: 0
+      thai_columns: [],
+      remind: [],
+      initialtype: false,
+      modals: false,
+      savetype: false,
+      fillcompleted: 0,
+      datatype_col: [],
+      datatypes: [
+          "text",
+          "boolean",
+          "integer",
+          "double",
+          "float"
+      ]
     };
   },
-  computed: {
-    fromDatabase() {
+  created() {
       firebase
-        .database()
-        .ref("users/" + this.theUserUid)
-        .on("value", snapshot => {
-          this.matched = snapshot.child("Matched").val();
-          this.index = snapshot.child("Index").val();
-          ElasticIndex.$emit("ElasticIndex", this.index);
-        });
-      this.columns = this.ColumnsFromDB();
-
-      if (this.gotPageFirst == true) {
-        this.matchColumns = this.MatchColumnsFromDB();
-      }
-      this.theTotalPages = this.totalPages();
-      this.updatePage(this.currentPage)
-
-      this.gotPageFirst = false;
-      return this.matched;
-    }
-  },
-  beforeMount: function() {
-    this.updateVisible();
+          .database()
+          .ref("users/" + this.theUserUid)
+          .on("value", snapshot => {
+              this.db = snapshot.val();
+              this.thai_columns = snapshot.child("MatchColumns_thai").val();
+              if(snapshot.child("Datatype").val()) {
+                this.savetype = true;
+                this.initialtype = true;
+                this.datatype_col = snapshot.child("Datatype").val();
+              }
+          });
   },
   methods: {
-    ColumnsFromDB() {
-      if (this.gotPageFirst || this.matched == true) {
+    compare_text(text,index) {
+        var count = 1;
+        for (let i = 0; i < this.thai_columns.length; i++) {
+            if (this.thai_columns[i] === text && i !== index && count === 1 && text !== "" && this.thai_columns[i] !== undefined) {
+                this.remind[index] = "Column name is matched another column, Please change this column name";
+                count++;
+            } else if (count > 1 && this.thai_columns[i] !== undefined) {
+                this.remind[index] = "Column name is matched another column, Please change this column name";
+            } else {
+                this.remind[index] = null;
+            }
+        }
+        if (this.initialtype === false) {
+            this.initialtype = true;
+            this.initail_datatype();
+        }
+    },
+    initail_datatype() {
+        for (let index = 0; index < this.length_col; index++) {
+            this.datatype_col[index] = "text";
+        }
+    },
+    savedata() {
+        this.fillcompleted = 0;
+        if (this.thai_columns.length === 0 || this.thai_columns.length !== this.length_col ) {
+            this.fillcompleted = 111;
+        } else {
+            for (let i = 0; i < this.thai_columns.length; i++) {
+                if (this.thai_columns[i] === "" || this.thai_columns[i] === null || this.thai_columns[i] === undefined) {
+                    this.fillcompleted+=1
+                }
+            }
+            for (let i = 0; i < this.remind.length; i++) {
+                if (this.remind[i] !== null) {
+                    this.fillcompleted = 222;
+                }
+            }
+        }
+        this.modals = true;
+    },
+    writeDB() {
         firebase
-          .database()
-          .ref("users/" + this.theUserUid)
-          .on("value", snapshot => {
-            this.columns = snapshot.child("MatchColumns_eng").val();
-            ElasticIndex.$emit("ColumnEng", this.columns);
-          });
-      }
-      return this.columns;
-    },
-    MatchColumnsFromDB() {
-      if (this.gotPageFirst || this.matched == true) {
+            .database()
+            .ref("users/" + this.theUserUid)
+            .child("MatchColumns_thai")
+            .update(this.thai_columns);
         firebase
-          .database()
-          .ref("users/" + this.theUserUid)
-          .on("value", snapshot => {
-            this.matchColumns = snapshot.child("MatchColumns_thai").val();
-            ElasticIndex.$emit("ColumnThai", this.matchColumns);
-          });
-      }
-      return this.matchColumns;
-    },
-    updatePage(pageNumber) {
-      this.currentPage = pageNumber;
-      this.updateVisible();
-    },
-    totalPages() {
-      return Math.ceil(this.columns.length / this.pageSize);
-    },
-    updateVisible() {
-      this.visible = this.columns.slice(
-        this.currentPage * this.pageSize,
-        this.currentPage * this.pageSize + this.pageSize
-      );
+            .database()
+            .ref("users/" + this.theUserUid)
+            .update({
+                Matched: true
+            });
+        firebase
+            .database()
+            .ref("users/" + this.theUserUid)
+            .child("Datatype")
+            .update(this.datatype_col);
 
-      if (this.visible.length == 0 && this.currentPage > 0) {
-        this.updatePage(this.currentPage - 1);
-      }
-    },
-    saveColumn() {
-      this.column_thai = this.matchColumns;
-      this.column_eng = this.columns;
-      ElasticIndex.$emit("ColumnThai", this.column_thai);
-      firebase
-        .database()
-        .ref("users/" + this.theUserUid)
-        .child("MatchColumns_thai")
-        .update(this.column_thai);
-      firebase
-        .database()
-        .ref("users/" + this.theUserUid)
-        .child("MatchColumns_eng")
-        .update(this.column_eng);
-      firebase
-        .database()
-        .ref("users/" + this.theUserUid)
-        .update({
-          Matched: true
-        });
-    },
-    editColumns() {
-      this.column_thai = this.matchColumns;
-      firebase
-        .database()
-        .ref("users/" + this.theUserUid)
-        .child("MatchColumns_thai")
-        .update(this.column_thai);
-        ElasticIndex.$emit("ColumnThai", this.column_thai);
-    },
-    // async sendToggle() {
-    //   const url = "https://35.198.215.67/getcol";
-    //   await axios
-    //     .get(url, {
-    //       params: {
-    //         index: this.index
-    //       }
-    //     })
-    //     .then(response => {
-    //       this.columns = response.data["index_name"];
-    //       this.length = response.data["index_name"].length;
-    //       this.column_eng = this.columns;
-    //       ElasticIndex.$emit("ColumnEng", this.column_eng);
-    //     })
-    //     .catch(e => {
-    //       this.errors.push(e);
-    //       console.log(this.errors);
-    //     });
-    // }
-  }
-};
+        this.modals = false;
+    }
+  },
+    components: {
+      Modal,
+    }
+}
 </script>
+<style>
+
+</style>

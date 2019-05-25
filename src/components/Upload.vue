@@ -33,7 +33,7 @@ import firebase from "firebase";
 import axios from "axios";
 export default {
   name: "upload",
-  props: ["index"],
+  // props: ["index"],
   data() {
     return {
       file: "",
@@ -42,7 +42,8 @@ export default {
       dbname: "",
       errors: [],
       complete: "False",
-      theUserUid: firebase.auth().currentUser.uid
+      theUserUid: firebase.auth().currentUser.uid,
+      columns: [],
     };
   },
   methods: {
@@ -55,14 +56,14 @@ export default {
           Uploaded: true,
           Matched: false,
           Index: this.index,
-          length: this.length,
+          // length: this.length,
           MatchColumns_thai: [""]
         });
     },
     selectFile() {
 
       const file = this.$refs.file.files[0];
-      const allowedTypes = ["text/csv"];
+      const allowedTypes = ["text/csv", "application/vnd.ms-excel"];
       const MAX_SIZE = 102400000;
       const tooLarge = file.size > MAX_SIZE;
 
@@ -72,8 +73,9 @@ export default {
         this.file = file;
         this.filename = this.file.name;
         this.message = "";
+        console.log(allowedTypes);
       } else {
-        console.log(file);
+        console.log(allowedTypes);
         this.message = tooLarge
           ? `Too large, Max size is ${MAX_SIZE / 1024}kb`
           : "Only CSV file are allowed";
@@ -111,32 +113,40 @@ export default {
       // const formData = new FormData();
       this.index = this.theUserUid + "_" + this.dbname;
       const url = "https://35.198.215.67/csv/" + this.index;
-      const getColUrl = "https://35.198.215.67/getcol";
+      // const getColUrl = "https://35.198.215.67/getcol";
 
       ElasticIndex.$emit("ElasticIndex", this.index);
-      await axios.get(url);
+      await axios.get(url).then(response => {
+          // console.log();
+          this.columns = response.data;
+      }).catch(error => {
+          console.log("Erropr : "+error);
+      });
       this.message = "Upload " + this.filename + " to Elasticsearch already";
       
-      await axios
-        .get(getColUrl, {
-          params: {
-            index: this.index
-          }
-        })
-        .then(response => {
-          this.columns = response.data["index_name"];
-          this.length = response.data["index_name"].length;
-        }).catch(e => {
-          this.errors.push(e);
-          console.log(this.errors);
-        });
-      firebase
-      .database()
-      .ref("users/" + this.theUserUid)
-      .child("MatchColumns_eng")
-      .update(this.columns);
+      // await axios
+      //   .get(getColUrl, {
+      //     params: {
+      //       index: this.index
+      //     }
+      //   })
+      //   .then(response => {
+      //     this.columns = response.data["index_name"];
+      //     this.length = response.data["index_name"].length;
+      //   }).catch(e => {
+      //     this.errors.push(e);
+      //     console.log(this.errors);
+      //   });
+      this.updatedata();
+    },
+    updatedata() {
+        firebase
+            .database()
+            .ref("users/" + this.theUserUid)
+            .child("MatchColumns_eng")
+            .update(this.columns);
 
-      this.database();
+        this.database();
     }
   }
 };
