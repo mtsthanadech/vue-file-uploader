@@ -51,7 +51,10 @@
         </div>
       </div>
     </div>
-    <button class="btn btn-1 btn-primary" @click="savedata()">Save Data</button>
+    <div class="row">
+      <button class="btn btn-1 btn-primary" @click="savedata()">Save Data</button>
+    </div>
+
     <modal :show.sync="modals">
       <template slot="header">
         <h5 class="modal-title">Are you sure?</h5>
@@ -88,12 +91,13 @@ import firebase, { database } from "firebase";
 
 export default {
   name: "MatchColumn",
-  props: ["db", "length_col"],
+  props: ["length_col"],
   data() {
     return {
       theUserUid: firebase.auth().currentUser.uid,
       thai_columns: [],
       remind: [],
+      db: [],
       initialtype: false,
       modals: false,
       savetype: false,
@@ -166,22 +170,69 @@ export default {
     writeDB() {
         firebase
             .database()
-            .ref("users/" + this.theUserUid)
+            .ref("users/" + this.theUserUid )
             .child("MatchColumns_thai")
-            .update(this.thai_columns);
-        firebase
-            .database()
-            .ref("users/" + this.theUserUid)
-            .update({
-                Matched: true
+            .update(this.thai_columns)
+            .then(res => {
+                console.log("Thai columns updated")
+            })
+            .catch(error => {
+                console.log(error)
             });
-        firebase
-            .database()
-            .ref("users/" + this.theUserUid)
-            .child("Datatype")
-            .update(this.datatype_col);
+        if (this.savetype !== true) {
+            firebase
+                .database()
+                .ref("users/" + this.theUserUid)
+                .update({
+                    Matched: true
+                })
+                .then(res => {
+                    console.log("Columns are matched")
+                })
+                .catch(error => {
+                    console.log(error)
+                });
+            firebase
+                .database()
+                .ref("users/" + this.theUserUid)
+                .child("Datatype")
+                .update(this.datatype_col)
+                .then(res => {
+                    console.log("Datatype are set")
+                })
+                .catch(error => {
+                    console.log(error)
+                });
+        }
 
         this.modals = false;
+        console.log(this.db);
+        const url_log = "https://35.198.215.67/logstash";
+        const url_prog = "https://35.198.215.67/progress/"+this.db.Index;
+
+        axios
+            .post(url_log,{
+                    column_eng: this.db.MatchColumns_eng,
+                    column_type: this.db.Datatype,
+                    index: this.db.Index,
+            })
+            .then(response => {
+                console.log(response);
+            })
+            .catch(error => {
+                console.log(error);
+            });
+
+        setTimeout(function(){
+            axios
+                .get(url_prog)
+                .then(response => {
+                    console.log(response);
+                })
+                .catch(error => {
+                    console.log(error);
+                })
+        }, 10000);
     }
   },
     components: {
@@ -190,5 +241,13 @@ export default {
 }
 </script>
 <style>
-
+  input.form-control.input-group-alternative ,select.form-control.input-group-alternative {
+    font-size: 1rem;
+  }
+  div.row div.row {
+    justify-content: center;
+  }
+  div.row div.row button.btn.btn-1.btn-primary{
+    margin-top: 20px;
+  }
 </style>

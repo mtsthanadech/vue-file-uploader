@@ -99,7 +99,8 @@ export default {
             .set({
               Name: this.name,
               Email: this.email,
-              Uploaded: false
+              Uploaded: false,
+              ShowIntroduction: true,
             });
           alert("Account created for " + this.email);
           // alert(`Account created for ${user.email}`);
