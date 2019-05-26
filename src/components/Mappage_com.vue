@@ -107,7 +107,6 @@ export default {
           "text",
           "boolean",
           "integer",
-          "double",
           "float"
       ]
     };
