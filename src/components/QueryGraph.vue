@@ -324,8 +324,8 @@ export default {
 
         this.label_x = "Percentile";
         this.label_y = data.label_y;
-        this.graph_label = this.queryword;
-        this.addGraph();
+        this.graph_label = queryword;
+        this.addGraph(queryword);
       } else if (type === 0) {
         console.log("no column");
       } else {

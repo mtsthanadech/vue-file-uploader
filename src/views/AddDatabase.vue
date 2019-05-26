@@ -1,20 +1,12 @@
 <template>
-    <section class="section section-lg">
+    <section class="section section-lg" v-if="db !== []">
       <div class="container">
-        <div class="row justify-content-center">
-          <div class="col-lg-12">
-            <div class="row row-grid" v-if="show === true">
-              <div class="col-lg-4"></div>
-              <div class="col-lg-4"><simple-upload></simple-upload></div>
-              <div class="col-lg-4"></div>
-            </div>
-            <div class="row row-grid" v-else>
-              <div class="col-lg-12"><match-column :length_col="collength"></match-column></div>
-            </div>
-          </div>
+        <div class="row">
+              <div class="col-lg-6" v-if="show === true"><simple-upload></simple-upload></div>
+              <div class="col-lg-12" v-else><match-column :length_col="collength"></match-column></div>
         </div>
       </div>
-      <div class="row">
+      <div class="row" v-if="Matched === true">
         <router-link to="/query" class="btn btn-1 btn-primary">Go to search</router-link>
       </div>
 
@@ -68,6 +60,9 @@ export default {
 
             if (this.uploaded === true) {
                 this.collength = snapshot.child("MatchColumns_eng").val().length;
+                if (this.collength === snapshot.child("MatchColumns_thai").val().length) {
+                    this.Matched = true;
+                }
             }
         });
 
@@ -79,6 +74,7 @@ export default {
       verified: false,
       theUserUid: firebase.auth().currentUser.uid,
       uploaded: false,
+      Matched: false,
       show: true,
       db: [],
       collength: "",
@@ -100,7 +96,10 @@ export default {
 };
 </script>
 <style>
-  section.section div.row {
+  section.section.section-lg div.container div.row, section.section.section-lg div.row {
     justify-content: center;
+  }
+  div.row a.btn.btn-1.btn-primary {
+    margin-top: 30px;
   }
 </style>
