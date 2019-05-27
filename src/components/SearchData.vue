@@ -1,6 +1,6 @@
 <template>
   <card class="border-0" hover shadow body-classes="py-5">
-    <h6 class="text-primary text-uppercase">{{ title }}</h6>
+    <h6 class="text-primary text-uppercase text-bind-title">{{ title }}</h6>
     <!-- - {{graph_data_y}} - {{graph_label_y}} -->
     <div class="row">
       <div class="col-9">
@@ -14,6 +14,18 @@
           class="form-control input-group-alternative"
           aria-describedby="addon-right addon-left"
         />
+        <ul v-if="wordsuggest.length > 0" class="ul-suggest">
+          <li v-for="(word, index) in wordsuggest" :key="index">
+            <div v-if="index < 5" class="btn-suggest-parent">
+              <a
+                @click="replaceWord(word, index)"
+                class="btn btn-suggest"
+              >
+                #{{ index }} - {{ word }}
+              </a>
+            </div>
+          </li>
+        </ul>
         <div v-if="wordDB !== 'completed' && wordDB.length !== 0" >
           <button @click="restore()" class="btn btn-1 btn-primary">
             แสดงข้อมูลครั้งที่แล้ว
@@ -30,18 +42,6 @@
             <i class="fa fa-download"></i> ดาวน์โหลดรายงาน
           </button>
         </div>
-        <ul v-if="wordsuggest.length > 0" class="ul-suggest">
-          <li v-for="(word, index) in wordsuggest" :key="index">
-            <div v-if="index < 5" class="btn-suggest-parent">
-              <a
-                @click="replaceWord(word, index)"
-                class="btn btn-suggest"
-              >
-                #{{ index }} - {{ word }}
-              </a>
-            </div>
-          </li>
-        </ul>
       </div>
       <div class="col-3">
         <button type="submit" @click="sendMessage(queryword)" class="btn btn-1 btn-primary btn-search">
@@ -69,22 +69,29 @@
         </div>
         <div class="col-md-12 box" v-else-if="graph">
           <!--&& agg_data[index].length === 1-->
-          <card>
+          <card ref="graph_canvas">
             <button type="button" class="close" @click="delGraph(index)">
               <span>×</span>
             </button>
             <h6>{{ graph }}</h6>
-            <div class="agg">{{ agg_data[index] }}</div>
-            <div class="agg_compare">
-              {{ agg_label }} {{ compare_agg[index] }}
+            <div v-if="compare_agg_1[index] && compare_agg[index]">
+              <div class="agg">{{ agg_data[index] }}</div>
+              <div class="agg_compare">
+                {{ agg_label }} {{ compare_agg[index] }}
+              </div>
+              <div class="agg_compare_1">
+                {{ agg_label_1 }} {{ compare_agg_1[index] }}
+              </div>
             </div>
-            <div class="agg_compare_1">
-              {{ agg_label_1 }} {{ compare_agg_1[index] }}
+            <div v-else>
+              <pie-chart></pie-chart>
             </div>
           </card>
         </div>
       </div>
     </div>
+    <card>
+    </card>
   </card>
 </template>
 
@@ -93,6 +100,7 @@ import axios from "axios";
 import firebase from "firebase";
 import LineChart from "@/components/ChartLine.vue";
 import BarChart from "@/components/ChartBar.vue";
+import PieChart from "@/components/ChartPie.vue";
 import * as jsPDF from "jspdf";
 
 export default {
@@ -152,7 +160,8 @@ export default {
   },
   components: {
     "line-chart": LineChart,
-    "bar-chart": BarChart
+    "bar-chart": BarChart,
+    "pie-chart": PieChart
   },
   methods: {
     onBtnPredictClicked() {
@@ -373,10 +382,14 @@ export default {
         // 3 - Count
         // 4 - Min
         // 5 - Max
-        var index = this.graphs.length
+        // 6 - SD
+        // 7 - Variance
+        var index = this.graphs.length;
+        if (type !== 3) {
+            this.compare_agg[index] = data.compare_agg.toFixed(2);
+            this.compare_agg_1[index] = data.compare_agg_1.toFixed(2);
+        }
         this.agg_data[index] = data.data.toFixed(2);
-        this.compare_agg[index] = data.compare_agg.toFixed(2);
-        this.compare_agg_1[index] = data.compare_agg_1.toFixed(2);
         if (type === 2) {
           this.agg_label = "Min :";
           this.agg_label_1 = "Max :";
@@ -384,7 +397,7 @@ export default {
         } else if (type === 3) {
           this.agg_label = "No Agg :";
           this.agg_label_1 = "No Agg :";
-            this.addGraph(queryword);
+          this.addGraph(queryword);
         } else if (type === 4) {
           this.agg_label = "Avg :";
           this.agg_label_1 = "Max :";
@@ -393,11 +406,11 @@ export default {
           this.agg_label = "Min :";
           this.agg_label_1 = "Avg :";
             this.addGraph(queryword);
+        } else if (type === 6) {
+            //SD
+        } else if (type === 7) {
+            //Variance
         }
-      } else if (type === 6) {
-        //SD
-      } else if (type === 7) {
-        //Population Variance
       } else if (type === 8) {
         //percentile
         var sorttable = [];
@@ -491,14 +504,19 @@ export default {
       // jsPDF
       var x = 5;
       var y = 5;
-      var width = 143.5;
-      var height = 66.67;
 
-      var doc = new jsPDF();
+      // var width = 50%;
+      // var height = 50%;
+
+      var doc = new jsPDF("p", "mm", "a4");
+      var width = doc.internal.pageSize.getWidth(); //210
+      var height = doc.internal.pageSize.getHeight(); //297
       for (let i = 0 ; i < this.$refs.graph_canvas.length ; i++) {
           var imgData = this.$refs.graph_canvas[i].$children[0].$refs.canvas.toDataURL('image/png');
-          doc.addImage(imgData, 'PNG', x, y, width, height);
-          y = y + height + 10;
+          // alert(width +" - "+height)
+          doc.addImage(imgData, 'PNG', x, y, 1724/8.6, 800/8.6);
+          // doc.addImage(imgData, 'PNG', x, y);
+          y = y + (800/8.6) + 10;
       }
 
       doc.save(this.title + '.pdf');
@@ -585,4 +603,8 @@ export default {
     left: 51.2%;
     top: -27px;
  }
+  .text-bind-title {
+    margin-bottom: 35px;
+    font-size: 30px;
+  }
 </style>

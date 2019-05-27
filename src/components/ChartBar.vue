@@ -2,11 +2,6 @@
 import { Bar } from 'vue-chartjs'
 
 export default {
-  // data_x = ["January", "February"]
-  // data_y = [40, 20]
-  // label_x = "XXXXXXX"
-  // label_y = "YYYYYYY"
-  // graph_label = "Data One"
   extends: Bar,
   props: ["graph_label", "data_x", "data_y", "label_x", "label_y"],
   data() {

@@ -114,6 +114,22 @@ export default {
         } else {
             this.modals = false;
         }
+
+        for (let i = 0; i < this.db.Usagetab.length; i++) {
+            // console.log("before if")
+            if (this.db.Usagetab[i].Tabname === this.tabs[index]) {
+                console.log("1 " + this.db.Usagetab);
+                this.db.Usagetab.splice(i,1);
+                firebase
+                    .database()
+                    .ref("users/" + this.theUserUid)
+                    .update({
+                        Usagetab: this.db.Usagetab
+                    });
+                console.log("2 " + this.db.Usagetab);
+            }
+        }
+
     },
     saveTabName(index) {
         this.tabs[index] = this.tabName;
@@ -131,9 +147,9 @@ export default {
       if (this.tabs.length !== 1) {
         for (let i = 0; i < this.db.Usagetab.length; i++) {
             // console.log("before if")
-            if (this.db.Usagetab[i].Tabname === this.tabs[index]) {
-                console.log("1 " + this.db.Usagetab);
-                this.db.Usagetab.splice(i,1);
+            if (i === index) {
+                console.log("1 " + this.db.Usagetab[i]);
+                // this.db.Usagetab[i] = null;
                 firebase
                     .database()
                     .ref("users/" + this.theUserUid)
