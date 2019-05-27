@@ -7,7 +7,7 @@ import Landing from "./views/Landing.vue";
 import Login from "./views/Login.vue";
 import Register from "./views/Register.vue";
 import Profile from "./views/Profile.vue";
-import AddDatabase from "./views/AddDatabase.vue";
+import AddDatabase from "./views/Fields.vue";
 import Verify from "./views/Verify.vue";
 import firebase from "firebase";
 

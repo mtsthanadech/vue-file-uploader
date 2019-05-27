@@ -101,6 +101,8 @@ export default {
               Email: this.email,
               Uploaded: false,
               ShowIntroduction: true,
+              Usagetab: [{Tabname: "Instruction Tab"}],
+              Tabs: ["Instruction Tab"],
             });
           alert("Account created for " + this.email);
           // alert(`Account created for ${user.email}`);

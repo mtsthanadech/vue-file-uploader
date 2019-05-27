@@ -5,12 +5,9 @@ import firebase from 'firebase';
 Vue.use(Vuex);
 
 export const store = new Vuex.Store({
-    // state: {
-    //     theUserUid: "",
-    //     theUserEmail: "",
-    //     theUserVerified: "",
-    //     ddata: ""
-    // },
+    state: {
+        Usaged: ["eeeee"],
+    },
     // getters: {
     //     getUid: state => {
     //         const userUid = firebase.

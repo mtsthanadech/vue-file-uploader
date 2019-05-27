@@ -2,51 +2,50 @@ import Vue from "vue";
 import Router from "vue-router";
 import AppHeader from "./layout/AppHeader";
 import AppFooter from "./layout/AppFooter";
-import Components from "./views/Components.vue";
-import Landing from "./views/Landing.vue";
+// import Components from "./views/Components.vue";
+// import Landing from "./views/Landing.vue";
 import Login from "./views/Login.vue";
 import Register from "./views/Register.vue";
-import Profile from "./views/Profile.vue";
-import AddDatabase from "./views/AddDatabase.vue";
+// import Profile from "./views/Profile.vue";
+import Fields from "./views/Fields.vue";
 import Verify from "./views/Verify.vue";
 import firebase from "firebase";
-import Query from "./views/QueryDatabase.vue";
-import Test from "./views/Test.vue";
+import "firebase/auth";
+import Search from "./views/Search.vue";
 import BootstrapVue from "bootstrap-vue";
 
 Vue.use(BootstrapVue);
-
 
 Vue.use(Router);
 const router = new Router({
   linkExactActiveClass: "active",
   routes: [
-    {
-      path: "/components",
-      name: "components",
-      components: {
-        header: AppHeader,
-        default: Components,
-        footer: AppFooter
-      },
+    // {
+    //   path: "/components",
+    //   name: "components",
+    //   components: {
+    //     header: AppHeader,
+    //     default: Components,
+    //     footer: AppFooter
+    //   },
       // meta: {
       //   requiresAuth: false,
       //   requiresVerify: true
       // }
-    },
-    {
-      path: "/landing",
-      name: "landing",
-      components: {
-        header: AppHeader,
-        default: Landing,
-        footer: AppFooter
-      },
-      meta: {
-        requiresAuth: false
-        // requiresVerify: true
-      }
-    },
+    // },
+    // {
+    //   path: "/landing",
+    //   name: "landing",
+    //   components: {
+    //     header: AppHeader,
+    //     default: Landing,
+    //     footer: AppFooter
+    //   },
+    //   meta: {
+    //     requiresAuth: false
+    //     // requiresVerify: true
+    //   }
+    // },
     {
       path: "/",
       name: "login",
@@ -71,21 +70,21 @@ const router = new Router({
         requiresGuest: true
       }
     },
+    // {
+    //   path: "/profile",
+    //   name: "profile",
+    //   components: {
+    //     header: AppHeader,
+    //     default: Profile,
+    //     footer: AppFooter
+    //   }
+    // },
     {
-      path: "/profile",
-      name: "profile",
+      path: "/fields",
+      name: "fields",
       components: {
         header: AppHeader,
-        default: Profile,
-        footer: AppFooter
-      }
-    },
-    {
-      path: "/app",
-      name: "adddatabase",
-      components: {
-        header: AppHeader,
-        default: AddDatabase,
+        default: Fields,
         footer: AppFooter
       },
       meta: {
@@ -106,29 +105,17 @@ const router = new Router({
       }
     },
     {
-      path : "/query",
-      name : "query",
+      path : "/search",
+      name : "search",
       components: {
         header: AppHeader,
-        default: Query,
+        default: Search,
         footer: AppFooter
       },
       meta: {
         requiresAuth: false
       }
     },
-    {
-      path: "/test",
-      name: "test",
-      components: {
-        header: AppHeader,
-        default: Test,
-        footer: AppFooter
-      },
-      meta: {
-        requiresAuth: false
-      }
-    }
   ],
   scrollBehavior: to => {
     if (to.hash) {
@@ -158,7 +145,7 @@ router.beforeEach((to, from, next) => {
     if (loggedIn) {
       // Go to login
       next({
-        path: "/app"
+        path: "/fields"
       });
     } else {
       // Proceed to route
@@ -172,7 +159,7 @@ router.beforeEach((to, from, next) => {
     } else {
       if (loggedIn.emailVerified) {
         to({
-          path: "/app"
+          path: "/fields"
         });
       } else {
         next({
@@ -183,7 +170,7 @@ router.beforeEach((to, from, next) => {
   } else if (to.matched.some(record => !record.meta.requiresAuth)) {
     if (!loggedIn.emailVerified) {
       to({
-        path: "/app"
+        path: "/fields"
       });
     } else {
       next();
@@ -191,7 +178,7 @@ router.beforeEach((to, from, next) => {
   } else {
     // Proceed to route
     to({
-      path: "/app"
+      path: "/fields"
     });
   }
 });

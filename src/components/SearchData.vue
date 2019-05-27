@@ -1,9 +1,6 @@
 <template>
   <card class="border-0" hover shadow body-classes="py-5">
     <h6 class="text-primary text-uppercase">{{ title }}</h6>
-    <button @click="generatePDF()" class="btn btn-1 btn-primary btn-pdf">
-      <i class="fa fa-download"></i>
-    </button>
     <!-- - {{graph_data_y}} - {{graph_label_y}} -->
     <div class="row">
       <div class="col-9">
@@ -13,10 +10,26 @@
           v-model="queryword"
           v-on:keyup="onBtnPredictClicked"
           @keypress.enter="sendMessage(queryword)"
-          placeholder="Query your data"
+          placeholder="ค้นหาข้อมูล"
           class="form-control input-group-alternative"
           aria-describedby="addon-right addon-left"
         />
+        <div v-if="wordDB !== 'completed' && wordDB.length !== 0" >
+          <button @click="restore()" class="btn btn-1 btn-primary">
+            แสดงข้อมูลครั้งที่แล้ว
+          </button>
+          <button @click="clearData()" class="btn btn-1 btn-primary">
+            เริ่มใหม่
+          </button>
+          <button @click="generatePDF()" :disabled="graphs.length < 1" class="btn btn-1 btn-primary">
+            <i class="fa fa-download"></i> ดาวน์โหลดรายงาน
+          </button>
+        </div>
+        <div v-else>
+          <button @click="generatePDF()" :disabled="graphs.length < 1" class="btn btn-1 btn-primary">
+            <i class="fa fa-download"></i> ดาวน์โหลดรายงาน
+          </button>
+        </div>
         <ul v-if="wordsuggest.length > 0" class="ul-suggest">
           <li v-for="(word, index) in wordsuggest" :key="index">
             <div v-if="index < 5" class="btn-suggest-parent">
@@ -29,15 +42,9 @@
             </div>
           </li>
         </ul>
-
-
-        <!--{{ getDB()}}-->
-        <!--<card>{{ data }}</card> <card>{{ data.type }}</card>-->
-        <!--<card>{{ deepword }}</card>-->
-        <!--<card>{{ wordsuggest }}</card>-->
       </div>
       <div class="col-3">
-        <button type="submit" @click="sendMessage(queryword)" class="btn btn-1 btn-primary">
+        <button type="submit" @click="sendMessage(queryword)" class="btn btn-1 btn-primary btn-search">
           <i class="fa fa-send"></i> Search
         </button>
       </div>
@@ -45,7 +52,7 @@
     <div class="row no-gutters masonry">
       <div class="graphfullwidth" v-for="(graph, index) in graphs" :key="index">
         <div class="col-md-12 box" v-if="graph && !agg_data[index]">
-          <card ref="oop">
+          <card ref="graph_canvas">
             <button type="button" class="close" @click="delGraph(index)">
               <span>×</span>
             </button>
@@ -90,18 +97,33 @@ import * as jsPDF from "jspdf";
 
 export default {
   name: "QueryGraph",
-  props: ["title"],
+  props: ["tabindex", "title"],
   created: function() {
+    firebase
+        .database()
+        .ref("users/" + this.theUserUid)
+        .on("value", snapshot => {
+          this.db = snapshot.val();
+          this.index = snapshot.child("Index").val();
+          this.column_thai = snapshot.child("MatchColumns_thai").val();
+          this.column_eng = snapshot.child("MatchColumns_eng").val();
+          this.matched = snapshot.child("Matched").val();
+          this.usagetab = snapshot.child("Usagetab").val()
+        });
     this.getDB();
   },
   data() {
     return {
+      db: [],
+
       queryword: "",
       deepword: "",
       wordsuggest: [],
       treedata: [],
       suggestdata: [],
       suggeststage: 0,
+      usagetab: [],
+      wordDB: [],
 
       selectWord: [],
       options: {},
@@ -125,7 +147,7 @@ export default {
       column_thai: [],
       column_eng: [],
       matched: "",
-      theUserUid: firebase.auth().currentUser.uid
+      theUserUid: firebase.auth().currentUser.uid,
     };
   },
   components: {
@@ -149,9 +171,6 @@ export default {
         this.deepword = this.selectWord[this.selectWord.length - 1];
         var deepword = this.deepword;
         var batch = [];
-
-        console.log(this.queryword.length);
-        console.log(this.suggeststage);
 
         if(this.queryword.length < 8 && this.suggeststage !== 1) {
             this.suggeststage = 0;
@@ -242,18 +261,90 @@ export default {
       console.log("out loop " + combind);
     },
     addGraph(queryword) {
+      var alltabs = [];
       this.graphs.push(queryword);
-      console.log("addGraph"+queryword);
-      console.log("add");
       firebase
         .database()
         .ref("users/" + this.theUserUid)
         .update({
           Graphs_label: this.graphs,
-          Query: queryword
+          Query: queryword,
         });
+      if (this.usagetab[0].Tabname === "Instruction Tab" && this.usagetab.length === 1) {
+          alltabs.push({Tabname: "Instruction Tab"});
+          alltabs.push({
+              Tabname: this.title,
+              Keywords: this.graphs,
+          });
+      } else {
+          var over = 0;
+          alltabs = [];
+          this.db.Tabs.forEach(tab => {
+              if (this.title === tab) {
+                  for (let i = 0; i < this.usagetab.length; i++){
+                      alltabs.push(this.usagetab[i])
+                  }
+
+                  for (let i = 0; i < alltabs.length; i++){
+                      if (alltabs[i].Tabname === tab && over === 0) {
+                          alltabs[i].Keywords = this.graphs;
+                          over+=1
+                      } else if (this.usagetab.length !== this.db.Tabs.length && alltabs[i].Tabname !== tab && over === 0){
+                          if(this.db.Tabs.length !== this.db.Usagetab.length && this.db.Tabs[this.db.Tabs.length-1] === tab){
+                              if (i === this.usagetab.length - 1) {
+                                  alltabs.push({
+                                        Tabname: tab,
+                                        Keywords: this.graphs,
+                                      });
+                              }
+                          } else {
+                              alltabs[i].Keywords = this.graphs;
+                              over+=1
+                          }
+                      }
+
+                      // if (this.usagetab.length !== this.db.Tabs.length && alltabs[i].Tabname !== tab) {
+                      //     alltabs.push({
+                      //         Tabname: tab,
+                      //         Keywords: this.graphs,
+                      //     });
+                      //
+                      // } else if (alltabs[i].Tabname === tab){
+                      //     alltabs[i].Keywords = this.graphs;
+                      // }
+                  }
+
+              }
+          })
+      }
+        firebase
+            .database()
+            .ref("users/" + this.theUserUid)
+            .update({
+                Usagetab: alltabs
+            });
+
     },
     delGraph(index) {
+        var count = 0;
+        for (let i = 0; i < this.usagetab.length; i++) {
+            if (this.usagetab[i].Tabname === this.title) {
+                for (let j = 0; j < this.usagetab[i].Keywords.length; j++) {
+                    if (this.usagetab[i].Keywords[j] === this.graphs[index] && count === 0) {
+                        this.usagetab[i].Keywords[j] = "";
+                        count+=1;
+                        firebase
+                            .database()
+                            .ref("users/" + this.theUserUid)
+                            .child("Usagetab")
+                            .child(i)
+                            .update({
+                                Keywords: this.usagetab[i].Keywords
+                            });
+                    }
+                }
+            }
+        }
       this.graphs.splice(index, 1, null);
       this.agg_data.splice(index, 1, null);
       this.compare_agg.splice(index, 1, null);
@@ -341,26 +432,39 @@ export default {
         this.wordsuggest = batch;
     },
     getDB() {
-      firebase
-        .database()
-        .ref("users/" + this.theUserUid)
-        .on("value", snapshot => {
-          this.index = snapshot.child("Index").val();
-          this.column_thai = snapshot.child("MatchColumns_thai").val();
-          this.column_eng = snapshot.child("MatchColumns_eng").val();
-          this.matched = snapshot.child("Matched").val();
-        });
-      const tree_url = "https://35.198.215.67:1064/getallword.php";
-      axios
-        .get(tree_url)
-        .then(response => {
-          this.treedata = response.data;
-          // this.suggestdata = this.treedata.concat(this.column_thai);
-        })
-        .catch(error => {
-          // this.suggestdata = this.column_thai;
-          console.log("can't get the tree data because => " + error);
-        });
+      if (this.treedata === []){
+          const tree_url = "https://35.198.215.67:1064/getallword.php";
+          axios
+              .get(tree_url)
+              .then(response => {
+                  this.treedata = response.data;
+                  // this.suggestdata = this.treedata.concat(this.column_thai);
+              })
+              .catch(error => {
+                  // this.suggestdata = this.column_thai;
+                  console.log("can't get the tree data because => " + error);
+              });
+      }
+      if (this.wordDB.length === 0){
+          for (let i = 0; i < this.usagetab.length; i++) {
+              if (this.usagetab[i].Tabname === this.title && this.usagetab[i].Keywords) {
+                  for (let j = 0; j < this.usagetab[i].Keywords.length; j++){
+                      this.wordDB.push(this.usagetab[i].Keywords[j])
+                      // setTimeout(this.sendMessage(this.usagetab[i].Keywords[j]),1000);
+                  }
+              }
+          }
+      }
+    },
+    restore(){
+        for (let i = 0; i < this.usagetab.length; i++) {
+            if (this.usagetab[i].Tabname === this.title) {
+                for (let j = 0; j < this.usagetab[i].Keywords.length; j++){
+                    setTimeout(this.sendMessage(this.usagetab[i].Keywords[j]),2000);
+                }
+            }
+        }
+        this.wordDB = "completed";
     },
     sendMessage(queryword) {
       const url = "https://35.198.215.67/query";
@@ -391,13 +495,13 @@ export default {
       var height = 66.67;
 
       var doc = new jsPDF();
-      for (let i = 0 ; i < this.$refs.oop.length ; i++) {
-          var imgData = this.$refs.oop[i].$children[0].$refs.canvas.toDataURL('image/png');
+      for (let i = 0 ; i < this.$refs.graph_canvas.length ; i++) {
+          var imgData = this.$refs.graph_canvas[i].$children[0].$refs.canvas.toDataURL('image/png');
           doc.addImage(imgData, 'PNG', x, y, width, height);
           y = y + height + 10;
       }
 
-      doc.save('sample-file.pdf');
+      doc.save(this.title + '.pdf');
     }
   }
 };
@@ -474,12 +578,11 @@ export default {
   div.col-4 button.btn:not(:last-child) {
     /*margin-right: 0;*/
   }
-  /*button.btn.btn-1.btn-primary.btn-pdf {*/
-   /*position: absolute;*/
-   /*left: 87%;*/
-   /*top: 12%;*/
-   /*background-color: #cccccc;*/
-   /*border-color: #cccccc;*/
-    /*color: #000000;*/
- /*}*/
+  .btn-search {
+    margin-top: 0 !important;
+  }
+  button.btn.btn-1.btn-primary.btn-pdf {
+    left: 51.2%;
+    top: -27px;
+ }
 </style>

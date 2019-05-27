@@ -1,6 +1,6 @@
 <template>
   <card class="border-0" hover shadow body-classes="py-5">
-    <h6 class="text-primary text-uppercase">Upload Database</h6>
+    <h6 class="text-primary text-uppercase">อัพโหลดข้อมูล</h6>
 
     <form @submit.prevent="sendFile" enctype="multipart/form-data">
       <div class="form-group">
@@ -103,10 +103,10 @@ export default {
 
       this.file = "";
       if (this.complete == "True") {
-        this.message = "File Upload Complete";
+        this.message = "อัพโหลดไฟล์สำเร็จแล้ว";
         this.sendToggle();
       } else {
-        this.message = "File Upload Failed";
+        this.message = "อัพโหลดไฟล์ไม่สำเร็จ";
       }
     },
     async sendToggle() {
@@ -122,7 +122,7 @@ export default {
       }).catch(error => {
           console.log("Erropr : "+error);
       });
-      this.message = "Upload " + this.filename + " to Elasticsearch already";
+      this.message = "อัพโหลด " + this.filename + "ไปยัง Server เรียบร้อย";
       
       // await axios
       //   .get(getColUrl, {

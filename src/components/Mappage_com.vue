@@ -1,6 +1,6 @@
 <template>
   <card class="border-0" hover shadow body-classes="py-5">
-    <h6 class="text-success text-uppercase">Match Column and Set data type</h6>
+    <h6 class="text-success text-uppercase">ตั้งชื่อ Fields และตั้ง Datatype</h6>
     <div class="row justify-content-center">
       <div class="col-lg-6">
         <div v-for="(column, index) in db.MatchColumns_eng" :key="index">
@@ -11,7 +11,7 @@
                 <input
                         v-model="thai_columns[index]"
                         :keyup="compare_text(thai_columns[index], index)"
-                        placeholder="Enter Thai name"
+                        placeholder="ใส่ชื่อ Field ภาษาไทย"
                         class="form-control input-group-alternative"
                         aria-describedby="addon-right addon-left"
                 >
@@ -35,7 +35,7 @@
                 <input
                         v-model="thai_columns[index]"
                         :keyup="compare_text(thai_columns[index], index)"
-                        placeholder="Enter Thai name"
+                        placeholder="ใส่ชื่อ Field ภาษาไทย"
                         class="form-control input-group-alternative"
                         aria-describedby="addon-right addon-left"
                 >
@@ -52,7 +52,7 @@
       </div>
     </div>
     <div class="row">
-      <button class="btn btn-1 btn-primary" @click="savedata()">Save Data</button>
+      <button class="btn btn-1 btn-primary" @click="savedata()">Save Fields</button>
     </div>
 
     <modal :show.sync="modals">
@@ -60,16 +60,16 @@
         <h5 class="modal-title">Are you sure?</h5>
       </template>
       <div v-if="fillcompleted === 0">
-        The datatype of database can't change, are you sure to save it ?.
+        Datatype ในแต่ละ Fields จะไม่สามารถเปลี่ยนได้ คุณแน่ใจที่จะบันทึก ?
       </div>
       <div v-else-if="fillcompleted > 0 && fillcompleted < 100">
-        Please insert the thai column name every field.
+        ใส่ชื่อ Fields เป็นภาษาไทยให้ครบทุก Fields
       </div>
       <div v-else-if="fillcompleted > 100 && fillcompleted < 200">
-        Please insert the thai column name before click save data.
+        ใส่ชื่อ Fields เป็นภาษาไทยให้ครบ ก่อนที่จะกด Save Fields
       </div>
       <div v-else-if="fillcompleted > 200">
-        Some columns name as same as another column.
+        มีบาง Fields ที่มีชื่อซ้ำกัน
       </div>
       <template slot="footer">
         <div v-if="fillcompleted === 0">
@@ -130,10 +130,10 @@ export default {
         var count = 1;
         for (let i = 0; i < this.thai_columns.length; i++) {
             if (this.thai_columns[i] === text && i !== index && count === 1 && text !== "" && this.thai_columns[i] !== undefined) {
-                this.remind[index] = "Column name is matched another column, Please change this column name";
+                this.remind[index] = "มีชื่อ Fields ซ้ำกัน, เปลี่ยนชื่อ Fields";
                 count++;
             } else if (count > 1 && this.thai_columns[i] !== undefined) {
-                this.remind[index] = "Column name is matched another column, Please change this column name";
+                this.remind[index] = "มีชื่อ Fields ซ้ำกัน, เปลี่ยนชื่อ Fields";
             } else {
                 this.remind[index] = null;
             }
@@ -205,7 +205,7 @@ export default {
         }
 
         this.modals = false;
-        console.log(this.db);
+        // console.log(this.db);
         const url_log = "https://35.198.215.67/logstash";
         const url_prog = "https://35.198.215.67/progress/"+this.db.Index;
 

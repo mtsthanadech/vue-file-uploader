@@ -7,26 +7,26 @@
         </div>
       </div>
       <div class="row" v-if="Matched === true">
-        <router-link to="/query" class="btn btn-1 btn-primary">Go to search</router-link>
+        <router-link to="/search" class="btn btn-1 btn-primary">Go to search</router-link>
       </div>
 
       <modal :show.sync="modals">
         <template slot="header">
-          <h5 class="modal-title">Introduction</h5>
+          <h5 class="modal-title">Instruction</h5>
         </template>
         <div>
-          <div class="text-intro">1. ตั้งชื่อ Database เป็นภาษาอังกฤษ</div>
-          <div class="text-intro">2. เลือกไฟล์ Database จากเครื่องคอมพิวเตอร์ รูปแบบไฟล์ .csv ขนาดไม่เกิน 100 mb.</div>
-          <div class="text-intro">3. เมื่ออัพโหลดสำเร็จ ระบบจะ list รายชื่อ Columns ที่เป็น ภาษาอังกฤษ ของ Database ที่ Upload เข้ามา</div>
-          <div class="text-intro">4. ตั้งชื่อภาษาไทยให้กับ Columns ต่างๆ โดยชื่อไม่ซ้ำกัน พร้อมกับตั้ง Datatype ให้กับแต่ละ Columns</div>
-          <div class="text-intro">5. กด Save Data แล้วยืนยันอีกรอบ</div>
+          <div class="text-intro">1. ตั้งชื่อ Index เป็นภาษาอังกฤษ</div>
+          <div class="text-intro">2. เลือกไฟล์ข้อมูลจากเครื่องคอมพิวเตอร์ รูปแบบไฟล์ .csv ขนาดไม่เกิน 100 mb.</div>
+          <div class="text-intro">3. เมื่ออัพโหลดสำเร็จ ระบบจะ list รายชื่อ Fields ที่เป็น ภาษาอังกฤษ ของข้อมูลที่ Upload เข้ามา</div>
+          <div class="text-intro">4. ตั้งชื่อภาษาไทยให้กับ Fields ต่างๆ โดยชื่อที่ชื่อในแต่ละ Fields ไม่ซ้ำกัน พร้อมกับตั้ง Datatype ให้กับแต่ละ Fields ด้วย</div>
+          <div class="text-intro">5. กด Save Field แล้วยืนยันอีกรอบ</div>
           <div class="text-intro">6. เมื่อ Save สำเร็จ จะมีปุ่ม Go to search ปรากฎขึ้น</div>
-          <div class="text-intro">7. กด Go to search เพื่อไปยังหน้า search</div>
+          <div class="text-intro">7. กด Go to search เพื่อไปยังหน้า Search</div>
         </div>
         <template slot="footer">
           <div>
             <base-button type="primary" @click="modals=false">Close</base-button>
-            <base-button type="primary" @click="neverShowIntro()">Never show again</base-button>
+            <base-button type="primary" @click="neverShowIntro()">Don’t show this again</base-button>
           </div>
         </template>
       </modal>
@@ -36,12 +36,11 @@
 <script>
 import Upload from "@/components/Upload.vue";
 import MatchColumn from "@/components/Mappage_com.vue";
-import QueryGraph from "@/components/QueryGraph.vue";
 import firebase from "firebase";
 import Modal from "../components/Modal";
 
 export default {
-  name: "adddatabase",
+  name: "fields",
   created() {
       firebase
         .database()
@@ -90,7 +89,7 @@ export default {
   components: {
     "simple-upload": Upload,
     "match-column": MatchColumn,
-    "query-graph": QueryGraph,
+    // "query-graph": SearchData,
     Modal
   }
 };
