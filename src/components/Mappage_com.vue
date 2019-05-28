@@ -97,6 +97,7 @@ export default {
       theUserUid: firebase.auth().currentUser.uid,
       thai_columns: [],
       remind: [],
+      logstash: false,
       db: [],
       initialtype: false,
       modals: false,
@@ -118,6 +119,7 @@ export default {
           .on("value", snapshot => {
               this.db = snapshot.val();
               this.thai_columns = snapshot.child("MatchColumns_thai").val();
+              this.logstash = snapshot.child("Logstash").val();
               if(snapshot.child("Datatype").val()) {
                 this.savetype = true;
                 this.initialtype = true;
@@ -206,32 +208,43 @@ export default {
 
         this.modals = false;
         // console.log(this.db);
-        const url_log = "https://35.198.215.67/logstash";
-        const url_prog = "https://35.198.215.67/progress/"+this.db.Index;
 
-        axios
-            .post(url_log,{
+        if (this.logstash === false){
+            const url_log = "https://35.198.215.67/logstash";
+            const url_prog = "https://35.198.215.67/progress/"+this.db.Index;
+            axios
+                .post(url_log,{
                     column_eng: this.db.MatchColumns_eng,
                     column_type: this.db.Datatype,
                     index: this.db.Index,
-            })
-            .then(response => {
-                console.log(response);
-            })
-            .catch(error => {
-                console.log(error);
-            });
-
-        setTimeout(function(){
-            axios
-                .get(url_prog)
+                })
                 .then(response => {
-                    console.log(response);
+                    if(response.percent === 100.0 || response.percent === "100.0"){
+                      this.logstash = true;
+                      firebase
+                          .database()
+                          .ref("users/" + this.theUserUid)
+                          .update({
+                              Logstash: this.logstash
+                          })
+                    }
                 })
                 .catch(error => {
+                    this.logstash = false;
                     console.log(error);
-                })
-        }, 10000);
+                });
+
+            setTimeout(function(){
+                axios
+                    .get(url_prog)
+                    .then(response => {
+                        console.log(response);
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    })
+            }, 10000);
+        }
     }
   },
     components: {

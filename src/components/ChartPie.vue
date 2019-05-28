@@ -3,15 +3,16 @@
 
     export default {
         extends: Pie,
+        props: ["data", "labels", "title"],
         data() {
             return {
                 chartData: {
-                    labels: ["piepiepie","chartchartchart"],
+                    labels: [this.labels,"ไม่ใช"+this.labels],
                     datasets: [
                         {
-                            label: "PIE",
+                            label: this.title,
                             backgroundColor: ["#f87979","#dddddd"],
-                            data: [50,100]
+                            data: this.data
                         }
                     ]
                 },
@@ -20,7 +21,7 @@
                     maintainAspectRatio: false,
                     title: {
                         display: true,
-                        text: ["piepiepie","chartchartchart"]
+                        text: this.title
                     },
                     tooltips: {
                         mode: "index",

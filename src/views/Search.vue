@@ -149,7 +149,7 @@ export default {
             // console.log("before if")
             if (i === index) {
                 console.log("1 " + this.db.Usagetab[i]);
-                // this.db.Usagetab[i] = null;
+                this.db.Usagetab[i] = null;
                 firebase
                     .database()
                     .ref("users/" + this.theUserUid)
@@ -159,9 +159,10 @@ export default {
                 console.log("2 " + this.db.Usagetab);
             }
         }
-          this.tabs.splice(index, 1, null);
-          this.tabs.splice(index, 1);
-
+        if(index !== 0){
+            this.tabs.splice(index, 1, null);
+            this.tabs.splice(index, 1);
+        }
         firebase
             .database()
             .ref("users/" + this.theUserUid)
@@ -243,6 +244,7 @@ export default {
         right: 65px;
         top: 115px;
         z-index: 1;
+        margin-top: 0;
     }
     .btn-edit {
         position: absolute !important;

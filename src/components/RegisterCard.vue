@@ -102,6 +102,7 @@ export default {
               Uploaded: false,
               ShowIntroduction: true,
               Usagetab: [{Tabname: "Instruction Tab"}],
+              Logstash: false,
               Tabs: ["Instruction Tab"],
             });
           alert("Account created for " + this.email);

@@ -26,22 +26,6 @@
             </div>
           </li>
         </ul>
-        <div v-if="wordDB !== 'completed' && wordDB.length !== 0" >
-          <button @click="restore()" class="btn btn-1 btn-primary">
-            แสดงข้อมูลครั้งที่แล้ว
-          </button>
-          <button @click="clearData()" class="btn btn-1 btn-primary">
-            เริ่มใหม่
-          </button>
-          <button @click="generatePDF()" :disabled="graphs.length < 1" class="btn btn-1 btn-primary">
-            <i class="fa fa-download"></i> ดาวน์โหลดรายงาน
-          </button>
-        </div>
-        <div v-else>
-          <button @click="generatePDF()" :disabled="graphs.length < 1" class="btn btn-1 btn-primary">
-            <i class="fa fa-download"></i> ดาวน์โหลดรายงาน
-          </button>
-        </div>
       </div>
       <div class="col-3">
         <button type="submit" @click="sendMessage(queryword)" class="btn btn-1 btn-primary btn-search">
@@ -84,14 +68,33 @@
               </div>
             </div>
             <div v-else>
-              <pie-chart></pie-chart>
+              <pie-chart :data="data" :labels="labels" :title="graph"></pie-chart>
             </div>
           </card>
         </div>
       </div>
+      <!--<div v-if="wordDB !== 'completed' && wordDB.length !== 0" >-->
+        <!--<button @click="restore()" class="btn btn-1 btn-primary">-->
+          <!--แสดงข้อมูลครั้งที่แล้ว-->
+        <!--</button>-->
+        <!--<button @click="clearData()" class="btn btn-1 btn-primary">-->
+          <!--เริ่มใหม่-->
+        <!--</button>-->
+        <!--<button @click="generatePDF()" :disabled="graphs.length < 1" class="btn btn-1 btn-primary">-->
+          <!--<i class="fa fa-download"></i> ดาวน์โหลดรายงาน-->
+        <!--</button>-->
+      <!--</div>-->
+      <!--<div v-else>-->
+        <!--<button @click="generatePDF()" :disabled="graphs.length < 1" class="btn btn-1 btn-primary">-->
+          <!--<i class="fa fa-download"></i> ดาวน์โหลดรายงาน-->
+        <!--</button>-->
+      <!--</div>-->
+      <div>
+        <button @click="generatePDF()" :disabled="graphs.length < 1" class="btn btn-1 btn-primary">
+          <i class="fa fa-download"></i> ดาวน์โหลดรายงาน
+        </button>
+      </div>
     </div>
-    <card>
-    </card>
   </card>
 </template>
 
@@ -136,7 +139,8 @@ export default {
       selectWord: [],
       options: {},
 
-      data: "",
+      data: [],
+      labels: [],
       graphs: [],
       graph_label: "",
       label_x: "",
@@ -445,7 +449,7 @@ export default {
         this.wordsuggest = batch;
     },
     getDB() {
-      if (this.treedata === []){
+      if (this.treedata.length === 0){
           const tree_url = "https://35.198.215.67:1064/getallword.php";
           axios
               .get(tree_url)
@@ -458,12 +462,11 @@ export default {
                   console.log("can't get the tree data because => " + error);
               });
       }
-      if (this.wordDB.length === 0){
+      if (this.wordDB.length === 0 && this.wordDB !== "completed"){
           for (let i = 0; i < this.usagetab.length; i++) {
               if (this.usagetab[i].Tabname === this.title && this.usagetab[i].Keywords) {
                   for (let j = 0; j < this.usagetab[i].Keywords.length; j++){
                       this.wordDB.push(this.usagetab[i].Keywords[j])
-                      // setTimeout(this.sendMessage(this.usagetab[i].Keywords[j]),1000);
                   }
               }
           }
@@ -479,6 +482,9 @@ export default {
         }
         this.wordDB = "completed";
     },
+    clearData() {
+        this.wordDB = "completed";
+    },
     sendMessage(queryword) {
       const url = "https://35.198.215.67/query";
       this.getDB();
@@ -490,14 +496,20 @@ export default {
           coleng: this.column_eng
         })
         .then(response => {
-          this.data = response.data;
+          if (response.data.type === 3){
+            var data = response.data.data;
+            var max_record = response.data.max_record;
+            this.data = [data, max_record]
+            this.labels = response.data.data_name;
+            this.namedata =response.data.da
+          }
           this.condition_graph(response.data, queryword);
         })
         .catch(e => {
           this.errors.push(e);
           console.log(this.errors);
         });
-      this.queryword = "";
+      // this.queryword = "";
       //show result here
     },
     generatePDF() {
