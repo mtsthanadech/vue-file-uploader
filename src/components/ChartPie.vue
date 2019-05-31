@@ -7,7 +7,7 @@
         data() {
             return {
                 chartData: {
-                    labels: [this.labels,"ไม่ใช"+this.labels],
+                    labels: [this.labels,"ไม่ใช่"+this.labels],
                     datasets: [
                         {
                             label: this.title,

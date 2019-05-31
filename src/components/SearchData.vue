@@ -382,12 +382,7 @@ export default {
         this.label_y = data.label_y;
         this.addGraph(queryword);
       } else if (type === 2 || type === 3 || type === 4 || type === 5) {
-        // 2 - Avg
-        // 3 - Count
-        // 4 - Min
-        // 5 - Max
-        // 6 - SD
-        // 7 - Variance
+        // 2 - Avg 3 - Count 4 - Min 5 - Max 6 - SD 7 - Variance
         var index = this.graphs.length;
         if (type !== 3) {
             this.compare_agg[index] = data.compare_agg.toFixed(2);
@@ -466,7 +461,7 @@ export default {
           for (let i = 0; i < this.usagetab.length; i++) {
               if (this.usagetab[i].Tabname === this.title && this.usagetab[i].Keywords) {
                   for (let j = 0; j < this.usagetab[i].Keywords.length; j++){
-                      this.wordDB.push(this.usagetab[i].Keywords[j])
+                      this.wordDB.push(this.usagetab[i].Keywords[j]);
                   }
               }
           }
@@ -499,9 +494,10 @@ export default {
           if (response.data.type === 3){
             var data = response.data.data;
             var max_record = response.data.max_record;
-            this.data = [data, max_record]
+            var invert = max_record - data;
+            this.data = [data, invert];
             this.labels = response.data.data_name;
-            this.namedata =response.data.da
+            // this.namedata =response.data.da
           }
           this.condition_graph(response.data, queryword);
         })
