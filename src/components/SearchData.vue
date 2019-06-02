@@ -73,22 +73,6 @@
           </card>
         </div>
       </div>
-      <!--<div v-if="wordDB !== 'completed' && wordDB.length !== 0" >-->
-        <!--<button @click="restore()" class="btn btn-1 btn-primary">-->
-          <!--แสดงข้อมูลครั้งที่แล้ว-->
-        <!--</button>-->
-        <!--<button @click="clearData()" class="btn btn-1 btn-primary">-->
-          <!--เริ่มใหม่-->
-        <!--</button>-->
-        <!--<button @click="generatePDF()" :disabled="graphs.length < 1" class="btn btn-1 btn-primary">-->
-          <!--<i class="fa fa-download"></i> ดาวน์โหลดรายงาน-->
-        <!--</button>-->
-      <!--</div>-->
-      <!--<div v-else>-->
-        <!--<button @click="generatePDF()" :disabled="graphs.length < 1" class="btn btn-1 btn-primary">-->
-          <!--<i class="fa fa-download"></i> ดาวน์โหลดรายงาน-->
-        <!--</button>-->
-      <!--</div>-->
       <div>
         <button @click="generatePDF()" :disabled="graphs.length < 1" class="btn btn-1 btn-primary">
           <i class="fa fa-download"></i> ดาวน์โหลดรายงาน
@@ -125,6 +109,7 @@ export default {
   },
   data() {
     return {
+      url: "https://35.198.215.67",
       db: [],
 
       queryword: "",
@@ -404,9 +389,11 @@ export default {
         } else if (type === 5) {
           this.agg_label = "Min :";
           this.agg_label_1 = "Avg :";
-            this.addGraph(queryword);
+          this.addGraph(queryword);
         } else if (type === 6) {
-            //SD
+          this.agg_label = "Variance :";
+          this.agg_label_1 = "Avg :";
+          this.addGraph(queryword);
         } else if (type === 7) {
             //Variance
         }
@@ -445,7 +432,8 @@ export default {
     },
     getDB() {
       if (this.treedata.length === 0){
-          const tree_url = "https://35.198.215.67:1064/getallword.php";
+          var url = this.url;
+          const tree_url = url+":1064/getallword.php";
           axios
               .get(tree_url)
               .then(response => {
@@ -481,7 +469,8 @@ export default {
         this.wordDB = "completed";
     },
     sendMessage(queryword) {
-      const url = "https://35.198.215.67/query";
+      var urlserve = this.url;
+      const url = urlserve + "/query";
       this.getDB();
       axios
         .post(url, {

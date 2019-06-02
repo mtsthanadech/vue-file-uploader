@@ -97,6 +97,7 @@ export default {
       theUserUid: firebase.auth().currentUser.uid,
       thai_columns: [],
       remind: [],
+      url: "https://35.198.215.67/",
       logstash: false,
       db: [],
       initialtype: false,
@@ -210,8 +211,9 @@ export default {
         // console.log(this.db);
 
         if (this.logstash === false){
-            const url_log = "https://35.198.215.67/logstash";
-            const url_prog = "https://35.198.215.67/progress/"+this.db.Index;
+            var url = this.url;
+            const url_log = url + "logstash";
+            const url_prog = url + "progress/"+this.db.Index;
             axios
                 .post(url_log,{
                     column_eng: this.db.MatchColumns_eng,

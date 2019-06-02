@@ -97,6 +97,7 @@ export default {
       show: true,
       db: [],
       collength: "",
+      url: "https://35.198.215.67/",
       modals: true,
     };
   },
@@ -111,7 +112,8 @@ export default {
               });
       },
       deleteDB(){
-          const url = "https://35.198.215.67/delindex/"+this.index;
+          var urlserver = this.url;
+          const url = urlserver+"delindex/"+this.index;
           axios.get(url)
               .then(response => {
                   if (response.check === true) {

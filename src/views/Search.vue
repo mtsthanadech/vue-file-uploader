@@ -109,7 +109,7 @@ export default {
         if (this.tabs[index] === "-" && stage === 1) {
             this.modals = true;
         } else if (stage === 999) {
-            this.tabName = this.tabs[index]
+            this.tabName = this.tabs[index];
             this.modals = true;
         } else {
             this.modals = false;
