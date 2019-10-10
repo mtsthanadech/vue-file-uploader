@@ -1,5 +1,16 @@
 #NLPQuery
 
-<code>yarn install</code>
-<code>yarn serve</code>
-<code>yarn build</code>
+Install package 
+```
+yarn install
+```
+
+Serve Program
+```
+yarn serve
+```
+
+Build 
+```
+yarn build
+```
